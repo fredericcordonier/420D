@@ -67,19 +67,6 @@ Some of the most popular features of `400plus` are:
 
 ## 🐳 Building with Docker (Podman)
 
-Structure of the project:
-420D/
-├── README.md
-├── LICENSE
-├── docker/
-│   ├── Dockerfile
-│   ├── entrypoint.sh
-│   └── build.sh
-├── src/
-│   ├── ...source code...
-│   └── ...
-
-
 To build the project in a clean and reproducible environment, you need to install podman:
 
 # Build the Docker image
