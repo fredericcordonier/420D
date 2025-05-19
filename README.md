@@ -1,13 +1,30 @@
-# 400plus
-A firmware hack for the Canon 400D / XTi digital camera
+# 420D – Firmware Add-on for Canon EOS 400D
 
-## About
+**420D** is an unofficial fork of the [400plus](https://github.com/400plus/400plus) firmware add-on, originally developed for the Canon EOS 400D (also known as the Digital Rebel XTi).
+This version celebrates the **20th anniversary** of the 400D by building upon the original project with updates, improvements, and a refreshed focus.
 
-`400plus` is a free firmware enhancement software which offers additional functionality and capabilities for your Canon 400D/XTi camera, in both a non-destructive and non-permanent way. It works by loading into your camera's memory automatically upon boot-up to enhance the native camera firmware; but it is not a permanent firmware upgrade, and can easily be removed.
+---
 
-_This software is similar to what [Magic Lantern](http://magiclantern.wikia.com/wiki/Magic_Lantern_Firmware_Wiki) is for the DryOS cameras, though it is designed specifically for the Canon 400D/XTi and will not work with other camera models. For info about porting `400plus` to your camera, please visit [the Magic Lantern wiki](http://magiclantern.wikia.com/wiki/Other_dslr)._
+## 🎯 Project Goals
 
-## Features
+- Modernize and clean up the original codebase
+- Improve documentation and accessibility
+- Modify existing features to personal taste
+- Add new features suited to today’s use cases
+- Extend the useful life of the Canon EOS 400D
+
+---
+
+## 📦 Based on 400plus
+
+This project is based on the original [400plus/400plus](https://github.com/400plus/400plus) repository.
+Full credit and thanks go to the original developers for their outstanding work.
+
+The original source code is licensed under the [GNU GPL v2](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html), which this project continues to honor.
+
+---
+
+## Original 400plus features
 
 Some of the most popular features of `400plus` are:
   * Custom modes:
@@ -40,19 +57,58 @@ Some of the most popular features of `400plus` are:
 
 `400plus` has been translated into several languages, and can even be translated to languages not supported by the camera.
 
-## Instructions
+## 🧩 New Features / Planned Work
+
+- Revamped user interface
+- Menu reorganization
+- Few modifications/corrections according to 400plus issue tracker
+
+---
+
+## 🐳 Building with Docker (Podman)
+
+Structure of the project:
+420D/
+├── README.md
+├── LICENSE
+├── docker/
+│   ├── Dockerfile
+│   ├── entrypoint.sh
+│   └── build.sh
+├── src/
+│   ├── ...source code...
+│   └── ...
+
+
+To build the project in a clean and reproducible environment, you need to install podman:
+
+# Build the Docker image
+./docker/build.sh
+
+# The firmware will be built using the toolchain inside the container
+
+---
+
+## Original 400plus instructions
 
 _Please, read "[a word of warning](https://github.com/400plus/400plus/wiki/A-word-of-warning)" at [our wiki](https://github.com/400plus/400plus/wiki) before doing anything else._
 
 There is a [user guide](https://github.com/400plus/400plus/wiki/User-guide), where you can get a better idea of what to expect from this project. Then, if you want to give it a try, there is also an [installation guide](https://github.com/400plus/400plus/wiki/Firmware-Hack-Installation).
 
-## Downloads
+## 🔧 Installation & Usage
 
-Visit our [releases page](https://github.com/400plus/400plus/releases) to obtain `400plus`.
+> *Installation instructions will be added once testing is complete.*
 
-## Support
+---
 
-We have the following support channels:
-  * The [issues page](https://github.com/400plus/400plus/issues) in this site.
-  * The [official board](http://chdk.setepontos.com/index.php?board=33.0) at the [CHDK forums](http://chdk.setepontos.com/) (see the [main thread](http://chdk.setepontos.com/index.php?topic=3290.0) first).
-  * We even have a [mailing list](http://groups.google.com/group/400plus) available.
+## 📝 License
+
+This project is released under the **GNU GPL v2** license, in accordance with the original 400plus project.
+See [LICENSE](./LICENSE) for full terms.
+
+---
+
+## 📸 About
+
+- Project started in 2025 by Frederic Cordonier
+- A tribute to the Canon EOS 400D – 2005–2025 ❤️

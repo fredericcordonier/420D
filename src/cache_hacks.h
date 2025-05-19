@@ -4,10 +4,106 @@
  * Thanks to Sergei for porting it.
  */
 
+#ifndef _CACHE_HACKS_H_
+#define _CACHE_HACKS_H_
+
 #include <vxworks.h>
 #include <stdint.h>
 
-#include "cache_hacks.h"
+#include "asm.h"
+
+/*
+ * Canon cameras appear to use the ARMv5 946E.
+ * (Confirmed on: 550D, ... )
+ *
+ * This processor supports a range of cache sizes from no cache (0KB) or
+ * 4KB to 1MB in powers of 2. Instruction(icache) and data(dcache) cache sizes
+ * can be independent and can not be changed at run time.
+ *
+ * A cache line is 32 bytes / 8 words / 8 instructions.
+ * 	byte address 	(Addr[1:0] = 2 bits)
+ * 	word address 	(Addr[4:2] = 2 bits)
+ * 	index 			(Addr[i+4:5] = i bits)
+ * 	address TAG 	(Addr[31:i+5] = 27 - i bits)
+ * Where 'i' is the size of the cache index in bits.
+ *
+ * There are 2^i cache lines.
+ * The index bits from the address select the cache line. The tag bits from the
+ * address are compared with the tag of the cache line and if the cache line is
+ * valid the byte and word bits extract the data from that cache line.
+ *
+ * The CP15 Control Register controls cache operation:
+ * bit 2  = dcache enable
+ * bit 12 = icache enable
+ *
+ * Self modifying code and reprogramming the protection regions requires a
+ * flush of the icache. Writing to CP15 register 7 flushes the
+ * cache. Writing a 0 flushes the entire icache. Writing the "FlushAddress"
+ * flushes that cache line. Icache automatically flushed on reset. Never needs
+ * to be cleaned because it cannot be written to.
+ *
+ * Dcache is automatically disabled and flushed on reset.
+ */
+
+#define RET_INSTR       0xE12FFF1E      // bx lr
+#define FAR_CALL_INSTR  0xE51FF004      // ldr pc, [pc,#-4]
+#define LOOP_INSTR      0xEAFFFFFE      // 1: b 1b
+#define NOP_INSTR       0xE1A00000      // mov r0, r0
+#define MOV_R0_1_INSTR  0xE3A00001	// mov r0, 1
+#define MOV_R0_0_INSTR  0xE3A00000	// mov r0, 0
+
+#define BL_INSTR(pc,dest) \
+    ( 0xEB000000 \
+    | ((( ((uint32_t)dest) - ((uint32_t)pc) - 8 ) >> 2) & 0x00FFFFFF) \
+    )
+
+#define B_INSTR(pc,dest) \
+    ( 0xEA000000 \
+    | ((( ((uint32_t)dest) - ((uint32_t)pc) - 8 ) >> 2) & 0x00FFFFFF) \
+    )
+
+#define TYPE_DCACHE 0
+#define TYPE_ICACHE 1
+
+/* get cache size depending on cache type and processor setup (13 -> 2^13 -> 8192 -> 8KiB) */
+#define CACHE_SIZE_BITS(t)          cache_get_size(t)
+
+/* depending on cache size, INDEX has different length */
+#define CACHE_INDEX_BITS(t)         (CACHE_SIZE_BITS(t)-7)
+/* INDEX in tag field starts at bit 5 */
+#define CACHE_INDEX_TAGOFFSET(t)    5
+/* bitmask that matches the INDEX value bits */
+#define CACHE_INDEX_BITMASK(t)      ((1U<<CACHE_INDEX_BITS(t)) - 1)
+/* bitmask to mask out the INDEX field in a tag */
+#define CACHE_INDEX_ADDRMASK(t)     (CACHE_INDEX_BITMASK(t)<<CACHE_INDEX_TAGOFFSET(t))
+
+/* depending on cache size, TAG has different length */
+#define CACHE_TAG_BITS(t)           (27-CACHE_INDEX_BITS(t))
+/* TAG in tag field starts at bit 5 plus INDEX size */
+#define CACHE_TAG_TAGOFFSET(t)      (5+CACHE_INDEX_BITS(t))
+/* bitmask that matches the TAG value bits */
+#define CACHE_TAG_BITMASK(t)        ((1U<<CACHE_TAG_BITS(t)) - 1)
+/* bitmask to mask out the TAG field in a tag */
+#define CACHE_TAG_ADDRMASK(t)       (CACHE_TAG_BITMASK(t)<<CACHE_TAG_TAGOFFSET(t))
+
+/* the WORD field in tags is always 3 bits */
+#define CACHE_WORD_BITS(t)          3
+/* WORD in tag field starts at this bit position */
+#define CACHE_WORD_TAGOFFSET(t)     2
+/* bitmask that matches the WORD value bits */
+#define CACHE_WORD_BITMASK(t)       ((1U<<CACHE_WORD_BITS(t)) - 1)
+/* bitmask to mask out the WORD field in a tag */
+#define CACHE_WORD_ADDRMASK(t)      (CACHE_WORD_BITMASK(t)<<CACHE_WORD_TAGOFFSET(t))
+
+/* the SEGMENT field in tags is always 2 bits */
+#define CACHE_SEGMENT_BITS(t)       2
+/* SEGMENT in tag field starts at this bit position */
+#define CACHE_SEGMENT_TAGOFFSET(t)  30
+/* bitmask that matches the SEGMENT value bits */
+#define CACHE_SEGMENT_BITMASK(t)    ((1U<<CACHE_SEGMENT_BITS(t)) - 1)
+/* bitmask to mask out the SEGMENT field in a tag */
+#define CACHE_SEGMENT_ADDRMASK(t)   (CACHE_SEGMENT_BITMASK(t)<<CACHE_SEGMENT_TAGOFFSET(t))
+
 
 static inline uint32_t cli(void)
 {
@@ -170,11 +266,10 @@ static void cache_get_content(uint32_t segment, uint32_t index, uint32_t word, u
 }
 
 /* check if given address is already used or if it is usable for patching */
-static uint32_t cache_is_patchable(uint32_t address, uint32_t type)
+static uint32_t __attribute__ ((unused)) cache_is_patchable(uint32_t address, uint32_t type)
 {
 	uint32_t stored_tag_index = 0;
 	uint32_t stored_data = 0;
-
 	cache_get_content(
 		0,
 		(address & CACHE_INDEX_ADDRMASK(type)) >> CACHE_INDEX_TAGOFFSET(type),
@@ -244,23 +339,6 @@ static uint32_t cache_get_cached(uint32_t address, uint32_t type)
 	}
 
 	return 0;
-}
-
-static inline void clean_d_cache(void)
-{
-	uint32_t segment = 0;
-
-	do {
-		uint32_t line = 0;
-		for( ; line != 0x400 ; line += 0x20 ) {
-			asm(
-				"MCR p15, 0, %0, c7, c14, 2"
-
-				:
-				: "r"( line | segment )
-			);
-		}
-	} while( segment += 0x40000000 );
 }
 
 static void icache_unlock(void)
@@ -405,11 +483,30 @@ static inline void icache_lock(void)
 	sei(old_int);
 }
 
+static void clean_d_cache(void);
+
 static inline void dcache_lock(void)
 {
-	uint32_t index;
 	uint32_t old_int = cli();
 
+	/* first clean and flush dcache entries */
+	//uint32_t segment;
+	uint32_t index;
+	/*
+	for(segment = 0; segment < (1U<<CACHE_SEGMENT_BITS(TYPE_DCACHE)); segment++ ) {
+		for(index = 0; index < (1U<<CACHE_INDEX_BITS(TYPE_DCACHE)); index++) {
+			uint32_t seg_index = (segment << CACHE_SEGMENT_TAGOFFSET(TYPE_DCACHE)) | (index << CACHE_INDEX_TAGOFFSET(TYPE_DCACHE));
+			asm volatile (
+				"MCR p15, 0, %0, c7, c14, 2\n"
+
+				:
+				: "r"(seg_index)
+			);
+		}
+	}
+	*/
+	// XXX: 0xAF: I dont know what is wrong with the code above, but it hangs the camera
+	// the following function clears D Cache w/o problems
 	clean_d_cache();
 
 	/* then lockdown data cache */
@@ -447,7 +544,7 @@ static inline void dcache_lock(void)
 
 /* these are the "public" functions. please use only these if you are not sure what the others are for */
 
-uint32_t cache_locked(void)
+static uint32_t __attribute__ ((unused)) cache_locked(void)
 {
 	uint32_t status = 0;
 	asm volatile (
@@ -462,26 +559,26 @@ uint32_t cache_locked(void)
 	return status;
 }
 
-inline void cache_lock(void)
+static inline void cache_lock(void)
 {
 	icache_lock();
 	dcache_lock();
 }
 
-void cache_unlock(void)
+static void __attribute__ ((unused)) cache_unlock(void)
 {
 	icache_unlock();
 	dcache_unlock();
 }
 
-uint32_t cache_fake(uint32_t address, uint32_t data, uint32_t type)
+static uint32_t cache_fake(uint32_t address, uint32_t data, uint32_t type)
 {
 	/* that word is already patched? return failure */
-	/* Disabled, as it always returns FALSE */
-	if(FALSE && !cache_is_patchable(address, type)) {
+	/*
+	if(!cache_is_patchable(address, type)) {
 		return 0;
 	}
-
+	*/
 	/* is that line not in cache yet? */
 	if(!cache_get_cached(address, type)) {
 		/* no, then fetch it */
@@ -491,10 +588,8 @@ uint32_t cache_fake(uint32_t address, uint32_t data, uint32_t type)
 	return cache_patch_single_word(address, data, type);
 }
 
-void flush_caches(void)
-{
+static inline void flush_caches( void ) {
 	uint32_t reg = 0;
-
 	asm(
 		"MOV %0, #0\n"
 		"MCR p15, 0, %0, c7, c5, 0\n" // entire I cache
@@ -507,3 +602,19 @@ void flush_caches(void)
 	);
 }
 
+static inline void clean_d_cache( void ) {
+	uint32_t segment = 0;
+	do {
+		uint32_t line = 0;
+		for( ; line != 0x400 ; line += 0x20 ) {
+			asm(
+				"MCR p15, 0, %0, c7, c14, 2"
+
+				:
+				: "r"( line | segment )
+			);
+		}
+	} while( segment += 0x40000000 );
+}
+
+#endif

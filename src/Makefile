@@ -2,12 +2,12 @@ PROJECT := AUTOEXEC
 ADDRESS := 0x7E0000
 
 ifndef CROSS_COMPILE
-	CROSS_COMPILE := arm-elf-
+	CROSS_COMPILE := arm-none-eabi-
 endif
 
 ifdef RELEASE
-	VERSION := VER-$(RELEASE)
-	RELNAME := 400plus-$(RELEASE)
+	VERSION := 420D-$(RELEASE)
+	RELNAME := 420D-$(RELEASE)
 	D_FLAGS := -DRELEASE
 else
 	VERSION := REV-$(shell git rev-parse --short HEAD)
@@ -28,7 +28,7 @@ COMMON_FLAGS := \
 	-fno-strict-aliasing              \
 	-mfloat-abi=soft                  \
 	-msoft-float                      \
-	-mfpu=fpa                         \
+	-mfpu=auto                         \
 
 	#-nostdinc                         \
 	#-fno-builtin-puts                 \
@@ -71,7 +71,7 @@ AS      := $(CROSS_COMPILE)as
 ASFLAGS := $(COMMON_FLAGS)
 
 LD      := $(CROSS_COMPILE)ld
-LDFLAGS := -Wl,-Ttext,$(ADDRESS) -Wl,-T,link.script -Wl,-Map,autoexec.map -Wl,--gc-sections -e _start -lm -lgcc -lc
+LDFLAGS := -Wl,-Ttext,$(ADDRESS) -Wl,-T,link.script -Wl,-Map,autoexec.map -Wl,--gc-sections -e _start -lm -lgcc -lc -z muldefs
 
 OBJCOPY := $(CROSS_COMPILE)objcopy
 
@@ -129,12 +129,12 @@ $(PROJECT).BIN: $(PROJECT).arm.elf
 	@$(ECHO) -e $(BOLD)[OBJCOPY]:$(NORM) $@
 	$(OBJCOPY) -O binary $(PROJECT).arm.elf $(PROJECT).BIN
 
-$(PROJECT).arm.elf: $(OBJS) link.script
+$(PROJECT).arm.elf: $(OBJS)
 	@$(ECHO) -e $(BOLD)[LINK]:$(NORM) $@
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 %.o: %.c
-	@$(ECHO) -e $(BOLD)[C]:$(NORM) $<
+	@$(ECHO) -e $(CFLAGS) $(BOLD)[C]:$(NORM) $<
 	@$(CC) $(CFLAGS) -c $<
 
 %.o: %.S
