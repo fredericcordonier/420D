@@ -104,7 +104,7 @@ endif
 ifdef INSTALL_PATH
 	@install    AUTOEXEC.BIN  $(INSTALL_PATH)/
 	@install -D languages.ini $(INSTALL_PATH)/400PLUS
-	@umount $(INSTALL_PATH)
+#	@umount $(INSTALL_PATH)
 endif
 
 all: $(PROJECT).BIN languages.ini languages/new_lang.ini

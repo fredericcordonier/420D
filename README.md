@@ -65,12 +65,21 @@ Some of the most popular features of `400plus` are:
 
 ---
 
-## 🐳 Building with Docker (Podman)
+## 🐳 Building with Docker/Podman
 
-To build the project in a clean and reproducible environment, you need to install podman:
+To build the project in a clean and reproducible environment, you need to install podman, then:
 
-# Build the Docker image
-./docker/build.sh
+- make
+
+will build the docker image if necessary, then build the software in the container.
+
+- make install
+
+will copy the generated software and files to the INSTALL_PATH, defaulting to ./output
+
+- make clean
+
+will delete the intermediate build files (but not the docker image).
 
 # The firmware will be built using the toolchain inside the container
 
