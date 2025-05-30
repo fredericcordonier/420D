@@ -1,8 +1,39 @@
 #ifndef CAMERA_H_
 #define CAMERA_H_
 
-// from ML's compiler.h
-/** Compile time failure if a structure is not sized correctly */
+/**
+ * @file camera.h
+ * 
+ * @brief Contains definitions related to camera parameters (from camera memomry)
+ * 
+ *
+ * [9] Values for "lcd_brightness"
+ *     Brightness in range 1 to 7
+ * 
+ *
+ * [J] ISO encoding
+ * Value xxyy.yzzz means:
+ *    xx = 01 always
+ *   yyy = Base ISO: 001 => 100, 010 => 200, 011 => 400, ...
+ *   zzz = Int. ISO: 000 => BaseISO, 001 => BaseISO + 1/8EV, 010 => BaseISO + 2/8EV, ...
+ *
+ * [K] EV encoding
+ * Value xyyy.yzzz means:
+ *      x = Sign: 0 => + , 1 => - (use two's complement for y and z)
+ *   yyyy = Base value: 0000 => 0EV, 0001 => 1EV, ...
+ *    yyy = Int. value: 000 => BaseEV, 011 => BaseEV + 1/3EV, 100 => BaseEV + 1/2EV, 101 => BaseEv + 2/3EV [*]
+ *   [*]: Could this be like [J], so 011 => BaseEV + 3/8EV , 100 => BaseEV + 4/8EV, 101 => BaseEv + 5/8EV?
+ *      Could we have eight intermediate EV's, instead of three?
+ *
+ */
+
+/**
+ * @brief Check size of structure
+ * 
+ * Compile time failure if a structure is not sized correctly
+ * 
+ */
+
 #define SIZE_CHECK_STRUCT( struct_name, size ) \
 	static int __attribute__((unused)) \
 	__size_check_##struct_name[ \
@@ -142,6 +173,10 @@ SIZE_CHECK_STRUCT(dpr_data_t, 0x194);
 
 typedef struct dpr_data_t dpr_data_t;
 
+/**
+ * @brief DigiProp values (address defined in camera.S)
+ * 
+ */
 extern dpr_data_t DPData;
 extern lens_info_t LensID;
 
@@ -282,11 +317,28 @@ typedef enum {
 extern int shutter_lock;
 
 extern int permit_or_inhibit_release(int);
-extern int able_to_release(void); // checks the "is_release_permitted" and "BurstCounter", return 1 if we can shoot
+/**
+ * @brief checks the "is_release_permitted" and "BurstCounter", return 1 if we can shoot
+ * 
+ * @return int (bool value)
+ */
+extern int able_to_release(void);
 
+/**
+ * @brief Indicates if the selected mode is an elementary mode.
+ * 
+ */
 #define AE_IS_AUTO(ae)     (ae) >= AE_MODE_AUTO
+/**
+ * @brief Indicates if the selected mode is an creative mode.
+ * 
+ */
 #define AE_IS_CREATIVE(ae) (ae) <  AE_MODE_AUTO
 
+/**
+ * @brief Hard-coded value of 2s for the delayed automatic shutter
+ * 
+ */
 #define SELF_TIMER_MS 2000
 
 #endif

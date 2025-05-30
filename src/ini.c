@@ -1,9 +1,10 @@
-/* inih -- simple .INI file parser
+/**
+ * \file ini.c Simple .INI file parser
 
-inih is released under the New BSD license (see LICENSE.txt). Go to the project
-home page for more info:
+    inih is released under the New BSD license (see LICENSE.txt). Go to the project
+    home page for more info:
 
-http://code.google.com/p/inih/
+    http://code.google.com/p/inih/
 */
 
 #include <vxworks.h>
@@ -95,8 +96,9 @@ int ini_parse_file(int file, const char* wanted_section, ini_line_handler handle
 					else
 						section_found = 0;
 				}
-				if (shandler && !shandler(user, lineno, section) && !error)
+				if (shandler && !shandler(user, lineno, section) && !error) {
 					error = lineno;
+				}
 			} else if (!error) {
 				/* No ']' found on section line */
 				error = lineno;
@@ -122,6 +124,7 @@ int ini_parse_file(int file, const char* wanted_section, ini_line_handler handle
 					error = lineno;
 			} else if (!error) {
 				/* No '=' or ':' found on name[=:]value line */
+				debug_log("ERROR: No '=' or ':' found on name value line");
 				error = lineno;
 			}
 		}

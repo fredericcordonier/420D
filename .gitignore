@@ -2,7 +2,7 @@ src/AUTOEXEC.*
 src/autoexec.map
 src/languages.ini
 src/..d
-./.vscode
+.vscode
 src/.*
 src/*.o
 .DS_Store

@@ -1,8 +1,9 @@
 #ifndef SETTINGS_H_
 #define SETTINGS_H_
 
-#define SETTINGS_FILENAME "SETTINGS"
-#define SETTINGS_VERSION  0x4A
+#define SETTINGS_FILENAME "SETTINGS.INI"
+
+#define SETTINGS_VERSION   0x40
 
 #define CCT_COUNT 16
 
@@ -98,73 +99,13 @@ typedef enum {
 	QEXP_WEIGHT_LAST  = QEXP_WEIGHT_COUNT - 1
 } qexp_weight_t;
 
+#define PARAM_INT_DEF(s, f)   int f;
+#define PARAM_INT_ARRAY_DEF(s, f, i)   int f[i];
 typedef struct {
-	int use_dpad;
-	int autoiso_enable;
-	int autoiso_miniso;
-	int autoiso_maxiso;
-	int autoiso_mintv;
-	int autoiso_maxav;
-	int autoiso_relaxed;
-	int eaeb_delay;
-	int eaeb_frames;
-	int eaeb_ev;
-	int eaeb_tv_min;
-	int eaeb_tv_max;
-	int eaeb_direction;
-	int efl_aeb_delay;
-	int efl_aeb_frames;
-	int efl_aeb_ev;
-	int efl_aeb_direction;
-	int apt_aeb_delay;
-	int apt_aeb_frames;
-	int apt_aeb_ev;
-	int apt_aeb_direction;
-	int iso_aeb_delay;
-	int iso_aeb[5];
-	int interval_delay;
-	int interval_time;
-	int interval_action;
-	int interval_shots;
-	int bramp_delay;
-	int bramp_time;
-	int bramp_shots;
-	int bramp_exp;
-	int bramp_ramp_t;
-	int bramp_ramp_s;
-	int bramp_ramp_exp;
-	int bramp_ramp_time;
-	int wave_delay;
-	int wave_action;
-	int wave_repeat;
-	int wave_instant;
-	int lexp_delay;
-	int lexp_time;
-	int remote_delay;
-	int timer_timeout;
-	int timer_action;
-	int keep_power_on;
-	int review_off;
-	int script_lcd;
-	int script_indicator;
-	int debug_on_poweron;
-	int logfile_mode;
-	int remote_enable;
-	int developers_menu;
-	int shortcut_jump;
-	int shortcut_trash;
-	int button_disp;
-	int language;
-	int digital_iso_step;
-	int menu_wrap;
-	int menu_navmain;
-	int menu_entermain;
-	int menu_autosave;
-	int qexp_mintv;
-	int qexp_weight;
-	int persist_aeb;
-	int invert_olc;
+	#include "settings.def"
 } settings_t;
+#undef PARAM_INT_DEF
+#undef PARAM_INT_ARRAY_DEF
 
 extern settings_t settings;
 

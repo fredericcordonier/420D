@@ -1,0 +1,4 @@
+1. Switch from 400plus to 420D
+2. Change saving of settings (.ini file)
+2.1. Menu order (if kept)
+3. Changed the implementation of custom color temperatures

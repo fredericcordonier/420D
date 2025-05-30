@@ -1,7 +1,7 @@
 # 420D – Firmware Add-on for Canon EOS 400D
 
 **420D** is an unofficial fork of the [400plus](https://github.com/400plus/400plus) firmware add-on, originally developed for the Canon EOS 400D (also known as the Digital Rebel XTi).
-This version celebrates the **20th anniversary** of the 400D by building upon the original project with updates, improvements, and a refreshed focus.
+This version targets the **20th anniversary** of the 400D by building upon the original project with updates, improvements, and a refreshed focus.
 
 ---
 
@@ -107,4 +107,4 @@ See [LICENSE](./LICENSE) for full terms.
 ## 📸 About
 
 - Project started in 2025 by Frederic Cordonier
-- A tribute to the Canon EOS 400D – 2005–2025 ❤️
+- A tribute to the Canon EOS 400D – August 2006–2025 ❤️
