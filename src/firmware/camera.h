@@ -3,13 +3,13 @@
 
 /**
  * @file camera.h
- * 
+ *
  * @brief Contains definitions related to camera parameters (from camera memomry)
- * 
+ *
  *
  * [9] Values for "lcd_brightness"
  *     Brightness in range 1 to 7
- * 
+ *
  *
  * [J] ISO encoding
  * Value xxyy.yzzz means:
@@ -31,7 +31,7 @@
  * @brief Check size of structure
  * 
  * Compile time failure if a structure is not sized correctly
- * 
+ *
  */
 
 #define SIZE_CHECK_STRUCT( struct_name, size ) \
@@ -175,7 +175,7 @@ typedef struct dpr_data_t dpr_data_t;
 
 /**
  * @brief DigiProp values (address defined in camera.S)
- * 
+ *
  */
 extern dpr_data_t DPData;
 extern lens_info_t LensID;
