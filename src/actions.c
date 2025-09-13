@@ -1,3 +1,7 @@
+/**
+ * @file actions.c
+ * @brief Implementation of various actions on camera settings.
+ */
 #include <vxworks.h>
 #include <dirent.h>
 #include <stdio.h>
@@ -22,6 +26,10 @@
 
 #include "actions.h"
 
+/**
+ * @brief Set the spot metering 
+ * 
+ */
 void set_metering_spot() {
 	press_button(IC_BUTTON_SET);
 	send_to_intercom(IC_SET_METERING, METERING_MODE_SPOT);
@@ -30,6 +38,12 @@ void set_metering_spot() {
 	beep();
 }
 
+/**
+ * @brief Select Color Temperature white balance (specified in menu)
+ * 
+ * First press Set button to go out of WB selection window.
+ * Then send WB mode to intercom.
+ */
 void set_whitebalance_colortemp() {
 	press_button(IC_BUTTON_SET);
 	send_to_intercom(IC_SET_WB, WB_MODE_COLORTEMP);
@@ -38,6 +52,10 @@ void set_whitebalance_colortemp() {
 	beep();
 }
 
+/**
+ * @brief Management of settings IR remote control.
+ * 
+ */
 void drivemode_set() {
 	if (settings.remote_enable) {
 		debug_log("Re-setting IR remote => enable");
@@ -50,6 +68,12 @@ void drivemode_set() {
 	}
 }
 
+/**
+ * @brief Toggle image format JPG -> RAW -> JPG+RAW.
+ * 
+ * This is also valid in elementary modes.
+ * 
+ */
 void toggle_img_format() {
 	static int first_call = TRUE;
 
@@ -73,15 +97,27 @@ void toggle_img_format() {
 	first_call = FALSE;
 }
 
+/**
+ * @brief Restore the ISO value previously memorized.
+ * 
+ */
 void restore_iso() {
 	send_to_intercom(IC_SET_ISO, EV_TRUNC(DPData.iso));
 }
 
+/**
+ * @brief Restore the white balance previously memorized.
+ * 
+ */
 void restore_wb() {
 	if (DPData.wb == WB_MODE_COLORTEMP)
 		send_to_intercom(IC_SET_WB, WB_MODE_AUTO);
 }
 
+/**
+ * @brief Restore metering mode previously memorized.
+ * 
+ */
 void restore_metering() {
 	if (DPData.metering == METERING_MODE_SPOT)
 		send_to_intercom(IC_SET_METERING, METERING_MODE_EVAL);

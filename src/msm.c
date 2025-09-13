@@ -1,5 +1,14 @@
 #include <vxworks.h>
+/**
+ * @file msm.c
+ * @brief Management of multi-spot measure
+ * 
+ */
 
+/**
+ * @defgroup msm Multi-spot measure
+ * @brief Allow multi-spot measure
+*/
 #include "firmware/camera.h"
 
 #include "main.h"
@@ -18,6 +27,10 @@ av_t msm_av_return; // Multi-spot metering: Av value in M mode to return
 
 void msm_reset(void);
 
+/**
+ * @brief Reset multi-spot metering.
+ * 
+ */
 void msm_reset(void) {
 	status.msm_count  = 0;
 	status.msm_tv     = EV_ZERO;
@@ -25,6 +38,13 @@ void msm_reset(void) {
 	status.msm_active = FALSE;
 }
 
+/**
+ * @brief Register a measure value for multi-spot metering.
+ * 
+ * If the button is kept pushed during MSM_TIMEOUT seconds, the last registered value
+ * is removed.
+ * 
+ */
 void msm_register(void) {
 	static int  last_flag; // Last value registered can be deleted
 	static tv_t last_tv;   // Last Tv value registered
@@ -71,10 +91,18 @@ void msm_register(void) {
 	last_av   = status.measured_av;
 }
 
+/**
+ * @brief Release the multi-spot metering.
+ * 
+ */
 void msm_release(void) {
 	send_to_intercom(IC_SET_BURST_COUNTER, 9);
 }
 
+/**
+ * @brief Start the multi-spot metering.
+ * 
+ */
 void msm_start(void) {
 	if (status.msm_count > 0) {
 		status.msm_active = TRUE;
@@ -98,6 +126,10 @@ void msm_start(void) {
 	}
 }
 
+/**
+ * @brief Stop the multi-spot metering and set back the tv, av and ae.
+ * 
+ */
 void msm_stop(void) {
 	wait_for_camera();
 	SleepTask(RELEASE_WAIT);

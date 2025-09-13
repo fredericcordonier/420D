@@ -1,3 +1,7 @@
+/** 
+ * \file menu_info.c
+ * \brief Implementation of menu INFO.
+ */
 #include <vxworks.h>
 
 #include "macros.h"
@@ -11,7 +15,7 @@
 
 #include "menu_info.h"
 
-menuitem_t menupage_info_items[] = {
+static menuitem_t menupage_info_items[] = {
 	MENUITEM_INFO (MENUPAGE_INFO_VERSION,  LP_WORD(L_I_VERSION),        VERSION),
 	MENUITEM_PARAM(MENUPAGE_INFO_RELEASE,  LP_WORD(L_I_RELEASE_COUNT), &FLAG_RELEASE_COUNT),
 	MENUITEM_PARAM(MENUPAGE_INFO_BODYID,   LP_WORD(L_I_BODY_ID),       &FLAG_BODY_ID),

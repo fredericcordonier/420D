@@ -1,3 +1,7 @@
+/**
+ * \file font.h
+ * \brief Header file for font management.
+ */
 #ifndef _font_h_
 #define _font_h_
 

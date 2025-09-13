@@ -1,5 +1,61 @@
 #include <vxworks.h>
 
+/**
+ * @file af_patterns.c
+ * @brief Management of AF patterns.
+ * 
+ */
+
+/**
+ * @defgroup af_pattern Management of AF patterns.
+ * @brief Management of AF patterns.
+ * 
+ * 400plus offers a range of additional AF-Pattern selections, instead of just the two 
+ * (Manual AF point selection, and Automatic AF point selection) which are included standard 
+ * in the camera. These additional AF-Pattern selections provide a wide range of multi-point 
+ * selection patterns, using different combinations of the 9 focus points, for some creative 
+ * AF capabilities.
+ * 
+ * To use the additional AF-Pattern selections during shooting:
+ * - press the ZOOM IN button to enter the standard "AF-Point Selection" dialog
+ * - press the ZOOM IN button again to enter the new "AF-Pattern Selection" dialog
+ * - use the UP, DOWN, LEFT, RIGHT, and SET buttons there to move around the different AF-Patterns 
+ *   available. 
+ * - half-press the shutter-release button to exit the dialog.
+ * 
+ * The following patterns are available:
+ * 
+ * 1. Selected with RIGHT / LEFT buttons
+ * ~~~~
+ * |--------------|--------------|--------------|--------------|--------------|--------------|--------------|
+ * |      -       |      -       |      x       |      x       |      x       |      -       |      -       |
+ * |    x   -     |    x   -     |    x   -     |    -   -     |    -   x     |    -   x     |    -   x     |
+ * |  x   -   -   |  x   x   -   |  x   x   -   |  -   x   -   |  -   x   x   |  -   x   x   |  -   -   x   |
+ * |    x   -     |    x   -     |    x   -     |    -   -     |    -   x     |    -   x     |    -   x     |
+ * |      -       |      -       |      x       |      x       |      x       |      -       |      -       |
+ * |--------------|--------------|--------------|--------------|--------------|--------------|--------------|
+ * ~~~~
+ * 2. Selected with DOWN / UP buttons
+ * ~~~~
+ * |--------------|--------------|--------------|--------------|--------------|--------------|--------------|
+ * |      x       |      x       |      x       |      -       |      -       |      -       |      -       |
+ * |    x   x     |    x   x     |    x   x     |    -   -     |    -   -     |    -   -     |    -   -     |
+ * |  -   -   -   |  -   x   -   |  x   x   x   |  x   x   x   |  x   x   x   |  -   x   -   |  -   -   -   |
+ * |    -   -     |    -   -     |    -   -     |    -   -     |    x   x     |    x   x     |    x   x     |
+ * |      -       |      -       |      -       |      -       |      x       |      x       |      x       |
+ * |--------------|--------------|--------------|--------------|--------------|--------------|--------------|
+ * ~~~~
+ * 3. Selected with SET button (twice)
+ * ~~~~
+ * |--------------|
+ * |      -       |
+ * |    x   x     |
+ * |  -   x   -   |
+ * |    x   x     |
+ * |      -       |
+ * |--------------|
+ * ~~~~
+ */
 #include "firmware.h"
 #include "firmware/camera.h"
 
@@ -11,7 +67,15 @@
 
 #include "af_patterns.h"
 
+/**
+ * @brief List of AF patterns
+ * @ingroup af_patterns
+ * 
+ * AF patterns are bitsets, 1 bit per point. The structures indicate the bitset, as well as the
+ * following one in each "direction" (each pressed key).
+ */
 pattern_map_item_t pattern_map[] = {
+     /*  pattern                    next center        next top                   next bottom                next left                 next right            */
 		{AF_PATTERN_CENTER,         AF_PATTERN_SQUARE, AF_PATTERN_TOPHALF,        AF_PATTERN_BOTTOMHALF,     AF_PATTERN_LEFTHALF,      AF_PATTERN_RIGHTHALF},
 		{AF_PATTERN_SQUARE,         AF_PATTERN_HLINE,  AF_PATTERN_TOPHALF,        AF_PATTERN_BOTTOMHALF,     AF_PATTERN_LEFTHALF,      AF_PATTERN_RIGHTHALF},
 
@@ -50,6 +114,11 @@ pattern_map_item_t pattern_map[] = {
 
 int afp_transformer (int pattern, direction_t direction);
 
+/**
+ * @brief Enter the AFP selection
+ * @ingroup af_pattern
+ * 
+ */
 void afp_enter() {
 	beep();
 }
@@ -74,6 +143,14 @@ void afp_right () {
 	send_to_intercom(IC_SET_AF_POINT, afp_transformer(DPData.af_point, DIRECTION_RIGHT));
 }
 
+/**
+ * @brief Sets the next pattern according to direction
+ * @ingroup af_pattern
+ * 
+ * @param pattern Current pattern value
+ * @param direction Direction to select next pattern
+ * @return int The next pattern.
+ */
 int afp_transformer (int pattern, direction_t direction) {
 	pattern_map_item_t *item;
 

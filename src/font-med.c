@@ -1,3 +1,7 @@
+/**
+ * \file font_med.c
+ * \brief Bitmaps for medium font.
+ */
 #ifdef USE_FONT_MED
 
 #include "font.h"

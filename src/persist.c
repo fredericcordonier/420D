@@ -10,11 +10,27 @@
 
 #include "persist.h"
 
+/**
+ * \file persist.c
+ * \brief Management of persistence for some parameters (Ev compensation and last script run)
+ * 
+ */
+
+/** 
+ * \brief Persisted parameters
+ * 
+ * Persisted are EV compensation and last run script
+*/
 persist_t persist = {
 	ev_comp     : EC_ZERO,
 	last_script : SCRIPT_NONE,
 };
 
+/**
+ * @brief Read persisted parameters from file.
+ * 
+ * @return boolean TRUE if parameters could be retrieved, FALSE otherwise
+ */
 int persist_read(void) {
 	int result  = FALSE;
 	int file    = -1;
@@ -45,6 +61,10 @@ end:
 	return result;
 }
 
+/**
+ * @brief Write persisted parameters
+ * 
+ */
 void persist_write(void) {
 	const int version = PERSIST_VERSION;
 	int file = -1;

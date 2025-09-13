@@ -1,3 +1,8 @@
+/**
+ * @file exposure.c
+ *
+ * @brief Functions related to exposure computations.
+ */
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -9,6 +14,9 @@
 
 #include "exposure.h"
 
+/**
+ * Strings displaying Aperture values.
+ */
 static char *av_strings[][4] = {
 	{"1.0", "1.1", "1.2", "1.3"},
 	{"1.4", "1.5", "1.7", "1.8"},
@@ -25,6 +33,9 @@ static char *av_strings[][4] = {
 	{ "64",   "",     "",    ""},
 };
 
+/**
+ * Strings displaying Time values.
+ */
 static char *tv_strings[][4] = {
 	{  "30\"",   "25\"",   "20\"",   "20\""},
 	{  "15\"",   "13\"",   "10\"",   "10\""},
@@ -119,6 +130,12 @@ ec_t ec_sub(ec_t ying, ec_t yang) {
 	return ec_add(ying, -yang);
 }
 
+/**
+ * @brief Print Exposure compensation values.
+ *
+ * @param dest <out> Pointer to allocated buffer to contain returned string
+ * @param ec   <in>  Exposure compensation value.
+ */
 void ec_print(char *dest, ec_t ec) {
 	char dsp_sgn = ' ';
 
@@ -174,6 +191,12 @@ av_t av_dec(av_t av) {
 	return av_sub(av, EV_STEP);
 }
 
+/**
+ * @brief Print aperture values.
+ *
+ * @param dest <out> Pointer to allocated buffer to contain the returned string.
+ * @param av   <in>  Aperture value.
+ */
 void av_print(char *dest, av_t av) {
 	int base = EV_VAL(av);
 	int frac = 0;
@@ -236,6 +259,12 @@ tv_t bulb_prev(tv_t tv) {
 	return MAX(tv, BULB_MIN);
 }
 
+/**
+ * @brief Print Time values.
+ *
+ * @param dest <out> Pointer to buffer to contain the returned string.
+ * @param tv   <in>  Time value.
+ */
 void tv_print(char *dest, tv_t tv) {
 	int base = EV_VAL(tv);
 	int frac = 0;
@@ -264,6 +293,12 @@ void tv_print(char *dest, tv_t tv) {
 	sprintf(dest, "%s", tv_strings[base - 2][frac]);
 }
 
+/**
+ * @brief Print BULB time value.
+ *
+ * @param dest <out> Pointer to allocated buffer to contain returned string.
+ * @param tv   <in>  Time value.
+ */
 void bulb_print(char *dest, tv_t tv) {
 	if (tv < BULB_VAL)
 		sprintf(dest, "%2i'", BULB_MN(tv));
@@ -304,12 +339,15 @@ iso_t iso_dec(iso_t iso) {
 }
 
 /**
+ * @brief Print ISO values.
+ *
  * For intermediate ISOs, we are doing a linear approximation
  * between two base ISOs; as pointed out by Sergei, we should
  * use an exponential calculation, but I decided to keep this
  * version, as the correct algorithm yields _uglier_ numbers.
+ * @param dest <out> Pointer to allocated buffer to contain the returned string.
+ * @param code <in>  ISO code.
  */
-
 void iso_print(char *dest, iso_t code) {
 	int iso;
 

@@ -1,3 +1,7 @@
+/**
+ * \file languages.c
+ * \brief Management of languages
+ */
 #include <vxworks.h>
 #include <string.h>
 
@@ -119,6 +123,7 @@ void lang_pack_config() {
 		int res;
 
 		stoupper(lang); // convert to upper case
+		debug_log("camera language: %s", lang);
 		lang_pack_keys_loaded=0;
 
 		if ((res = ini_parse(MKPATH_NEW(LANGUAGES_FILENAME), lang, lang_pack_loader, NULL, (void*)lang)) == -1)

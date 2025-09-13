@@ -13,6 +13,18 @@
 
 #include "qexp.h"
 
+/**
+ * @defgroup qexp Quick Exposure in M mode
+ * @brief Rapidly set Av and Tv to match the measured exposure.
+ * 
+ * In M mode, 400D displays in viewfinder the difference between measured value and selected Ev. The
+ * user can then change the selection to obtain the desired difference. If the difference is very large,
+ * it may be long to approach the  desired value.
+ * 
+ * When looking through the viewfinder, 400Plus allows to automatically set Tv and Av to match the measured
+ * value by pressing UP button.
+ */
+
 void qexp_enable(void) {
 	status.vf_status = VF_STATUS_QEXP;
 }

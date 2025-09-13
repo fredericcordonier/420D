@@ -1,3 +1,7 @@
+/**
+ * \file fexp.h
+ * \brief Header for fexp.c
+ */
 #ifndef FEXP_H_
 #define FEXP_H_
 

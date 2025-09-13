@@ -1,3 +1,7 @@
+/**
+ * \file display.h
+ * \brief Header for display.c
+ */
 #ifndef DISPLAY_H_
 #define DISPLAY_H_
 

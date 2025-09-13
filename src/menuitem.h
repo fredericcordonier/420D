@@ -76,167 +76,167 @@ struct menuitem_t {
 };
 
 #define MENUITEM_EC(_ID_, _NAME_, _VALUE_, _RO_, _EXT_, _CDZ_, _ZMO_, _CHANGE_) { \
-	id       : _ID_, \
-	name     : _NAME_, \
-	readonly : _RO_, \
-	parm     : { menuitem_ec : { \
-		value          : _VALUE_, \
-		extended       : _EXT_, \
-		can_do_zero    : _CDZ_, \
-		zero_means_off : _ZMO_, \
+	.id       = _ID_, \
+	.name     = _NAME_, \
+	.readonly = _RO_, \
+	.parm     = { .menuitem_ec = { \
+		.value          = _VALUE_, \
+		.extended       = _EXT_, \
+		.can_do_zero    = _CDZ_, \
+		.zero_means_off = _ZMO_, \
 	}}, \
-	display  : menuitem_display_ec, \
-	inc      : menuitem_inc_ec, \
-	dec      : menuitem_dec_ec, \
-	change   : _CHANGE_ \
+	.display  = menuitem_display_ec, \
+	.inc      = menuitem_inc_ec, \
+	.dec      = menuitem_dec_ec, \
+	.change   = _CHANGE_ \
 }
 
 #define MENUITEM_AV(_ID_, _NAME_, _VALUE_, _CHANGE_) { \
-	id      : _ID_, \
-	name    : _NAME_, \
-	parm    : { menuitem_av : { \
-			value : _VALUE_, \
+	.id      = _ID_, \
+	.name    = _NAME_, \
+	.parm    = { .menuitem_av = { \
+			.value = _VALUE_, \
 	}}, \
-	display : menuitem_display_av, \
-	inc     : menuitem_inc_av, \
-	dec     : menuitem_dec_av, \
-	change  : _CHANGE_ \
+	.display = menuitem_display_av, \
+	.inc     = menuitem_inc_av, \
+	.dec     = menuitem_dec_av, \
+	.change  = _CHANGE_ \
 }
 
 #define MENUITEM_TV(_ID_, _NAME_, _VALUE_, _CHANGE_) { \
-	id      : _ID_, \
-	name    : _NAME_, \
-	parm    : { menuitem_tv : { \
-		value : _VALUE_, \
+	.id      = _ID_, \
+	.name    = _NAME_, \
+	.parm    = { .menuitem_tv = { \
+		.value = _VALUE_, \
 	}}, \
-	display : menuitem_display_tv, \
-	inc     : menuitem_inc_tv, \
-	dec     : menuitem_dec_tv, \
-	change  : _CHANGE_ \
+	.display = menuitem_display_tv, \
+	.inc     = menuitem_inc_tv, \
+	.dec     = menuitem_dec_tv, \
+	.change  = _CHANGE_ \
 }
 
 #define MENUITEM_BULB(_ID_, _NAME_, _VALUE_, _CHANGE_) { \
-	id      : _ID_, \
-	name    : _NAME_, \
-	parm    : { menuitem_tv : { \
-		value : _VALUE_, \
+	.id      = _ID_, \
+	.name    = _NAME_, \
+	.parm    = { .menuitem_tv = { \
+		.value = _VALUE_, \
 	}}, \
-	display : menuitem_display_bulb,  \
-	inc     : menuitem_inc_bulb, \
-	dec     : menuitem_dec_bulb, \
-	change  : _CHANGE_ \
+	.display = menuitem_display_bulb,  \
+	.inc     = menuitem_inc_bulb, \
+	.dec     = menuitem_dec_bulb, \
+	.change  = _CHANGE_ \
 }
 
 #define MENUITEM_ISO(_ID_, _NAME_, _VALUE_, _FULL_, _CHANGE_)  { \
-	id      : _ID_, \
-	name    : _NAME_, \
-	parm    : { menuitem_iso : { \
-		value : _VALUE_, \
-		full  : _FULL_, \
+	.id      = _ID_, \
+	.name    = _NAME_, \
+	.parm    = { .menuitem_iso = { \
+		.value = _VALUE_, \
+		.full  = _FULL_, \
 	}}, \
-	display : menuitem_display_iso, \
-	inc     : menuitem_inc_iso, \
-	dec     : menuitem_dec_iso, \
-	change  : _CHANGE_ \
+	.display = menuitem_display_iso, \
+	.inc     = menuitem_inc_iso, \
+	.dec     = menuitem_dec_iso, \
+	.change  = _CHANGE_ \
 }
 
 #define MENUITEM_INT(_ID_, _NAME_, _VALUE_, _RO_, _MIN_, _MAX_, _SMALL_, _BIG_, _LOG_, _ZMU_, _FORMAT_, _CHANGE_, _ACTION_) { \
-	id       : _ID_, \
-	name     : _NAME_, \
-	readonly : _RO_, \
-	parm     : {menuitem_int : { \
-		value                : _VALUE_, \
-		min                  : _MIN_, \
-		max                  : _MAX_, \
-		small_step           : _SMALL_, \
-		big_step             : _BIG_, \
-		base_log             : _LOG_, \
-		zero_means_unlimited : _ZMU_, \
-		format               : _FORMAT_, \
+	.id       = _ID_, \
+	.name     = _NAME_, \
+	.readonly = _RO_, \
+	.parm     = {.menuitem_int = { \
+		.value                = _VALUE_, \
+		.min                  = _MIN_, \
+		.max                  = _MAX_, \
+		.small_step           = _SMALL_, \
+		.big_step             = _BIG_, \
+		.base_log             = _LOG_, \
+		.zero_means_unlimited = _ZMU_, \
+		.format               = _FORMAT_, \
 	}}, \
-	display : menuitem_display_int, \
-	inc     : menuitem_inc_int, \
-	dec     : menuitem_dec_int, \
-	change  : _CHANGE_, \
-	action  : _ACTION_ \
+	.display = menuitem_display_int, \
+	.inc     = menuitem_inc_int, \
+	.dec     = menuitem_dec_int, \
+	.change  = _CHANGE_, \
+	.action  = _ACTION_ \
 }
 
 #define MENUITEM_TIME(_ID_, _NAME_, _VALUE_, _RO_, _MIN_, _MAX_, _SMALL_, _BIG_, _LOG_, _CHANGE_) { \
-	id       : _ID_, \
-	name     : _NAME_, \
-	readonly : _RO_, \
-	parm     : {menuitem_int : { \
-		value                : _VALUE_, \
-		min                  : _MIN_, \
-		max                  : _MAX_, \
-		small_step           : _SMALL_, \
-		big_step             : _BIG_, \
-		base_log             : _LOG_, \
+	.id       = _ID_, \
+	.name     = _NAME_, \
+	.readonly = _RO_, \
+	.parm     = {.menuitem_int = { \
+		.value                = _VALUE_, \
+		.min                  = _MIN_, \
+		.max                  = _MAX_, \
+		.small_step           = _SMALL_, \
+		.big_step             = _BIG_, \
+		.base_log             = _LOG_, \
 	}}, \
-	display : menuitem_display_time, \
-	inc     : menuitem_inc_int, \
-	dec     : menuitem_dec_int, \
-	change  : _CHANGE_ \
+	.display = menuitem_display_time, \
+	.inc     = menuitem_inc_int, \
+	.dec     = menuitem_dec_int, \
+	.change  = _CHANGE_ \
 }
 
 #define MENUITEM_FLENGTH(_ID_, _NAME_, _VALUE_, _CHANGE_) { \
-	id       : _ID_, \
-	name     : _NAME_, \
-	parm     : {menuitem_int : { \
-		value                : _VALUE_, \
-		format               : "%i", \
+	.id       = _ID_, \
+	.name     = _NAME_, \
+	.parm     = {.menuitem_int = { \
+		.value                = _VALUE_, \
+		.format               = "%i", \
 	}}, \
-	display : menuitem_display_int, \
-	inc     : menuitem_inc_flen, \
-	dec     : menuitem_dec_flen, \
-	change  : _CHANGE_ \
+	.display = menuitem_display_int, \
+	.inc     = menuitem_inc_flen, \
+	.dec     = menuitem_dec_flen, \
+	.change  = _CHANGE_ \
 }
 
 #define MENUITEM_ENUM(_ID_, _NAME_, _VALUE_, _CYCLE_, _TEXTS_, _CHANGE_)  { \
-	id    : _ID_, \
-	name  : _NAME_, \
-	parm  : { menuitem_enum : { \
-		value : _VALUE_, \
-		cycle : _CYCLE_, \
-		list  : _TEXTS_, \
+	.id    = _ID_, \
+	.name  = _NAME_, \
+	.parm  = { .menuitem_enum = { \
+		.value = _VALUE_, \
+		.cycle = _CYCLE_, \
+		.list  = _TEXTS_, \
 	}}, \
-	display : menuitem_display_enum, \
-	inc     : menuitem_inc_enum, \
-	dec     : menuitem_dec_enum, \
-	change  : _CHANGE_ \
+	.display = menuitem_display_enum, \
+	.inc     = menuitem_inc_enum, \
+	.dec     = menuitem_dec_enum, \
+	.change  = _CHANGE_ \
 }
 
 #define MENUITEM_LAUNCH(_ID_, _NAME_, _ACTION_)  { \
-	id      : _ID_, \
-	name    : _NAME_, \
-	display : menuitem_display,  \
-	action  : _ACTION_, \
+	.id      = _ID_, \
+	.name    = _NAME_, \
+	.display = menuitem_display,  \
+	.action  = _ACTION_, \
 }
 
 #define MENUITEM_SUBMENU(_ID_, _NAME_, _PAGE_, _ACTION_) { \
-	id    : _ID_, \
-	name  : _NAME_, \
-	parm  : { menuitem_submenu : { \
-		page : _PAGE_, \
+	.id    = _ID_, \
+	.name  = _NAME_, \
+	.parm  = { .menuitem_submenu = { \
+		.page = _PAGE_, \
 	}}, \
-	display : menuitem_display_sub, \
-	inc     : menuitem_inc_sub, \
-	action  : _ACTION_, \
+	.display = menuitem_display_sub, \
+	.inc     = menuitem_inc_sub, \
+	.action  = _ACTION_, \
 }
 
 #define MENUITEM_PAGE(_ID_, _NAME_) { \
-	id      : _ID_, \
-	name    : _NAME_, \
-	display : menuitem_display, \
+	.id      = _ID_, \
+	.name    = _NAME_, \
+	.display = menuitem_display, \
 }
 
 #define MENUITEM_INFO(_ID_, _NAME_, _VALUE_) { \
-	id    : _ID_, \
-	name  : _NAME_, \
-	parm  : { menuitem_info : { \
-		value : _VALUE_, \
+	.id    = _ID_, \
+	.name  = _NAME_, \
+	.parm  = { .menuitem_info = { \
+		.value = _VALUE_, \
 	}}, \
-	display : menuitem_display_info, \
+	.display = menuitem_display_info, \
 }
 
 #define MENUITEM_EVCOMP(_ID_, _NAME_, _VALUE_, _ON_CHANGE_) MENUITEM_EC(_ID_, _NAME_, _VALUE_, FALSE, FALSE, TRUE,  FALSE, _ON_CHANGE_)

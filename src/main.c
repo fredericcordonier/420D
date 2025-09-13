@@ -1,3 +1,7 @@
+/** \file main.c
+ * 
+ * \brief This file contains the main entry plus initiatization stuff.
+ */
 #include <vxworks.h>
 #include <dirent.h>
 
@@ -18,10 +22,14 @@
 
 #include "main.h"
 
-// Main message queue
+/**
+ * Main message queue
+ */
 int *action_queue;
 
-// Global status
+/**
+ * Global status
+ */
 status_t status = {
 	button_down       : BUTTON_NONE,
 	script_running    : FALSE,
@@ -57,7 +65,15 @@ void action_dispatcher(void);
 
 int check_create_folder(void);
 
-// 420D entry point
+/** 
+ * \brief 400plus entry point.
+ * 
+ * Sequence of operations (how does it work).
+ * - First check if Trash button is pressed, otherwise switch blue LED on.
+ * - Relocate the hash (avoid firmware heap).
+ * - Install hacks (should be called hooks)
+ * - Run original firmware.
+ */
 int main(void) {
 	// If TRASH button is pressed, do not initialize 420D at all
 	if (BTN_TRASH != BTN_PRESSED) {
@@ -78,7 +94,10 @@ int main(void) {
 	return 0;
 }
 
-// 0xAF: check the devinfo for more details on why this routine is needed
+/** 
+ * \brief 0xAF: check the devinfo for more details on why this routine is needed
+ * 
+ */
 void hack_relocate(void) {
 	int i;
 
@@ -90,6 +109,15 @@ void hack_relocate(void) {
 	}
 }
 
+/**
+ * \brief Install the hacks
+ * 
+ * After flushing and locking the caches, install 400plus own hooks.
+ * 
+ * - hack_dmProcInit
+ * - hack_init_intercom_data
+ * - hack_StartConsole
+ */
 void cache_hacks(void) {
 	flush_caches();
 
@@ -130,6 +158,11 @@ void disable_cache_clearing(void) {
 	cache_fake(0xFFB373EC, ASM_NOP, TYPE_ICACHE);
 }
 
+/**
+ * \brief Hook for dmProcInit.
+ * 
+ * First call the FW dmProcInit, then our own init function.
+ */
 void hack_dmProcInit(void) {
 	dmProcInit();
 
@@ -158,7 +191,14 @@ void hack_StartConsole(void) {
 	StartConsole();
 }
 
-// this is ran in the beginning of the OFW's task init process
+/**
+ * \brief This is ran in the beginning of the OFW's task init process
+ * 
+ * 1. create 400plus message queue
+ * 2. create action_dispatcher "task"
+ * 3. hook some labels in dialogs
+ * 4. hook dialog redraw
+ */
 void hack_pre_init_hook(void) {
 	action_queue = (int*)CreateMessageQueue("action_queue", 0x40);
 	CreateTask("Action Dispatcher", 25, 0x2000, action_dispatcher, 0);
@@ -172,6 +212,9 @@ void hack_pre_init_hook(void) {
 }
 
 // we can run extra code at the end of the OFW's task init
+/**
+ * \brief This function installs a button handler.
+ */
 void hack_post_init_hook(void) {
 	// Inject our hacked_TransferScreen
 	//TransferScreen = hack_TransferScreen;
@@ -195,6 +238,9 @@ void hack_post_init_hook(void) {
 	//cache_fake(0xFF9DDB24, ASM_MOV_R0_INT(0), TYPE_ICACHE); // prevent ui lock
 }
 
+/**
+ * \brief Handler for buttons "Jump" and "Trash"
+ */
 void hack_jump_trash_events(int r0, int r1, int button) {
 	switch (button) {
 	case 4: // JUMP_UP

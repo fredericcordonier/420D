@@ -1,3 +1,8 @@
+/**
+ * @file button.c
+ * @brief Management of buttons in all situations.
+ * 
+ */
 #include <vxworks.h>
 
 #include "firmware.h"
@@ -64,6 +69,7 @@ reaction_t
 	reaction_420D_wheel_right = {TRUE,  menu_event_next},
 	reaction_420D_zoom_out    = {TRUE,  menu_event_out},
 	reaction_420D_zoom_in     = {TRUE,  menu_event_in},
+	/** AV button has push and release actions (diplay/select main menu items) */
 	reaction_420D_av          = {TRUE,  menu_event_av, menu_event_av_up},
 	reaction_420D_set         = {TRUE,  menu_event_set},
 	reaction_420D_up          = {TRUE,  menu_event_up},
@@ -72,6 +78,10 @@ reaction_t
 	reaction_420D_left        = {TRUE,  menu_event_left}
 ;
 
+/**
+ * @brief Button actions in 400plus menu.
+ * 
+ */
 reaction_t *button_actions_420D[BUTTON_COUNT] = {
 	[BUTTON_DP]          = &reaction_420D_dp,
 	[BUTTON_DISP]        = &reaction_420D_disp,
@@ -101,6 +111,10 @@ reaction_t
 	reaction_shortcut_release     = {TRUE,  shortcut_event_end}
 ;
 
+/**
+ * @brief Actions during "shortcut" (while pressing a shortcut button=Trash/Jump)
+ * 
+ */
 reaction_t *button_actions_shortcut[BUTTON_COUNT] = {
 	[BUTTON_DISP]        = &reaction_shortcut_disp,
 	[BUTTON_AV]          = &reaction_shortcut_av,
@@ -109,43 +123,65 @@ reaction_t *button_actions_shortcut[BUTTON_COUNT] = {
 	[BUTTON_DOWN]        = &reaction_shortcut_down,
 	[BUTTON_RIGHT]       = &reaction_shortcut_right,
 	[BUTTON_LEFT]        = &reaction_shortcut_left,
-	[BUTTON_RELEASE]     = &reaction_shortcut_release,
+	[BUTTON_RELEASE]     = &reaction_shortcut_release, ///< BUTTON_RELEASE is a pseudo button (release of any button)
 };
 
+/** Link DP button (blocking) to set Spot metering */
 reaction_t
 	reaction_meter_dp = {TRUE, set_metering_spot}
 ;
 
+/**
+ * @brief Reaction of button (DP) while setting the Metering mode.  
+ * 
+ */
 reaction_t *button_actions_meter[BUTTON_COUNT] = {
 	[BUTTON_DP] = &reaction_meter_dp,
 };
 
+/** Pressing DP while setting White balance sets the color Temperature set in menu */
 reaction_t
 	reaction_wb_dp = {TRUE, set_whitebalance_colortemp}
 ;
 
+/**
+ * @brief Reactions for buttons while setting the White Balance.
+ * 
+ */
 reaction_t *button_actions_wb[BUTTON_COUNT] = {
 	[BUTTON_DP] = &reaction_wb_dp,
 };
 
 reaction_t
+	/** Pressing DP enables Auto ISO */
 	reaction_iso_dp  = {TRUE,  autoiso_enable},
+	/** Pressing SET disables Auto iso and is not blocking for other functions. */
 	reaction_iso_set = {FALSE, autoiso_disable}
 ;
 
+/**
+ * @brief Reactions of buttons while setting the ISO value.
+ * 
+ */
 reaction_t *button_actions_iso[BUTTON_COUNT] = {
 	[BUTTON_DP]  = &reaction_iso_dp,
 	[BUTTON_SET] = &reaction_iso_set,
 };
 
+/** Reactions while looking through the viewfinder */
 reaction_t
 	reaction_face_set   = {TRUE, viewfinder_set},
+	/** The following reactions include a "button up" action to restore data display in WF */
 	reaction_face_up    = {TRUE, viewfinder_up,    viewfinder_end},
 	reaction_face_down  = {TRUE, viewfinder_down,  viewfinder_end},
 	reaction_face_right = {TRUE, viewfinder_right, viewfinder_end},
 	reaction_face_left  = {TRUE, viewfinder_left,  viewfinder_end}
 ;
 
+/**
+ * @brief Reactions of buttons when looking through the viewfinder.
+ * 
+ */
 reaction_t *button_actions_face[BUTTON_COUNT] = {
 	[BUTTON_SET]   = &reaction_face_set,
 	[BUTTON_UP]    = &reaction_face_up,
@@ -154,15 +190,23 @@ reaction_t *button_actions_face[BUTTON_COUNT] = {
 	[BUTTON_LEFT]  = &reaction_face_left,
 };
 
+/** 
+ * Actions to select the AF pattern.
+*/
 reaction_t
 	reaction_af_set   = {TRUE, afp_center},
 	reaction_af_up    = {TRUE, afp_top},
 	reaction_af_down  = {TRUE, afp_bottom},
 	reaction_af_right = {TRUE, afp_right},
 	reaction_af_left  = {TRUE, afp_left},
+	/** Block DISP button during selection of AF pattern */
 	reaction_af_disp  = {TRUE}
 ;
 
+/**
+ * @brief List of reactions for buttons during AF pattern selection.
+ * 
+ */
 reaction_t *button_actions_af[BUTTON_COUNT] = {
 	[BUTTON_SET]   = &reaction_af_set,
 	[BUTTON_UP]    = &reaction_af_up,
@@ -172,6 +216,11 @@ reaction_t *button_actions_af[BUTTON_COUNT] = {
 	[BUTTON_DISP]  = &reaction_af_disp,
 };
 
+/**
+ * @brief Reacion for Drive mode selection, non blocking
+ * 
+ * This reaction is used to manage the settings of remote control.
+ */
 reaction_t
 	reaction_drive_set    = {FALSE, drivemode_set};
 
@@ -179,6 +228,10 @@ reaction_t *button_actions_drive[BUTTON_COUNT] = {
 	[BUTTON_SET]   = &reaction_drive_set,
 };
 
+/**
+ * @brief Definition of action chains (action table + optional condition)
+ * 
+ */
 chain_t
 	chain_actions_main     = {button_actions_main},
 	chain_actions_meter    = {button_actions_meter},
@@ -191,6 +244,10 @@ chain_t
 	chain_actions_face     = {button_actions_face, &settings.use_dpad}
 ;
 
+/**
+ * @brief Table indicating the action chain for each button.
+ * 
+ */
 chain_t *button_chains[GUIMODE_COUNT] = {
 	[GUIMODE_OLC]       = &chain_actions_main,
 	[GUIMODE_OFF]       = &chain_actions_main,
@@ -204,6 +261,10 @@ chain_t *button_chains[GUIMODE_COUNT] = {
 	[GUIMODE_SHORTCUT]  = &chain_actions_shortcut,
 };
 
+/**
+ * @brief Lists the buttons which can be held down fo actions.
+ * 
+ */
 int can_hold[BUTTON_COUNT] = {
 	[BUTTON_AV]    = TRUE,
 	[BUTTON_UP]    = TRUE,
@@ -212,6 +273,25 @@ int can_hold[BUTTON_COUNT] = {
 	[BUTTON_LEFT]  = TRUE,
 };
 
+/**
+ * @brief Button handler
+ * 
+ * Functioning of button handler:
+ * 1. Determine the GUI mode, or use fake GUI modes for special conditions:
+ * 		- GUIMODE_FACE: if display has been shut down by face sensor
+ * 		- GUIMODE_400PLUS: in case we are in the 400Plus menu
+ * 		- GUIMODE_SHORTCUT: while we are pressing a button assigned to a shortcut (Jump/Trash)
+ * 2. Get the action "chain" corresponding to this display mode (struct chain_t)
+ * 		- chain indicates if the button action is linked to a condition
+ * 		- chain is linked to the action on button (reaction) (struct reaction_t)
+ * 3. Analyse reaction (action_pressed) and launch action if it exists
+ * 4. Check if the button can be hold for an action (can_hold). If it is the case:
+ * 		- status.button_down will keep the reference of the button being hold
+ * 		- button_up_action and button_up_block will keep te data linked to this button  
+ * @param button button_t ID of button (ID is an enum of 400plus)
+ * @param is_button_down int Flag if the button is down or up
+ * @return int Indication if the button blocks or not
+ */
 int button_handler(button_t button, int is_button_down) {
 	static action_t   button_up_action = NULL;  // Action that must be executed when the current button is released
 	static int        button_up_block  = FALSE; // Reaction when the current button is released

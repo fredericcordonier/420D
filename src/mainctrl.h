@@ -1,5 +1,9 @@
 #ifndef MAINCTRL_H_
 #define MAINCTRL_H_
+/**
+ * \file mainctrl.h
+ * \brief Definitions of main controls hardware.
+ */
 
 #include "firmware.h"
 

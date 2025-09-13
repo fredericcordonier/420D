@@ -1,3 +1,7 @@
+/**
+ * \file float.h
+ * \brief Header for float.c
+ */
 #ifndef FLOAT_H_
 #define FLOAT_H_
 

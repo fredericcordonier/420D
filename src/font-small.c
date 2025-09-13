@@ -1,3 +1,7 @@
+/**
+ * \file font_small.c
+ * \brief Bitmaps for small font.
+ */
 #ifdef USE_FONT_SMALL
 
 #include "font.h"

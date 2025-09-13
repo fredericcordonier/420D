@@ -1,3 +1,7 @@
+/**
+ * \file float.c
+ * \brief Implementation of float functions?
+ */
 #include "float.h"
 
 #define FLOAT_LOOP_MAX 100

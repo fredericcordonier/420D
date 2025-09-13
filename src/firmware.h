@@ -1,3 +1,7 @@
+/**
+ * \file firmware.h
+ * \brief Definitions to access firmware stuff.
+ */
 #ifndef FIRMWARE_H_
 #define FIRMWARE_H_
 

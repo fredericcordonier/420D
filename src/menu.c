@@ -21,20 +21,20 @@ void *menu_handler;
 
 menu_t *current_menu;
 
-void menu_initialize(void);
-void menu_destroy   (void);
+static void menu_initialize(void);
+static void menu_destroy   (void);
 
-int menu_event_handler(dialog_t * dialog, int *r1, gui_event_t event, int *r3, int r4, int r5, int r6, int code);
+static int menu_event_handler(dialog_t * dialog, int *r1, gui_event_t event, int *r3, int r4, int r5, int r6, int code);
 
 void menu_set_page(menupage_t *page);
 void menu_set_text(const int line, const char *text);
 
 void menu_repeat(menu_t *menu, void (*action)(menu_t *menu, const int repeating));
 
-void menu_repeat_right(menu_t *menu, const int repeating);
-void menu_repeat_left (menu_t *menu, const int repeating);
+static void menu_repeat_right(menu_t *menu, const int repeating);
+static void menu_repeat_left (menu_t *menu, const int repeating);
 
-menupage_t *get_selected_page(void);
+static menupage_t *get_selected_page(void);
 
 void menu_create(menu_t *menu) {
 	status.lock_redraw = TRUE;
@@ -71,12 +71,12 @@ void menu_close() {
 	menu_finish(NULL); //TODO:FixMe
 }
 
-void menu_initialize() {
+static void menu_initialize() {
 	menu_return(current_menu);
 	status.menu_running = TRUE;
 }
 
-void menu_destroy() {
+static void menu_destroy() {
 	if (menu_handler != NULL) {
 		GUI_PalettePop();
 		DeleteDialogBox(menu_handler);
@@ -90,7 +90,7 @@ void menu_finish(menu_t *menu) {
 	status.menu_running = FALSE;
 }
 
-int menu_event_handler(dialog_t * dialog, int *r1, gui_event_t event, int *r3, int r4, int r5, int r6, int code) {
+static int menu_event_handler(dialog_t * dialog, int *r1, gui_event_t event, int *r3, int r4, int r5, int r6, int code) {
 	button_t button;
 
 	debug_log("r0: %08X", dialog);
@@ -174,6 +174,10 @@ void menu_event_right()  { menu_event(MENU_EVENT_RIGHT);   };
 void menu_event_left()   { menu_event(MENU_EVENT_LEFT);    };
 void menu_event_dp()     { menu_event(MENU_EVENT_DP);      };
 void menu_event_av()     { menu_event(MENU_EVENT_AV);      };
+/**
+ * @brief Release the AV button
+ * 
+ */
 void menu_event_av_up()  { menu_event(MENU_EVENT_AV_UP);   };
 void menu_event_out()    { menu_event(MENU_EVENT_OUT);     };
 void menu_event_in()     { menu_event(MENU_EVENT_IN);      };
@@ -254,7 +258,7 @@ void menu_repeat(menu_t *menu, void (*action)(menu_t *menu, const int repeating)
 	} while (status.button_down && status.button_down == button);
 }
 
-void menu_repeat_right(menu_t *menu, const int repeating) {
+static void menu_repeat_right(menu_t *menu, const int repeating) {
 	menupage_t *page = menu->current_page;
 	menuitem_t *item = get_current_item(page);
 
@@ -269,7 +273,7 @@ void menu_repeat_right(menu_t *menu, const int repeating) {
 	}
 }
 
-void menu_repeat_left(menu_t *menu, const int repeating) {
+static void menu_repeat_left(menu_t *menu, const int repeating) {
 	menupage_t *page = menu->current_page;
 	menuitem_t *item = get_current_item(page);
 
@@ -284,7 +288,7 @@ void menu_repeat_left(menu_t *menu, const int repeating) {
 	}
 }
 
-menupage_t *get_selected_page() {
+static menupage_t *get_selected_page() {
 	if (current_menu->ordering)
 		return current_menu->pages.data[current_menu->ordering[current_menu->current_posn]];
 	else

@@ -1,3 +1,59 @@
+/**
+ * @file shortcuts.c
+ * @brief Management of "shortcuts" (Trash/Jump buttons assigned to rapid configurations).
+ * 
+ */
+
+/**
+ * \defgroup disp_shortcut Better display
+ * 
+ * \brief Management of "Better Display" feature.
+ * 
+ * Better display feature allows to easily change the brightness of the display (easier than going to the
+ * ad-hoc menu, 1st wrench).
+ * 
+ * It is activated through the Settings menu, button config.
+ * 
+ * If activated, pressing DISP will display the current brightness level in place of ISO value. Pressing the
+ * D-Pad arrows change the value:
+ * - Up: max level
+ * - Down: min level
+ * - Left: decrease brightness by one value
+ * - Right: increase brightness by one value
+ * 
+ */
+
+/**
+ * \defgroup flash_shortcut Rapid flash configuration
+ * 
+ * \brief Management of the rapid flash configuration.
+ * 
+ * Rapid flash configuration feature allows to set various flash parameters with few button presses.
+ * 
+ * It can be assigned to "Trash" or "Jump" button in the Settings menu, button config.
+ * 
+ * Flash configuration can be done by pressing and maintaining the assigned button, and then pressing D-Pad:
+ * - Set: activate/disactivate the flash
+ * - Av: set 1st (ON) or 2nd curtain synchro
+ * - Left: decrease Ev flash compensation by 1/2 step
+ * - Right: increase Ev flash compensation by 1/2 step
+ * - Up: decrease Ev flash compensation by 1 step
+ * - Down: increase Ev flash compensation by 1 step
+ * Flash exposure compensation can be defined from -6 to +6 Ev
+ */
+
+/**
+ * \defgroup mlu_shortcut Rapid Mirror Lock-Up configuration
+ * 
+ * \brief Management of the rapid Mirror Lock-Up configuration.
+ * 
+ * Rapid Mirror Lock-Up configuration feature allows to set MLU parameters with few button presses.
+ * 
+ * It can be assigned to "Trash" or "Jump" button in the Settings menu, button config.
+ * 
+ * MLU configuration can be done by pressing and maintaining the assigned button, and then pressing D-Pad:
+ * - Set: activate/disactivate the MLU
+*/
 #include <string.h>
 
 #include "firmware.h"
@@ -21,44 +77,63 @@ const char *label_aeb     = SHORTCUT_LABEL_AEB;
 const char *label_flash   = SHORTCUT_LABEL_FLASH;
 const char *label_display = SHORTCUT_LABEL_DISPLAY;
 
-void repeat_last_script     (void);
+static void repeat_last_script     (void);
 
-void shortcut_start(shortcut_t action);
+static void shortcut_start(shortcut_t action);
 
-void shortcut_iso_toggle (void);
-void shortcut_aeb_toggle (void);
+static void shortcut_iso_toggle (void);
+static void shortcut_aeb_toggle (void);
 
-void shortcut_iso_set    (iso_t iso);
-void shortcut_mlu_toggle (void);
-void shortcut_efl_toggle (void);
-void shortcut_efl_set    (ec_t value);
-void shortcut_f2c_toggle (void);
-void shortcut_aeb_set    (ec_t value);
-void shortcut_disp_set   (int brightness);
+static void shortcut_iso_set    (iso_t iso);
+static void shortcut_mlu_toggle (void);
+static void shortcut_efl_toggle (void);
+static void shortcut_efl_set    (ec_t value);
+static void shortcut_f2c_toggle (void);
+static void shortcut_aeb_set    (ec_t value);
+static void shortcut_disp_set   (int brightness);
 
-void shortcut_info_iso     (void);
-void shortcut_info_mlu     (void);
-void shortcut_info_aeb     (void);
-void shortcut_info_flash   (void);
-void shortcut_info_display (void);
+static void shortcut_info_iso     (void);
+static void shortcut_info_mlu     (void);
+static void shortcut_info_aeb     (void);
+static void shortcut_info_flash   (void);
+static void shortcut_info_display (void);
 
-void shortcut_info    (const char *label);
-void shortcut_info_str(const char *label, const char *value);
-void shortcut_info_int(const char *label, const int   value);
-void shortcut_info_ec (const char *label, const ec_t  value);
+static void shortcut_info    (const char *label);
+static void shortcut_info_str(const char *label, const char *value);
+static void shortcut_info_int(const char *label, const int   value);
+static void shortcut_info_ec (const char *label, const ec_t  value);
+static void shortcut_info_end(void);
 
-void shortcut_info_end(void);
 
+/**
+ * @brief Activate the JUMP shortcut.
+ * 
+ */
 void shortcut_jump() {
 	if (DPData.cf_set_button_func != 4)
 		shortcut_start(settings.shortcut_jump);
+	/// This not available if D-Pad is configured for AF point selection
 }
 
+/**
+ * @brief Activate the TRASH shortcut.
+ * 
+ */
 void shortcut_trash() {
 	if (DPData.cf_set_button_func != 4)
 		shortcut_start(settings.shortcut_trash);
+	/// This not available if D-Pad is configured for AF point selection
 }
 
+/**
+ * @brief Manage the DISP shortcut.
+ * @ingroup disp_shortcut
+ * 
+ * If "Better Display" is ON, pressing the DISP button will:
+ * - if display is off, activate the display
+ * - otherwise, SHORTCUT_DISPLAY is activated
+ * If "Better Display" is OFF, post the DISP button to the original software.
+ */
 void shortcut_disp() {
 	if (settings.button_disp) {
 		if (FLAG_GUI_MODE == GUIMODE_OFF) {
@@ -72,7 +147,13 @@ void shortcut_disp() {
 	}
 }
 
-void shortcut_start(shortcut_t action) {
+/**
+ * @brief Start a shortcut.
+ * 
+ * @param action Which shortcut to start.
+ * 
+ */
+static void shortcut_start(shortcut_t action) {
 	char *msg = NULL;
 
 	status.shortcut_running = action;
@@ -114,16 +195,29 @@ void shortcut_start(shortcut_t action) {
 	}
 }
 
+/**
+ * @brief Stop the running shortcut.
+ * 
+ */
 void shortcut_stop() {
 	status.shortcut_running = SHORTCUT_NONE;
 }
 
+/**
+ * @brief Beep if display is shut down during a "shortcut".
+ * @ingroup disp_shortcut
+ * 
+ */
 void shortcut_event_disp() {
 	press_button(IC_BUTTON_DISP);
 	enqueue_action(beep);
 	shortcut_event_end();
 }
 
+/**
+ * @brief End the envent linked to shortcut.
+ * 
+ */
 void shortcut_event_end() {
 	switch (status.shortcut_running) {
 	case SHORTCUT_AEB:
@@ -138,6 +232,11 @@ void shortcut_event_end() {
 	shortcut_info_end();
 }
 
+/**
+ * @brief Pressing AV during a "shortcut" assigned to flash configuration will toggle 2nc curtain flash.
+ * @ingroup flash_shortcut
+ * 
+ */
 void shortcut_event_av(void) {
 	switch (status.shortcut_running) {
 	case SHORTCUT_FLASH:
@@ -148,6 +247,10 @@ void shortcut_event_av(void) {
 	}
 }
 
+/**
+ * @brief Management of SET button during shortcut mode.
+ * 
+ */
 void shortcut_event_set(void) {
 	switch (status.shortcut_running) {
 	case SHORTCUT_ISO:
@@ -171,6 +274,10 @@ void shortcut_event_set(void) {
 	}
 }
 
+/**
+ * @brief Management of UP button during shortcut mode.
+ * 
+ */
 void shortcut_event_up(void) {
 	switch (status.shortcut_running) {
 	case SHORTCUT_ISO:
@@ -190,6 +297,10 @@ void shortcut_event_up(void) {
 	}
 }
 
+/**
+ * @brief Management of DOWN button during shortcut mode.
+ * 
+ */
 void shortcut_event_down(void) {
 	switch (status.shortcut_running) {
 	case SHORTCUT_ISO:
@@ -209,6 +320,10 @@ void shortcut_event_down(void) {
 	}
 }
 
+/**
+ * @brief Management of RIGHT button during shortcut mode.
+ * 
+ */
 void shortcut_event_right(void) {
 	switch (status.shortcut_running) {
 	case SHORTCUT_ISO:
@@ -228,6 +343,10 @@ void shortcut_event_right(void) {
 	}
 }
 
+/**
+ * @brief Management of LEFT button during shortcut mode.
+ * 
+ */
 void shortcut_event_left(void) {
 	switch (status.shortcut_running) {
 	case SHORTCUT_ISO:
@@ -247,18 +366,33 @@ void shortcut_event_left(void) {
 	}
 }
 
-void shortcut_iso_toggle() {
+/**
+ * @brief Toggle Auto-ISO on-off.
+ * @ingroup iso_shortcut
+ * 
+ */
+static void shortcut_iso_toggle() {
 	settings.autoiso_enable = ! settings.autoiso_enable;
 	enqueue_action(settings_write);
 
 	shortcut_info_iso();
 }
 
-void shortcut_aeb_toggle() {
+/**
+ * @brief Toggle AEB shortcut.
+ * @ingroup aeb_shortcut
+ * 
+ */
+static void shortcut_aeb_toggle(void) {
 	shortcut_aeb_set(DPData.ae_bkt ? EC_ZERO : persist.last_aeb);
 }
 
-void shortcut_iso_set(iso_t iso) {
+/**
+ * @brief Set ISO value and display it.
+ * @ingroup iso_shortcut
+ * @param iso ISO value.
+ */
+static void shortcut_iso_set(iso_t iso) {
 	if (settings.autoiso_enable) {
 		settings.autoiso_enable = FALSE;
 		enqueue_action(settings_write);
@@ -269,29 +403,51 @@ void shortcut_iso_set(iso_t iso) {
 	shortcut_info_iso();
 }
 
-void shortcut_mlu_toggle() {
+/**
+ * @brief Toggle the Mirror Lock-up (and display ON/OFF).
+ * @ingroup mlu_shortcut
+ */
+static void shortcut_mlu_toggle(void) {
 	send_to_intercom(IC_SET_CF_MIRROR_UP_LOCK, 1 - DPData.cf_mirror_up_lock);
 	shortcut_info_mlu();
 }
 
-void shortcut_efl_toggle() {
+/**
+ * @brief Toggle the flash ON/OFF and display this value.
+ * @ingroup flash_shortcut
+ */
+static void shortcut_efl_toggle(void) {
 	send_to_intercom(IC_SET_CF_EMIT_FLASH, 1 - DPData.cf_emit_flash);
 	shortcut_info_flash();
 }
 
-void shortcut_efl_set(ec_t value) {
+/**
+ * @brief Set the flash exposure compensation and display it.
+ * @ingroup flash_shortcut
+ * @param value Value of compensation to set.
+ */
+static void shortcut_efl_set(ec_t value) {
 	send_to_intercom(IC_SET_EFCOMP, value);
 	shortcut_info_flash();
 }
 
-void shortcut_f2c_toggle(void) {
+/**
+ * @brief Toggle 2nd Curtain activation and display the value. 
+ * @ingroup flash_shortcut
+ */
+static void shortcut_f2c_toggle(void) {
 	if (DPData.cf_emit_flash)
 		send_to_intercom(IC_SET_CF_FLASH_SYNC_REAR, 1 - DPData.cf_flash_sync_rear);
 
 	shortcut_info_flash();
 }
 
-void shortcut_aeb_set(ec_t value) {
+/**
+ * @brief Set exposure compensation and display it.
+ * @ingroup aeb_shortcut 
+ * @param value Value to be set and displayed.
+ */
+static void shortcut_aeb_set(ec_t value) {
 	send_to_intercom(IC_SET_AE_BKT, value);
 
 	persist.aeb = value;
@@ -302,7 +458,12 @@ void shortcut_aeb_set(ec_t value) {
 	shortcut_info_aeb();
 }
 
-void shortcut_disp_set(int brightness) {
+/**
+ * @brief Set brightness shortcut, display the value.
+ * @ingroup disp_shortcut
+ * @param brightness Value to be set and displayed.
+ */
+static void shortcut_disp_set(int brightness) {
 	send_to_intercom(IC_SET_LCD_BRIGHTNESS, brightness);
 	shortcut_info_display();
 }
@@ -315,7 +476,11 @@ void dev_btn_action() {
 }
 #endif
 
-void repeat_last_script(void) {
+/**
+ * @brief Repeat the last script.
+ * @ingroup script_shortcut
+ */
+static void repeat_last_script(void) {
 	switch (persist.last_script) {
 	case SCRIPT_EXT_AEB:
 		script_ext_aeb();
@@ -340,7 +505,11 @@ void repeat_last_script(void) {
 	}
 }
 
-void shortcut_info_iso() {
+/**
+ * @brief Display ISO value.
+ * @ingroup iso_shortcut
+ */
+static void shortcut_info_iso() {
 	char buffer[8] = "AUTO";
 
 	if (!settings.autoiso_enable)
@@ -349,45 +518,80 @@ void shortcut_info_iso() {
 	shortcut_info_str(label_iso, buffer);
 }
 
-void shortcut_info_mlu() {
+/**
+ * @brief Display MLU value
+ * @ingroup mlu_shortcut
+ * 
+ */
+static void shortcut_info_mlu() {
 	shortcut_info_str(label_mlu, DPData.cf_mirror_up_lock ? " On" : " Off");
 }
 
-void shortcut_info_aeb() {
+/**
+ * @brief Display AEB value.
+ * @ingroup aeb_shortcut
+ */
+static void shortcut_info_aeb() {
 	shortcut_info_ec(label_aeb, DPData.ae_bkt);
 }
 
-void shortcut_info_flash() {
+/**
+ * @brief Display flash on main display.
+ * @ingroup flash_shortcut
+ * 
+ */
+static void shortcut_info_flash() {
 	char buffer[8] = "";
 
 	sprintf(buffer, "%s", DPData.cf_emit_flash ? (DPData.cf_flash_sync_rear ? "2nd" : "On" ) : "Off");
 	shortcut_info_str(label_flash, buffer);
 }
 
-void shortcut_info_display() {
+/**
+ * @brief Display the LCD brightness level.
+ * @ingroup disp_shortcut
+ */
+static void shortcut_info_display() {
 	shortcut_info_int(label_display, DPData.lcd_brightness);
 }
 
-void shortcut_info(const char *label) {
+/**
+ * @brief Display a text in the display area of "remaining card capacity"
+ * 
+ * @param label 
+ */
+static void shortcut_info(const char *label) {
 	dialog_item_set_label(hMainDialog, 0x08, label, 1 + strlen(label), 0x26);
 
 	display_refresh();
 }
 
-void shortcut_info_str(const char *label, const char *value) {
+/**
+ * @brief Display information about shortcuts on main display.
+ * 
+ * @param label Shortcut function.
+ * @param value Value of parameter.
+ */
+static void shortcut_info_str(const char *label, const char *value) {
 	dialog_item_set_label(hMainDialog, 0x08, value, 1 + strlen(value), 0x04);
 
 	shortcut_info(label);
 }
 
-void shortcut_info_int(const char *label, const int value) {
+static void shortcut_info_int(const char *label, const int value) {
 	char buffer[8];
 
 	sprintf(buffer, "%4i", value);
 	shortcut_info_str(label, buffer);
 }
 
-void shortcut_info_ec(const char *label, const ec_t value) {
+/**
+ * @brief Display exposure compensation value.
+ * 
+ * @param label 
+ * @param value exposure compensation value
+ */
+static void shortcut_info_ec(const char *label, const ec_t value) {
 	int symbol = get_efcomp_data(value);
 
 	if (value != EC_ZERO)
@@ -396,7 +600,11 @@ void shortcut_info_ec(const char *label, const ec_t value) {
 	shortcut_info(label);
 }
 
-void shortcut_info_end() {
+/**
+ * @brief Reset display info after a shortcut.
+ * 
+ */
+static void shortcut_info_end() {
 	char label[8], value[8];
 	const int symbol = 0xFC;
 

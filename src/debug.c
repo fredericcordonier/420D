@@ -1,3 +1,7 @@
+/**
+ * \file debug.c
+ * \brief Debug functions, disabled.
+ */
 #include <vxworks.h>
 #include <ioLib.h>
 #include <clock.h>

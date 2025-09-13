@@ -1,3 +1,7 @@
+/**
+ * \file font_large.c
+ * \brief Bitmaps for large font.
+ */
 #ifdef USE_FONT_LARGE
 
 #include "font.h"

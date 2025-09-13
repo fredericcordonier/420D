@@ -34,6 +34,12 @@ void menupage_initialize(menupage_t *page) {
 	item_grabbed = FALSE;
 }
 
+/**
+ * @brief Construct the menu page display.
+ * 
+ * @param menu Used to get current page to display
+ * @todo Seems to be an issue if number of items per page is less than 5.
+ */
 void menupage_display(menu_t *menu) {
 	int i;
 	char buffer[LP_MAX_WORD];
@@ -172,12 +178,17 @@ void menupage_refresh(menu_t *menu) {
 	menu_redraw();
 }
 
-void menupage_display_line(menupage_t *page, const int line) {
+/**
+ * @brief Display a line of the display.
+ * 
+ * @param page Current page
+ * @param display_line Display display_line
+ */
+void menupage_display_line(menupage_t *page, const int display_line) {
 	int  i = 0;
 	char message[LP_MAX_WORD] = "";
 
-	int item_id = line + page->current_posn - page->current_line;
-
+	int item_id = display_line + page->current_posn - page->current_line;
 	menuitem_t *item = get_item(page, item_id);
 
 	if (item) {
@@ -200,7 +211,7 @@ void menupage_display_line(menupage_t *page, const int line) {
 			item->display(item, &message[i], MENU_WIDTH - i);
 	}
 
-	menu_set_text(line, message);
+	menu_set_text(display_line, message);
 }
 
 menuitem_t *get_current_item(menupage_t *page) {
@@ -220,6 +231,13 @@ int get_real_id(menupage_t *page, int item_pos) {
 		return get_item_id(page, item_pos);
 }
 
+/**
+ * @brief Get the item id of the menu entry to display
+ * 
+ * @param page Current page 
+ * @param item_pos 
+ * @return int Id of page item
+ */
 int get_item_id(menupage_t *page, int item_pos) {
 	const int max_pos = MAX(page->items.size, MENU_HEIGHT);
 	const int item_id = item_pos - max_pos * (item_pos / max_pos);

@@ -53,6 +53,11 @@ SIZE_CHECK_STRUCT(vram_info_t, 0x14);
 typedef struct vram_info_t vram_info_t;
 extern vram_info_t VramInfo[2];
 
+/**
+ * @brief Info on lens.
+ *
+ * Read from camera. 
+ */
 struct lens_info_t {
 	short id;
 	short max_mm;
@@ -63,7 +68,11 @@ struct lens_info_t {
 
 typedef struct lens_info_t lens_info_t;
 
-// DigiProp Data Structure
+/**
+ *  \brief DigiProp Data Structure
+ * 
+ * This data is read from Camera memory.
+ */
 struct dpr_data_t {              // [*] Used and tested, others unknown
 	int ae;                      // 0x0000 [*] [1]
 	int metering;                // 0x0004 [*] [2]
@@ -168,19 +177,38 @@ struct dpr_data_t {              // [*] Used and tested, others unknown
 	int field_190;               // 0x0190
 };
 
-//  0x194 is the number in the FW when it comes to DPR (as it's 0x198 too, they go together always)
+/**
+ * @brief 0x194 is the number in the FW when it comes to DPR (as it's 0x198 too, they go together always)
+ * 
+ */
 SIZE_CHECK_STRUCT(dpr_data_t, 0x194);
 
 typedef struct dpr_data_t dpr_data_t;
 
 /**
  * @brief DigiProp values (address defined in camera.S)
- *
+ * 
  */
 extern dpr_data_t DPData;
+/**
+ * @brief Investigations about a structure that would have the same size as DPData
+ * 
+ */
+extern dpr_data_t DPData_2;
+extern dpr_data_t DPData_at_start;
+extern int MIN_ADDR;
+extern int MAX_ADDR;
+/**
+ * @brief Lens data values (address defined in camera.S)
+ * 
+ */
 extern lens_info_t LensID;
 
-extern int is_release_permitted; // can we shoot ?
+/**
+ * @brief Camera flag indicates is camera is ready to shoot
+ * 
+ */
+extern int is_release_permitted;
 
 // [1] Values for "ae"
 typedef enum {

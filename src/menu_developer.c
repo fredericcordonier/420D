@@ -1,12 +1,17 @@
-// to enable specific functionality compile with the following flags:
-// -DBREAK_CAMERA   - enable "factory mode" menus
-// -DTEST_DIALOGS   - enable dialogs testing menu
-// -DMEM_DUMP       - enable memory dump menu
-
-// dialogs testing navigation:
-// DISPLAY -> next dialog
-// MENU -> exit test mode
-// JUMP -> change color palette (some dialogs are seen in special palettes)
+/**
+ * \file menu_developer.c
+ * \brief Debug functions, disabled by default.
+ *
+ * To enable specific functionality compile with the following flags:
+ * -DBREAK_CAMERA   - enable "factory mode" menus
+ * -DTEST_DIALOGS   - enable dialogs testing menu
+ * -DMEM_DUMP       - enable memory dump menu
+ *
+ * dialogs testing navigation:
+ * DISPLAY -> next dialog
+ * MENU -> exit test mode
+ * JUMP -> change color palette (some dialogs are seen in special palettes)
+ */
 
 #include <vxworks.h>
 #include <stdio.h>
@@ -31,10 +36,10 @@ extern void *menu_handler;
 static int   template     = 1;
 static int   curr_palette = 0;
 
-static void test_dialog_create(void);
+static void test_dialog_create(const menuitem_t *menu);
 
-void menupage_developer_dump_log  (const menuitem_t *menuitem);
-void menupage_developer_print_info(const menuitem_t *menuitem);
+static void menupage_developer_dump_log  (const menuitem_t *menuitem);
+static void menupage_developer_print_info(const menuitem_t *menuitem);
 
 	menuitem_t menu_developer_items[] = {
 	MENUITEM_LAUNCH( MENUPAGE_DEVEL_DUMP,          LP_WORD(L_I_DUMP_LOG_TO_FILE),    menupage_developer_dump_log),
@@ -67,16 +72,17 @@ menupage_t menupage_developer = {
 };
 
 void menupage_developer_start(menu_t *menu) {
+	debug_log("menupage_developer_start");
 	if (settings.developers_menu) {
 		menu_set_page(&menupage_developer);
 	}
 }
 
-void menupage_developer_dump_log(const menuitem_t *menuitem) {
+static void menupage_developer_dump_log(const menuitem_t *menuitem) {
 	dump_log();
 }
 
-void menupage_developer_print_info(const menuitem_t *menuitem) {
+static void menupage_developer_print_info(const menuitem_t *menuitem) {
 	print_info();
 }
 
@@ -91,7 +97,7 @@ static int test_dialog_event_handler(dialog_t * dialog, int *r1, gui_event_t eve
 		template++;
 		curr_palette = 0;
 		debug_log("incrementing template to [%d]", template);
-		test_dialog_create();
+		test_dialog_create(NULL);
 		return 0; // block
 	case GUI_BUTTON_MENU:
 		DeleteDialogBox(menu_handler);
@@ -101,7 +107,7 @@ static int test_dialog_event_handler(dialog_t * dialog, int *r1, gui_event_t eve
 	case GUI_BUTTON_JUMP:
 		curr_palette++;
 		debug_log("palette for dialog [%d] to [%d]", template, curr_palette);
-		test_dialog_create();
+		test_dialog_create(NULL);
 		return 0;
 	default:
 		debug_log("btn: [%d] pressed.", event);
@@ -111,7 +117,7 @@ static int test_dialog_event_handler(dialog_t * dialog, int *r1, gui_event_t eve
 	return dialog_event_handler(dialog, r1, event, r3, r4, r5, r6, code);
 }
 
-static void test_dialog_create(void) {
+static void test_dialog_create(const menuitem_t *menu) {
 	debug_log("Creating dialog [%d]", template);
 	FLAG_GUI_MODE = 0x30;
 

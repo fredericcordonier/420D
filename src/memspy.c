@@ -1,4 +1,7 @@
-// memspy tool ported from MagicLantern.
+/**
+ * \file memspy.c
+ * \brief memspy tool ported from MagicLantern.
+ */
 #ifdef MEMSPY
 #include "debug.h"
 #include "bmp.h"

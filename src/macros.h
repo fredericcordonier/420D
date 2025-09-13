@@ -1,5 +1,12 @@
 #ifndef MACROS_H_
 #define MACROS_H_
+/**
+ * \file macros.h
+ * \brief Various macros
+ */
+
+#define TRUE 1
+#define FALSE 0
 
 #define MAX(x, y) ((x) > (y) ? (x) : (y))
 #define MIN(x, y) ((x) < (y) ? (x) : (y))
@@ -11,6 +18,6 @@
 #define SWAP(x, y) do {typeof(x) _SWAP_; _SWAP_=(x); (x)=(y); (y)=_SWAP_;} while (0)
 
 #define LENGTH(array) (sizeof(array) / sizeof(array[0]))
-#define LIST(  array) {size : LENGTH(array), data : (array)}
+#define LIST(  array) {.size = LENGTH(array), .data = (array)}
 
 #endif

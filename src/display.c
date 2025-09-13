@@ -1,3 +1,7 @@
+/**
+ * \file display.c
+ * \brief Handle 400D display.
+ */
 #include <vxworks.h>
 #include <string.h>
 
@@ -41,6 +45,15 @@ int hack_GUI_IDLEHandler(int unk0, int event, int unused, int unk1) {
 
 #endif
 
+/**
+ * @brief Hook the display of values in various dialogs.
+ * 
+ * @param dialog The dialog we are in (only hMainDialog is handled)
+ * @param type 
+ * @param data Data that would be displayed withot the hook
+ * @param length Lendth of data?
+ * @param item Which item is being displayed
+ */
 void hack_item_set_label(dialog_t *dialog, const int type, const void *data, const int length, const int item)
 {
 	char my_label[8] = "AUTO";
@@ -78,6 +91,7 @@ void hack_item_set_label(dialog_t *dialog, const int type, const void *data, con
 		switch (item) {
 		case 0x04: // ISO
 			if (!settings.autoiso_enable || status.measuring)
+				// Convert iso value from DPData to text
 				iso_print(my_label, DPData.iso);
 
 			if (status.shortcut_running)

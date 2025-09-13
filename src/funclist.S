@@ -15048,7 +15048,32 @@ DEF(0xFFAFC558,aRemdriverRemco)
 DEF(0xFFAFC574,aReleaseselfm_0)
 DEF(0xFFAFC58C,aReleaseselfm_1)
 DEF(0xFFAFC5A4,aReleaseinstmax)
+// This method is called:
+// loc_ff824c04:     (SetSendButtonB6andB7)
+// ff824c04: 	e59f0010 	ldr	r0, [pc, #16]	; ff824c1c: (ff824c2c) 
+// ff824c08: 	e52de004 	push	{lr}		; (str lr, [sp, #-4]!)
+// ff824c0c: 	eb0b5ea1 	bl	loc_ffafc698
+// ff824c10: 	e59f0008 	ldr	r0, [pc, #8]	; ff824c20: (ff824c44=SendButtonB7) 
+// ff824c14: 	e49de004 	pop	{lr}		; (ldr lr, [sp], #4)
+// ff824c18: 	ea0b5ea2 	b	loc_ffafc6a8
+//
+// loc_ff95b33c:
+// ff95b33c: 	e59f2090 	ldr	r2, [pc, #144]	; ff95b3d4: (00005894) 
+// ff95b340: 	e59f4090 	ldr	r4, [pc, #144]	; ff95b3d8: (ff95dd84) 
+// ff95b344: 	e3a03001 	mov	r3, #1
+// ff95b348: 	e1a00004 	mov	r0, r4
+// ff95b34c: 	e5823000 	str	r3, [r2]
+// ff95b350: 	eb0684d0 	bl	loc_ffafc698
+// ff95b354: 	e1a00004 	mov	r0, r4
+// ff95b358: 	eb0684d2 	bl	loc_ffafc6a8
+// ff95b35c: 	eb068496 	bl	loc_ffafc5bc
+// ff95b360: 	e28dd004 	add	sp, sp, #4
+// ff95b364: 	e8bd8010 	pop	{r4, pc}
+// ff95b368: 	e1a0f00e 	mov	pc, lr
+//
+// It loads the value in r0 into address 0000ca28
 DEF(0xFFAFC698,SetSendButtonB6)
+// It loads the value in r0 into address 0000ca2c
 DEF(0xFFAFC6A8,SetSendButtonB7)
 DEF(0xFFAFCAD0,aEdLedOff)
 DEF(0xFFAFCADC,aEdledon)

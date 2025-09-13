@@ -1,3 +1,7 @@
+/**
+ * \file intercom.h
+ * \brief Header for intercom.c
+ */
 #ifndef INTERCOM_H_
 #define INTERCOM_H_
 

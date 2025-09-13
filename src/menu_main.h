@@ -4,7 +4,7 @@
 #include "menu.h"
 
 extern void menu_main_start(void);
-extern void menu_main_save (menu_t *menu);
+extern void menu_main_save(menu_t *menu);
 
 enum {
 	MENUPAGE_PARAMS,

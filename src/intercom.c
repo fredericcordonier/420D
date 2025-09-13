@@ -1,3 +1,7 @@
+/**
+ * @file intercom.c
+ * @brief Management of intercom?
+ */
 #include <vxworks.h>
 
 #include "firmware.h"
@@ -64,6 +68,10 @@ proxy_t listeners_menu[0x100] = {
 	[IC_BUTTON_AV]     = proxy_button,
 };
 
+/**
+ * @brief Listeners for all Intercom messages.
+ *
+ */
 proxy_t listeners_main[0x100] = {
 	[IC_SET_TV_VAL]    = proxy_tv,
 	[IC_SET_AV_VAL]    = proxy_av,
@@ -167,6 +175,7 @@ void message_logger(char *message) {
 		sprintf(text + 3 * i, "%02X ", message[i]);
 
 	debug_log("MSG%04d-%02X: %s", id++, FLAG_GUI_MODE, text);
+	debug_log_raw("%s", text);
 }
 #endif
 
@@ -272,6 +281,12 @@ int proxy_initialize(char *message) {
 	return FALSE;
 }
 
+/**
+ * @brief Proxy listener for IC_SETTINGS_0
+ *
+ * @param message received from intercom.
+ * @return int blocks message or not
+ */
 int proxy_settings0(char *message) {
 	static int first = TRUE;
 
@@ -307,6 +322,7 @@ int proxy_button(char *message) {
 }
 
 int proxy_wheel(char *message) {
+	debug_log("proxy_wheel");
 	return button_handler((message[2] & 0x80) ? BUTTON_WHEEL_LEFT : BUTTON_WHEEL_RIGHT, TRUE);
 }
 

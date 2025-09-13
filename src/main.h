@@ -1,6 +1,9 @@
 #ifndef MAIN_H_
 #define MAIN_H_
-
+/**
+ * \file main.h
+ * \brief Header for main.c
+ */
 #include "firmware.h"
 #include "exposure.h"
 #include "scripts.h"
@@ -17,10 +20,10 @@ typedef void(*action_t)(void);
 
 typedef enum {
 	VF_STATUS_NONE,
-	VF_STATUS_MSM,
-	VF_STATUS_ISO,
-	VF_STATUS_FEXP,
-	VF_STATUS_QEXP,
+	VF_STATUS_MSM,    //< Multi-spot measure
+	VF_STATUS_ISO,    //< Display ISO
+	VF_STATUS_FEXP,   //< Fixed epxosure
+	VF_STATUS_QEXP,   //< Quick exposure
 } vf_status_t;
 
 // Global status

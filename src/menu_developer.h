@@ -1,5 +1,9 @@
 #ifndef MENU_DEVELOPER_H_
 #define MENU_DEVELOPER_H_
+/** 
+ * \file menu_developer.h
+ * \brief Header filel for developer menu.
+ */
 
 #include "menupage.h"
 
