@@ -39,7 +39,7 @@ menuitem_t buttons_items[] = {
 
 menuitem_t cmodes_items[] = {
 	MENUITEM_BOOLEAN(0, LP_WORD(L_I_CMODES_CAMERA),   &cmodes_config.recall_camera,   NULL),
-	MENUITEM_BOOLEAN(0, LP_WORD(L_I_CMODES_400PLUS),  &cmodes_config.recall_400plus,  NULL),
+	MENUITEM_BOOLEAN(0, LP_WORD(L_I_CMODES_420D),     &cmodes_config.recall_420D,     NULL),
 	MENUITEM_BOOLEAN(0, LP_WORD(L_I_CMODES_ORDERING), &cmodes_config.recall_ordering, NULL),
 	MENUITEM_BOOLEAN(0, LP_WORD(L_I_CMODES_SETTINGS), &cmodes_config.recall_settings, NULL),
 	MENUITEM_BOOLEAN(0, LP_WORD(L_I_CMODES_IMAGE),    &cmodes_config.recall_image,    NULL),

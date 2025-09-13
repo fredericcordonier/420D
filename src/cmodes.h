@@ -16,7 +16,7 @@
 
 typedef struct {
 	int  recall_camera;
-	int  recall_400plus;
+	int  recall_420D;
 	int  recall_ordering;
 	int  recall_settings;
 	int  recall_image;

@@ -32,7 +32,7 @@ run: build
 
 install:
 	@install -D $(PROJECT_ROOT)/src/AUTOEXEC.BIN  $(INSTALL_PATH)/AUTOEXEC.BIN
-	@install -D $(PROJECT_ROOT)/src/languages.ini $(INSTALL_PATH)/400PLUS/languages.ini
+	@install -D $(PROJECT_ROOT)/src/languages.ini $(INSTALL_PATH)/420D/languages.ini
 	@echo "   ---------------------------------------------------------------------------"
 	@echo "✅ Fichiers installed in $(INSTALL_PATH)"
 	@echo "   ---------------------------------------------------------------------------"

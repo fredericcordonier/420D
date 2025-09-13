@@ -17,7 +17,7 @@
 
 cmodes_config_t cmodes_default = {
 	recall_camera   : TRUE,
-	recall_400plus  : TRUE,
+	recall_420D  : TRUE,
 	recall_ordering : FALSE,
 	recall_settings : FALSE,
 	recall_image    : TRUE,

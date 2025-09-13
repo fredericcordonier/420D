@@ -72,7 +72,7 @@ menuitem_t main_list_items[] = {
 };
 
 menupage_t main_list = {
-	name     : LP_WORD(L_P_400PLUS),
+	name     : LP_WORD(L_P_420D),
 	items    : LIST(main_list_items),
 	actions  : {
 		[MENU_EVENT_PLAY]   = page_display,

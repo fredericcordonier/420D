@@ -13,7 +13,7 @@
 // * V_ are item values.
 // * S_ are sub-menus.
 #define LANGUAGE_PAIRS \
-	LANG_PAIR( P_400PLUS,            "400plus"                   ) \
+	LANG_PAIR( P_420D,               "420D"                      ) \
 	LANG_PAIR( P_PARAMS,             "Parameters"                ) \
 	LANG_PAIR( P_SETTINGS,           "Settings"                  ) \
 	LANG_PAIR( P_SCRIPTS,            "Scripts"                   ) \
@@ -99,7 +99,7 @@
 	LANG_PAIR( I_BTN_JUMP,           "Jump"                      ) \
 	LANG_PAIR( I_BTN_TRASH,          "Trash"                     ) \
 	LANG_PAIR( I_CMODES_CAMERA,      "Camera"                    ) \
-	LANG_PAIR( I_CMODES_400PLUS,     "400plus"                   ) \
+	LANG_PAIR( I_CMODES_420D,        "420D"                      ) \
 	LANG_PAIR( I_CMODES_ORDERING,    "Menu order"                ) \
 	LANG_PAIR( I_CMODES_SETTINGS,    "Settings"                  ) \
 	LANG_PAIR( I_CMODES_IMAGE,       "Image"                     ) \
@@ -152,7 +152,7 @@
 	LANG_PAIR( V_DIM,                "Dim down"                  ) \
 	LANG_PAIR( V_INTISO,             "Intermediate ISO"          ) \
 	LANG_PAIR( V_REPEAT,             "Repeat last script"        ) \
-	LANG_PAIR( V_HACK_MENU,          "400plus Main Menu"         ) \
+	LANG_PAIR( V_HACK_MENU,          "420D Main Menu"            ) \
 	LANG_PAIR( V_TOGGLE_FLASH,       "Flash on/off"              ) \
 	LANG_PAIR( S_CMODE_NAME ,        "Custom mode"               ) \
 	LANG_PAIR( S_INFINITE,           "INF!"                      ) \

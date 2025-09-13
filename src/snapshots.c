@@ -175,7 +175,7 @@ void snapshot_apply(snapshot_t *snapshot) {
 		menu_order = snapshot->menu_order;
 	}
 
-	if (cmodes_config.recall_400plus) {
+	if (cmodes_config.recall_420D) {
 		settings = snapshot->settings;
 		settings_apply();
 	}

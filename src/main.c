@@ -57,9 +57,9 @@ void action_dispatcher(void);
 
 int check_create_folder(void);
 
-// 400plus entry point
+// 420D entry point
 int main(void) {
-	// If TRASH button is pressed, do not initialize 400plus at all
+	// If TRASH button is pressed, do not initialize 420D at all
 	if (BTN_TRASH != BTN_PRESSED) {
 		// Switch blue LED on, it will be switched back off after initialization
 		LEDBLUE = LEDON;
@@ -229,7 +229,7 @@ void enqueue_action(action_t action) {
 }
 
 void start_up() {
-	// Check and create our 400PLUS folder
+	// Check and create our 420D folder
 	status.folder_exists = check_create_folder();
 
 	// Recover persisting information
@@ -296,7 +296,7 @@ void start_up() {
 }
 
 /*
- * Look for a "400PLUS" folder, and create it if it does not exist
+ * Look for a "420D" folder, and create it if it does not exist
  */
 
 int check_create_folder(void)

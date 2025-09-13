@@ -7,7 +7,7 @@
 
 // Our folder
 #define FOLDER_ROOT "A:"
-#define FOLDER_NAME "400PLUS"
+#define FOLDER_NAME "420D"
 #define FOLDER_PATH FOLDER_ROOT "/" FOLDER_NAME
 #define MKPATH_OLD(FILENAME) FOLDER_ROOT "/" FILENAME
 #define MKPATH_NEW(FILENAME) FOLDER_ROOT "/" FOLDER_NAME "/" FILENAME
@@ -47,7 +47,7 @@ typedef struct {
 	int         msm_active;        // Multi-spot metering: is active and in M mode
 	ic_event_t  ignore_msg;        // Event to be ignored at intercom
 	vf_status_t vf_status;         // Status of viewfinder
-	int         folder_exists;     // 400PLUS folder exists
+	int         folder_exists;     // 420D folder exists
 	int         lock_redraw;       // Lock redrawing of dialogs
 } status_t;
 

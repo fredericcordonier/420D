@@ -174,7 +174,7 @@ foreach my $lf(@lang_files) {
 #}}}
 
 open (OF, ">$out_file") || die "cannot open output file [$out_file] for writing\n";
-print OF "; Languages for 400plus\n";
+print OF "; Languages for 420D\n";
 print OF ";\n";
 print OF "; info for translators: http://code.google.com/p/400plus/wiki/TranslatorsGuide\n";
 print OF ";\n";
@@ -205,7 +205,7 @@ __END__
 
 =head1 NAME
 
-lang_tool.pl - Tool to verify language files and generate languages.ini for 400plus project.
+lang_tool.pl - Tool to verify language files and generate languages.ini for 420D project.
 
 =head1 SYNOPSIS
 
@@ -273,8 +273,8 @@ The output file B<languages.ini>.
 
 =head1 DESCRIPTION
 
-B<lang_too.pl> will check the language files and generate the I<languages.ini> for B<400plus> project.
-For more information about B<400plus>, check: http://code.google.com/p/400plus
+B<lang_too.pl> will check the language files and generate the I<languages.ini> for B<420D> project.
+For more information about B<420D>, check: http://code.google.com/p/400plus
 
 =cut
 

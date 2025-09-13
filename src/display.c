@@ -173,7 +173,7 @@ void display_overlay(uint8_t *vram_address) {
 			}
 
 #ifdef RELEASE
-			bmp_printf(vram_address, FONT(FONT_SMALL, COLOR_BLACK, COLOR_BLUE), 148, 0, LP_WORD(L_P_400PLUS));
+			bmp_printf(vram_address, FONT(FONT_SMALL, COLOR_BLACK, COLOR_BLUE), 148, 0, LP_WORD(L_P_420D));
 #else
 			bmp_printf(vram_address, FONT(FONT_SMALL, COLOR_BLACK, COLOR_RED ),  20, 0, LP_WORD(L_A_WARNING));
 #endif

@@ -55,39 +55,39 @@ reaction_t *button_actions_main[BUTTON_COUNT] = {
 };
 
 reaction_t
-	reaction_400plus_dp          = {TRUE,  menu_event_dp},
-	reaction_400plus_disp        = {TRUE,  menu_event_disp},
-	reaction_400plus_jump        = {TRUE,  menu_event_jump},
-	reaction_400plus_play        = {TRUE,  menu_event_play},
-	reaction_400plus_trash       = {TRUE,  menu_event_trash},
-	reaction_400plus_wheel_left  = {TRUE,  menu_event_prev},
-	reaction_400plus_wheel_right = {TRUE,  menu_event_next},
-	reaction_400plus_zoom_out    = {TRUE,  menu_event_out},
-	reaction_400plus_zoom_in     = {TRUE,  menu_event_in},
-	reaction_400plus_av          = {TRUE,  menu_event_av, menu_event_av_up},
-	reaction_400plus_set         = {TRUE,  menu_event_set},
-	reaction_400plus_up          = {TRUE,  menu_event_up},
-	reaction_400plus_down        = {TRUE,  menu_event_down},
-	reaction_400plus_right       = {TRUE,  menu_event_right},
-	reaction_400plus_left        = {TRUE,  menu_event_left}
+	reaction_420D_dp          = {TRUE,  menu_event_dp},
+	reaction_420D_disp        = {TRUE,  menu_event_disp},
+	reaction_420D_jump        = {TRUE,  menu_event_jump},
+	reaction_420D_play        = {TRUE,  menu_event_play},
+	reaction_420D_trash       = {TRUE,  menu_event_trash},
+	reaction_420D_wheel_left  = {TRUE,  menu_event_prev},
+	reaction_420D_wheel_right = {TRUE,  menu_event_next},
+	reaction_420D_zoom_out    = {TRUE,  menu_event_out},
+	reaction_420D_zoom_in     = {TRUE,  menu_event_in},
+	reaction_420D_av          = {TRUE,  menu_event_av, menu_event_av_up},
+	reaction_420D_set         = {TRUE,  menu_event_set},
+	reaction_420D_up          = {TRUE,  menu_event_up},
+	reaction_420D_down        = {TRUE,  menu_event_down},
+	reaction_420D_right       = {TRUE,  menu_event_right},
+	reaction_420D_left        = {TRUE,  menu_event_left}
 ;
 
-reaction_t *button_actions_400plus[BUTTON_COUNT] = {
-	[BUTTON_DP]          = &reaction_400plus_dp,
-	[BUTTON_DISP]        = &reaction_400plus_disp,
-	[BUTTON_JUMP]        = &reaction_400plus_jump,
-	[BUTTON_PLAY]        = &reaction_400plus_play,
-	[BUTTON_TRASH]       = &reaction_400plus_trash,
-	[BUTTON_WHEEL_LEFT]  = &reaction_400plus_wheel_left,
-	[BUTTON_WHEEL_RIGHT] = &reaction_400plus_wheel_right,
-	[BUTTON_ZOOM_OUT]    = &reaction_400plus_zoom_out,
-	[BUTTON_ZOOM_IN]     = &reaction_400plus_zoom_in,
-	[BUTTON_AV]          = &reaction_400plus_av,
-	[BUTTON_SET]         = &reaction_400plus_set,
-	[BUTTON_UP]          = &reaction_400plus_up,
-	[BUTTON_DOWN]        = &reaction_400plus_down,
-	[BUTTON_RIGHT]       = &reaction_400plus_right,
-	[BUTTON_LEFT]        = &reaction_400plus_left,
+reaction_t *button_actions_420D[BUTTON_COUNT] = {
+	[BUTTON_DP]          = &reaction_420D_dp,
+	[BUTTON_DISP]        = &reaction_420D_disp,
+	[BUTTON_JUMP]        = &reaction_420D_jump,
+	[BUTTON_PLAY]        = &reaction_420D_play,
+	[BUTTON_TRASH]       = &reaction_420D_trash,
+	[BUTTON_WHEEL_LEFT]  = &reaction_420D_wheel_left,
+	[BUTTON_WHEEL_RIGHT] = &reaction_420D_wheel_right,
+	[BUTTON_ZOOM_OUT]    = &reaction_420D_zoom_out,
+	[BUTTON_ZOOM_IN]     = &reaction_420D_zoom_in,
+	[BUTTON_AV]          = &reaction_420D_av,
+	[BUTTON_SET]         = &reaction_420D_set,
+	[BUTTON_UP]          = &reaction_420D_up,
+	[BUTTON_DOWN]        = &reaction_420D_down,
+	[BUTTON_RIGHT]       = &reaction_420D_right,
+	[BUTTON_LEFT]        = &reaction_420D_left,
 };
 
 reaction_t
@@ -185,7 +185,7 @@ chain_t
 	chain_actions_wb       = {button_actions_wb},
 	chain_actions_iso      = {button_actions_iso},
 	chain_actions_drive    = {button_actions_drive},
-	chain_actions_400plus  = {button_actions_400plus},
+	chain_actions_420D  = {button_actions_420D},
 	chain_actions_shortcut = {button_actions_shortcut},
 	chain_actions_af       = {button_actions_af},
 	chain_actions_face     = {button_actions_face, &settings.use_dpad}
@@ -199,7 +199,7 @@ chain_t *button_chains[GUIMODE_COUNT] = {
 	[GUIMODE_ISO]       = &chain_actions_iso,
 	[GUIMODE_AFPATTERN] = &chain_actions_af,
 	[GUIMODE_DRIVE]     = &chain_actions_drive,
-	[GUIMODE_400PLUS]   = &chain_actions_400plus,
+	[GUIMODE_420D]   = &chain_actions_420D,
 	[GUIMODE_FACE]      = &chain_actions_face,
 	[GUIMODE_SHORTCUT]  = &chain_actions_shortcut,
 };
@@ -227,7 +227,7 @@ int button_handler(button_t button, int is_button_down) {
 		if (FLAG_FACE_SENSOR && FLAG_GUI_MODE == GUIMODE_OFF)
 			gui_mode = GUIMODE_FACE;
 		else if(status.menu_running)
-			gui_mode = GUIMODE_400PLUS;
+			gui_mode = GUIMODE_420D;
 		else if(status.shortcut_running != SHORTCUT_NONE)
 			gui_mode = GUIMODE_SHORTCUT;
 		else
