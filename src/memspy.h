@@ -5,7 +5,7 @@
  * \brief port of memspy for ML.
  */
 
-void memspy_task( void* unused );
+void memspy_task(void *unused);
 void memspy_enable(void);
 void memspy_disable(void);
 

@@ -13,8 +13,8 @@
  * JUMP -> change color palette (some dialogs are seen in special palettes)
  */
 
-#include <vxworks.h>
 #include <stdio.h>
+#include <vxworks.h>
 
 #include "firmware/gui.h"
 
@@ -22,124 +22,135 @@
 
 #include "debug.h"
 #include "languages.h"
-#include "menu.h"
-#include "menupage.h"
-#include "menuitem.h"
-#include "menu_settings.h"
-#include "utils.h"
-#include "settings.h"
 #include "memspy.h"
+#include "menu.h"
+#include "menu_settings.h"
+#include "menuitem.h"
+#include "menupage.h"
+#include "settings.h"
+#include "utils.h"
 
 #include "menu_developer.h"
 
 extern void *menu_handler;
-static int   template     = 1;
-static int   curr_palette = 0;
+static int template = 1;
+static int curr_palette = 0;
 
 static void test_dialog_create(const menuitem_t *menu);
 
-static void menupage_developer_dump_log  (const menuitem_t *menuitem);
+static void menupage_developer_dump_log(const menuitem_t *menuitem);
 static void menupage_developer_print_info(const menuitem_t *menuitem);
 
-	menuitem_t menu_developer_items[] = {
-	MENUITEM_LAUNCH( MENUPAGE_DEVEL_DUMP,          LP_WORD(L_I_DUMP_LOG_TO_FILE),    menupage_developer_dump_log),
-	MENUITEM_LAUNCH( MENUPAGE_DEVEL_PRINT,         LP_WORD(L_I_PRINT_INFO),          menupage_developer_print_info),
-	MENUITEM_BOOLEAN(MENUPAGE_DEVEL_DEBUG,         LP_WORD(L_I_DEBUG_ON_POWERON),   &settings.debug_on_poweron, NULL),
-	MENUITEM_LOGFILE(MENUPAGE_DEVEL_MODE,          LP_WORD(L_I_LOGFILE_MODE),       &settings.logfile_mode,     NULL),
+menuitem_t menu_developer_items[] = {
+    MENUITEM_LAUNCH(MENUPAGE_DEVEL_DUMP, LP_WORD(L_I_DUMP_LOG_TO_FILE),
+                    menupage_developer_dump_log),
+    MENUITEM_LAUNCH(MENUPAGE_DEVEL_PRINT, LP_WORD(L_I_PRINT_INFO),
+                    menupage_developer_print_info),
+    MENUITEM_BOOLEAN(MENUPAGE_DEVEL_DEBUG, LP_WORD(L_I_DEBUG_ON_POWERON),
+                     &settings.debug_on_poweron, NULL),
+    MENUITEM_LOGFILE(MENUPAGE_DEVEL_MODE, LP_WORD(L_I_LOGFILE_MODE),
+                     &settings.logfile_mode, NULL),
 #ifdef MEM_DUMP
-	MENUITEM_LAUNCH( MENUPAGE_DEVEL_MEMORY,        LP_WORD(L_I_DUMP_MEMORY),         dump_memory_after_5s),
+    MENUITEM_LAUNCH(MENUPAGE_DEVEL_MEMORY, LP_WORD(L_I_DUMP_MEMORY),
+                    dump_memory_after_5s),
 #endif
 #ifdef MEMSPY
-	MENUITEM_LAUNCH( MENUPAGE_DEVEL_MEMSPYENABLE,  LP_WORD(L_I_MEMSPY_ENABLE),       memspy_enable),
-	MENUITEM_LAUNCH( MENUPAGE_DEVEL_MEMSPYDISABLE, LP_WORD(L_I_MEMSPY_DISABLE),      memspy_disable),
+    MENUITEM_LAUNCH(MENUPAGE_DEVEL_MEMSPYENABLE, LP_WORD(L_I_MEMSPY_ENABLE),
+                    memspy_enable),
+    MENUITEM_LAUNCH(MENUPAGE_DEVEL_MEMSPYDISABLE, LP_WORD(L_I_MEMSPY_DISABLE),
+                    memspy_disable),
 #endif
 #ifdef BREAK_CAMERA
-	MENUITEM_LAUNCH( MENUPAGE_DEVEL_ENTERFACTMODE, LP_WORD(L_I_ENTER_FACTORY_MODE),  enter_factory_mode),
-	MENUITEM_LAUNCH( MENUPAGE_DEVEL_EXITFACTMODE,  LP_WORD(L_I_EXIT_FACTORY_MODE),   exit_factory_mode),
+    MENUITEM_LAUNCH(MENUPAGE_DEVEL_ENTERFACTMODE,
+                    LP_WORD(L_I_ENTER_FACTORY_MODE), enter_factory_mode),
+    MENUITEM_LAUNCH(MENUPAGE_DEVEL_EXITFACTMODE, LP_WORD(L_I_EXIT_FACTORY_MODE),
+                    exit_factory_mode),
 #endif
 #ifdef TEST_DIALOGS
-	MENUITEM_LAUNCH( MENUPAGE_DEVEL_TEST,          LP_WORD(L_I_TEST_DIALOGS),        test_dialog_create),
+    MENUITEM_LAUNCH(MENUPAGE_DEVEL_TEST, LP_WORD(L_I_TEST_DIALOGS),
+                    test_dialog_create),
 #endif
 };
 
 menupage_t menupage_developer = {
-	name      : LP_WORD(L_P_DEVELOPERS),
-	items     : LIST(menu_developer_items),
-	ordering  : menu_order.developer,
-	actions  : {
-		[MENU_EVENT_AV] = menu_return,
-	}
+    name : LP_WORD(L_P_DEVELOPERS),
+    items : LIST(menu_developer_items),
+    ordering : menu_order.developer,
+    actions : {
+        [MENU_EVENT_AV] = menu_return,
+    }
 };
 
 void menupage_developer_start(menu_t *menu) {
-	debug_log("menupage_developer_start");
-	if (settings.developers_menu) {
-		menu_set_page(&menupage_developer);
-	}
+    debug_log("menupage_developer_start");
+    if (settings.developers_menu) {
+        menu_set_page(&menupage_developer);
+    }
 }
 
 static void menupage_developer_dump_log(const menuitem_t *menuitem) {
-	dump_log();
+    dump_log();
 }
 
 static void menupage_developer_print_info(const menuitem_t *menuitem) {
-	print_info();
+    print_info();
 }
 
-static int test_dialog_event_handler(dialog_t * dialog, int *r1, gui_event_t event, int *r3, int r4, int r5, int r6, int code) {
-	switch (event) {
-	case GUI_BUTTON_DISP:
-		if (template>=110) {
-			DeleteDialogBox(menu_handler);
-			menu_handler = NULL;
-			FLAG_GUI_MODE = GUIMODE_420D;
-		}
-		template++;
-		curr_palette = 0;
-		debug_log("incrementing template to [%d]", template);
-		test_dialog_create(NULL);
-		return 0; // block
-	case GUI_BUTTON_MENU:
-		DeleteDialogBox(menu_handler);
-		menu_handler = NULL;
-		FLAG_GUI_MODE = GUIMODE_420D;
-		return 0;
-	case GUI_BUTTON_JUMP:
-		curr_palette++;
-		debug_log("palette for dialog [%d] to [%d]", template, curr_palette);
-		test_dialog_create(NULL);
-		return 0;
-	default:
-		debug_log("btn: [%d] pressed.", event);
-		break;
-	}
+static int test_dialog_event_handler(dialog_t *dialog, int *r1,
+                                     gui_event_t event, int *r3, int r4, int r5,
+                                     int r6, int code) {
+    switch (event) {
+    case GUI_BUTTON_DISP:
+        if (template >= 110) {
+            DeleteDialogBox(menu_handler);
+            menu_handler = NULL;
+            FLAG_GUI_MODE = GUIMODE_420D;
+        }
+        template ++;
+        curr_palette = 0;
+        debug_log("incrementing template to [%d]", template);
+        test_dialog_create(NULL);
+        return 0; // block
+    case GUI_BUTTON_MENU:
+        DeleteDialogBox(menu_handler);
+        menu_handler = NULL;
+        FLAG_GUI_MODE = GUIMODE_420D;
+        return 0;
+    case GUI_BUTTON_JUMP:
+        curr_palette++;
+        debug_log("palette for dialog [%d] to [%d]", template, curr_palette);
+        test_dialog_create(NULL);
+        return 0;
+    default:
+        debug_log("btn: [%d] pressed.", event);
+        break;
+    }
 
-	return dialog_event_handler(dialog, r1, event, r3, r4, r5, r6, code);
+    return dialog_event_handler(dialog, r1, event, r3, r4, r5, r6, code);
 }
 
 static void test_dialog_create(const menuitem_t *menu) {
-	debug_log("Creating dialog [%d]", template);
-	FLAG_GUI_MODE = 0x30;
+    debug_log("Creating dialog [%d]", template);
+    FLAG_GUI_MODE = 0x30;
 
-	if (menu_handler != NULL) {
-		DeleteDialogBox(menu_handler);
-		menu_handler = NULL;
-	}
+    if (menu_handler != NULL) {
+        DeleteDialogBox(menu_handler);
+        menu_handler = NULL;
+    }
 
-	menu_handler = dialog_create(template, test_dialog_event_handler);
+    menu_handler = dialog_create(template, test_dialog_event_handler);
 
-	int i;
-	for (i = 0; i<255; i++) {
-		char s[30];
-		sprintf(s, "[%d,%d]",template,i);
-		dialog_set_property_str(menu_handler, i, s);
-	}
+    int i;
+    for (i = 0; i < 255; i++) {
+        char s[30];
+        sprintf(s, "[%d,%d]", template, i);
+        dialog_set_property_str(menu_handler, i, s);
+    }
 
-	GUI_PaletteChange(curr_palette);
+    GUI_PaletteChange(curr_palette);
 
-	dialog_redraw(menu_handler);
+    dialog_redraw(menu_handler);
 }
-
 
 #if 0
 
@@ -193,4 +204,3 @@ Special Dialogs:
 	eventproc_DispWarningDlgLarge() - bigger one
 
 #endif
-

@@ -1,11 +1,10 @@
 /**
  * file ini.h
  * inih: Simple .INI file parser
- * 
- * inih is released under the New BSD license (see LICENSE.txt). Go to the project
- * home page for more info:
- * http://code.google.com/p/inih/
-*/
+ *
+ * inih is released under the New BSD license (see LICENSE.txt). Go to the
+ * project home page for more info: http://code.google.com/p/inih/
+ */
 
 #ifndef __INI_H__
 #define __INI_H__
@@ -20,11 +19,11 @@ extern "C" {
 
 #define MAX_LINE 100
 #define MAX_SECTION LP_MAX_WORD /*32*/
-#define MAX_NAME    LP_MAX_WORD /*32*/
+#define MAX_NAME LP_MAX_WORD    /*32*/
 
-
-typedef int (*ini_line_handler)(void* user, int lineno, const char* section, const char* name, const char* value);
-typedef int (*ini_section_handler)(void* user, int lineno, const char* section);
+typedef int (*ini_line_handler)(void *user, int lineno, const char *section,
+                                const char *name, const char *value);
+typedef int (*ini_section_handler)(void *user, int lineno, const char *section);
 
 /* Parse given INI-style file. May have [section]s, name=value pairs
    (whitespace stripped), and comments starting with ';' (semicolon). Section
@@ -38,16 +37,19 @@ typedef int (*ini_section_handler)(void* user, int lineno, const char* section);
    Returns 0 on success, line number of first error on parse error (doesn't
    stop on first error), or -1 on file open error.
 
-   0xAF: added section parameter, pass the section name to get only this section parsed
-   if you want the whole file parsed, pass NULL
-   0xAF: added a section handler, which will be called when new section is found.
-   the return from this handler is the same like the name/value handler
+   0xAF: added section parameter, pass the section name to get only this section
+   parsed if you want the whole file parsed, pass NULL 0xAF: added a section
+   handler, which will be called when new section is found. the return from this
+   handler is the same like the name/value handler
 */
-int ini_parse(const char* filename, const char* wanted_section, ini_line_handler handler, ini_section_handler shandler, void* user);
+int ini_parse(const char *filename, const char *wanted_section,
+              ini_line_handler handler, ini_section_handler shandler,
+              void *user);
 
 /* Same as ini_parse(), but takes a FD instead of filename. This doesn't
    close the file when it's finished -- the caller must do that. */
-int ini_parse_file(int fd, const char* wanted_section, ini_line_handler handler, ini_section_handler shandler, void* user);
+int ini_parse_file(int fd, const char *wanted_section, ini_line_handler handler,
+                   ini_section_handler shandler, void *user);
 
 /* Nonzero to allow multi-line value parsing, in the style of Python's
    ConfigParser. If allowed, ini_parse() will call the handler with the same

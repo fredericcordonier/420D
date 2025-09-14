@@ -1,82 +1,87 @@
-#include <vxworks.h>
 #include <ioLib.h>
+#include <vxworks.h>
 
 #include "firmware.h"
 #include "firmware/fio.h"
 
-#include "main.h"
 #include "exposure.h"
+#include "main.h"
 #include "scripts.h"
 
 #include "persist.h"
 
 /**
  * \file persist.c
- * \brief Management of persistence for some parameters (Ev compensation and last script run)
- * 
+ * \brief Management of persistence for some parameters (Ev compensation and
+ * last script run)
+ *
  */
 
-/** 
+/**
  * \brief Persisted parameters
- * 
+ *
  * Persisted are EV compensation and last run script
-*/
+ */
 persist_t persist = {
-	ev_comp     : EC_ZERO,
-	last_script : SCRIPT_NONE,
+    ev_comp : EC_ZERO,
+    last_script : SCRIPT_NONE,
 };
 
 /**
  * @brief Read persisted parameters from file.
- * 
+ *
  * @return boolean TRUE if parameters could be retrieved, FALSE otherwise
  */
 int persist_read(void) {
-	int result  = FALSE;
-	int file    = -1;
-	int   version = 0;
+    int result = FALSE;
+    int file = -1;
+    int version = 0;
 
-	persist_t persistent_buffer;
+    persist_t persistent_buffer;
 
-	if ((file = FIO_OpenFile(MKPATH_NEW(PERSIST_FILENAME), O_RDONLY)) == -1)
-		if ((file = FIO_OpenFile(MKPATH_OLD(PERSIST_FILENAME), O_RDONLY)) == -1)
-			goto end;
+    if ((file = FIO_OpenFile(MKPATH_NEW(PERSIST_FILENAME), O_RDONLY)) == -1)
+        if ((file = FIO_OpenFile(MKPATH_OLD(PERSIST_FILENAME), O_RDONLY)) == -1)
+            goto end;
 
-	if (FIO_ReadFile(file, &version, sizeof(version)) != sizeof(version))
-		goto end;
+    if (FIO_ReadFile(file, &version, sizeof(version)) != sizeof(version))
+        goto end;
 
-	if (version != PERSIST_VERSION)
-		goto end;
+    if (version != PERSIST_VERSION)
+        goto end;
 
-	if (FIO_ReadFile(file, &persistent_buffer, sizeof(persistent_buffer)) != sizeof(persistent_buffer))
-		goto end;
+    if (FIO_ReadFile(file, &persistent_buffer, sizeof(persistent_buffer)) !=
+        sizeof(persistent_buffer))
+        goto end;
 
-	persist = persistent_buffer;
-	result  = TRUE;
+    persist = persistent_buffer;
+    result = TRUE;
 
 end:
-	if (file != -1)
-		FIO_CloseFile(file);
+    if (file != -1)
+        FIO_CloseFile(file);
 
-	return result;
+    return result;
 }
 
 /**
  * @brief Write persisted parameters
- * 
+ *
  */
 void persist_write(void) {
-	const int version = PERSIST_VERSION;
-	int file = -1;
+    const int version = PERSIST_VERSION;
+    int file = -1;
 
-	if ((file = FIO_OpenFile(MKPATH_NEW(PERSIST_FILENAME), O_CREAT | O_WRONLY)) == -1)
-		if (status.folder_exists || (file = FIO_OpenFile(MKPATH_OLD(PERSIST_FILENAME), O_CREAT | O_WRONLY)) == -1)
-			goto end;
+    if ((file = FIO_OpenFile(MKPATH_NEW(PERSIST_FILENAME),
+                             O_CREAT | O_WRONLY)) == -1)
+        if (status.folder_exists ||
+            (file = FIO_OpenFile(MKPATH_OLD(PERSIST_FILENAME),
+                                 O_CREAT | O_WRONLY)) == -1)
+            goto end;
 
-	FIO_WriteFile(file, (void*)&version, sizeof(version));
-	FIO_WriteFile(file, &persist, sizeof(persist));
+    FIO_WriteFile(file, (void *)&version, sizeof(version));
+    FIO_WriteFile(file, &persist, sizeof(persist));
 
 end:
-	if (file != -1)
-		FIO_CloseFile(file);
+    if (file != -1)
+        FIO_CloseFile(file);
 }

@@ -2,7 +2,8 @@
 #define MENU_DLG_H_
 
 /**
- * \file menu_dlg.h Implementation of various dialogs displayed out of the 420D menu
+ * \file menu_dlg.h Implementation of various dialogs displayed out of the 420D
+ * menu
  */
 #include "settings.h"
 

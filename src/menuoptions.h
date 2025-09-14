@@ -2,8 +2,8 @@
 #define MENUOPTIONS_H_
 
 typedef struct {
-	int    size;
-	char **data;
+    int size;
+    char **data;
 } list_t;
 
 extern list_t menuoptions_bool;

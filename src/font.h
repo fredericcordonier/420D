@@ -5,14 +5,13 @@
 #ifndef _font_h_
 #define _font_h_
 
-#include <vxworks.h>
 #include <stdint.h>
+#include <vxworks.h>
 
-typedef struct
-{
-	unsigned        width;
-	unsigned        height;
-	uint16_t        bitmap[];
+typedef struct {
+    unsigned width;
+    unsigned height;
+    uint16_t bitmap[];
 } font_t;
 
 #ifdef USE_FONT_SMALL
