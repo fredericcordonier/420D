@@ -28,6 +28,7 @@ run: build
 	@echo "   ---------------------------------"
 	podman run --rm \
 		-v $(PROJECT_ROOT):/project:Z \
+		-e RELEASE \
 		$(IMAGE_NAME)
 
 install:

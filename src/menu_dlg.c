@@ -24,6 +24,7 @@
  */
 
 #include "firmware/gui.h"
+#include <string.h>
 
 #include "debug.h"
 #include "firmware.h"
@@ -52,6 +53,7 @@
  * Structure containing the named temperatures being displayed.
  */
 named_temps_t named_temps;
+static void get_namedtemps_file_name(char *buf);
 
 static void named_temps_init(menu_t *menu);
 static void named_temps_pgdown(menu_t *menu);
@@ -60,7 +62,6 @@ static void apply_named_temp(const menuitem_t *item);
 static void named_temps_up(menu_t *menu);
 static void named_temps_down(menu_t *menu);
 
-static void named_temps_init(menu_t *menu);
 static void named_temp_save(menu_t *menu);
 static void apply_named_temp(const menuitem_t *item);
 // methods managing the paging of named temperatures:
@@ -202,14 +203,28 @@ static int named_temps_handler(void *user, int lineno, const char *name,
         strncpy0(named_temps.names[temp_index], name, LP_MAX_WORD);
         named_temps.temps[temp_index] = i_l_value;
         // Set boundaries of temp item so that the user may adjust them
-        named_temps_items[temp_index].parm.menuitem_int.min = i_l_min_value;
-        named_temps_items[temp_index].parm.menuitem_int.max = i_l_max_value;
+        named_temps_items[temp_index].parm.menuitem_int.min =
+            MIN(i_l_min_value, i_l_value);
+        named_temps_items[temp_index].parm.menuitem_int.max =
+            MAX(i_l_max_value, i_l_value);
         // Increment the number of temp values found
         ((named_temps_parsing *)user)->nb_values++;
         ((named_temps_parsing *)user)->last_line_read = lineno;
         return 1;
     }
     return 0;
+}
+
+/** Get the named temps file name according to camera language.
+ *
+ * The file shall be in a sub-folder of 420D having the name of the language.
+ */
+static void get_namedtemps_file_name(char *buf) {
+    // Launch named temps from csv file
+    strcpy(buf, FOLDER_PATH);
+    GetLanguageStr(DPData.language, buf + strlen(FOLDER_PATH));
+    stoupper(buf); // convert to upper case
+    strcpy(buf + strlen(buf), "/" NAMED_TEMPS_FILENAME);
 }
 
 /**
@@ -222,16 +237,14 @@ static int named_temps_handler(void *user, int lineno, const char *name,
 static void named_temps_init(menu_t *menu) {
     named_temps_parsing s_l_nt_parsed;
     s_l_nt_parsed.nb_values = 0;
-    if (!named_temps.initd) {
-        // Launch named temps from csv file
-        csv_parse(MKPATH_NEW(NAMED_TEMPS_FILENAME),
-                  settings.named_temps_top_of_page_line, named_temps_handler,
-                  &s_l_nt_parsed);
+    char folder_lang[LP_MAX_WORD];
+    // Launch named temps from csv file
+    get_namedtemps_file_name(folder_lang);
+    csv_parse(folder_lang, settings.named_temps_top_of_page_line,
+                named_temps_handler, &s_l_nt_parsed);
 
-        // Change the size of items to match what was read from file
-        named_temps_page.items.size = s_l_nt_parsed.nb_values;
-        named_temps.initd = TRUE;
-    }
+    // Change the size of items to match what was read from file
+    named_temps_page.items.size = s_l_nt_parsed.nb_values;
 }
 
 /**
@@ -255,12 +268,15 @@ static void named_temp_save(menu_t *menu) {
  */
 static void named_temps_pgdown(menu_t *menu) {
     if (named_temps_page.items.size == MENU_HEIGHT) {
+        char folder_lang[LP_MAX_WORD];
+        get_namedtemps_file_name(folder_lang);
         // Page was completely filled -> maybe some more elements in file
         named_temps_parsing s_l_nt_parsed;
         s_l_nt_parsed.nb_values = 0;
         settings.named_temps_top_of_page_line += MENU_HEIGHT;
         // Launch named temps from csv file
-        csv_parse(MKPATH_NEW(NAMED_TEMPS_FILENAME),
+        get_namedtemps_file_name(folder_lang);
+        csv_parse(folder_lang,
                   settings.named_temps_top_of_page_line, named_temps_handler,
                   &s_l_nt_parsed);
         if (s_l_nt_parsed.nb_values > 0) {
@@ -297,9 +313,11 @@ static int named_temps_load_pgup(void) {
         settings.named_temps_top_of_page_line -= MENU_HEIGHT;
 
         named_temps_parsing s_l_nt_parsed;
+        char folder_lang[LP_MAX_WORD];
+        get_namedtemps_file_name(folder_lang);
         s_l_nt_parsed.nb_values = 0;
         // Launch named temps from csv file
-        csv_parse(MKPATH_NEW(NAMED_TEMPS_FILENAME),
+        csv_parse(folder_lang,
                   settings.named_temps_top_of_page_line, named_temps_handler,
                   &s_l_nt_parsed);
 

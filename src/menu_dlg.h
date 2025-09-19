@@ -8,7 +8,6 @@
 #include "settings.h"
 
 typedef struct {
-    int initd;
     int temps[CCT_COUNT];
     char names[CCT_COUNT][LP_MAX_WORD];
 } named_temps_t;
