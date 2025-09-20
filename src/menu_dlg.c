@@ -64,11 +64,6 @@ static void named_temps_down(menu_t *menu);
 
 static void named_temp_save(menu_t *menu);
 static void apply_named_temp(const menuitem_t *item);
-// methods managing the paging of named temperatures:
-static void named_temps_pgdown(menu_t *menu);
-static void named_temps_pgup(menu_t *menu);
-static void named_temps_down(menu_t *menu);
-static void named_temps_up(menu_t *menu);
 
 // Named temps positions are limited to the size of the menu. They are
 // dynamically loaded per page from the csv file.

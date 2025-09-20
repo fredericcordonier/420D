@@ -1,7 +1,9 @@
 PROJECT := AUTOEXEC
 ADDRESS := 0x7E0000
 RELEASE ?=
-$(info RELEASE est définie comme : [$(RELEASE)])
+
+$(info RELEASE is defined as : [$(RELEASE)])
+
 ifndef CROSS_COMPILE
 	CROSS_COMPILE := arm-none-eabi-
 endif

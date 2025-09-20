@@ -8,5 +8,6 @@
 
 int write_settings_file(int file, settings_t *px_settings);
 int read_settings_file(int file, settings_t *px_settings);
-
+int write_menu_order_file(int file, menu_order_t *px_menu_order);
+int read_menu_order_file(int file, menu_order_t *px_menu_order);
 #endif // SERIALIZE_H

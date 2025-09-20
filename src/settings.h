@@ -2,6 +2,7 @@
 #define SETTINGS_H_
 
 #define SETTINGS_FILENAME "SETTINGS.INI"
+#define MENU_ORDER_FILENAME "MENUORDER.INI"
 
 #define SETTINGS_VERSION 0x40
 
@@ -104,25 +105,19 @@ typedef enum {
 typedef struct {
 #include "settings.def"
 } settings_t;
+
+typedef struct {
+    #include "menu_order.def"
+} menu_order_t;
 #undef PARAM_INT_DEF
 #undef PARAM_INT_ARRAY_DEF
 
 extern settings_t settings;
-
-typedef struct {
-    int main[MENUPAGE_COUNT];
-    int params[MENUPAGE_PARAMS_COUNT];
-    int scripts[MENUPAGE_SCRIPTS_COUNT];
-    int info[MENUPAGE_INFO_COUNT];
-    int developer[MENUPAGE_DEVEL_COUNT];
-    int settings[MENUPAGE_SETTINGS_COUNT];
-} menu_order_t;
-
 extern menu_order_t menu_order;
 
-extern int settings_read(void);
-extern void settings_write(void);
-extern void settings_apply(void);
-extern void settings_restore(void);
+int settings_read(void);
+void settings_write(void);
+void settings_apply(void);
+void settings_restore(void);
 
 #endif /* SETTINGS_H_ */
