@@ -28,7 +28,7 @@ run: build
 	@echo "   ---------------------------------"
 	podman run --rm \
 		-v $(PROJECT_ROOT):/project:Z \
-		-e RELEASE \
+		-e RELEASE -e ENABLE_DEBUG \
 		$(IMAGE_NAME)
 
 install:

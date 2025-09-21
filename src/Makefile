@@ -3,6 +3,7 @@ ADDRESS := 0x7E0000
 RELEASE ?=
 
 $(info RELEASE is defined as : [$(RELEASE)])
+$(info ENABLE_DEBUG is : [$(ENABLE_DEBUG)])
 
 ifndef CROSS_COMPILE
 	CROSS_COMPILE := arm-none-eabi-
@@ -16,6 +17,11 @@ else
 	VERSION := REV-$(shell git rev-parse --short HEAD)
 	D_FLAGS :=
 endif
+
+ifdef ENABLE_DEBUG
+	D_FLAGS += -DENABLE_DEBUG
+endif
+
 
 USE_FONTS := -DUSE_FONT_SMALL
 
