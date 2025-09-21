@@ -4,11 +4,11 @@
 
 #include "firmware/fio.h"
 
+#include "debug.h"
+#include "exposure.h"
 #include "firmware.h"
 #include "macros.h"
 #include "main.h"
-
-#include "exposure.h"
 #include "utils.h"
 
 #include "serialize.h"
@@ -117,14 +117,9 @@ int settings_read() {
     menu_order = menu_order_default;
 
     if ((file = FIO_OpenFile(MKPATH_NEW(SETTINGS_FILENAME), O_RDONLY)) != -1) {
-        if (read_settings_file(file, &settings) != -1)
+        if (read_settings_file(file) != -1) {
             result = TRUE;
-        FIO_CloseFile(file);
-    }
-    if ((file = FIO_OpenFile(MKPATH_NEW(MENU_ORDER_FILENAME), O_RDONLY)) !=
-        -1) {
-        if (read_menu_order_file(file, &menu_order) != -1)
-            result = TRUE;
+        }
         FIO_CloseFile(file);
     }
     return result;
@@ -136,21 +131,13 @@ void settings_write() {
 
     if ((file = FIO_OpenFile(MKPATH_NEW(SETTINGS_FILENAME),
                              O_CREAT | O_WRONLY)) != -1) {
-        success = write_settings_file(file, &settings);
+        success = write_settings_file(file);
         // TODO: only settings are saved now, menu_order to do
         FIO_CloseFile(file);
     }
     if (success == -1) {
         // Don't want to have a partially written file here, delete it.
         FIO_RemoveFile(MKPATH_NEW(SETTINGS_FILENAME));
-    }
-    if ((file = FIO_OpenFile(MKPATH_NEW(MENU_ORDER_FILENAME),
-                             O_CREAT | O_WRONLY)) != -1) {
-        success = write_menu_order_file(file, &menu_order);
-    }
-    if (success == -1) {
-        // Remove file partially written
-        FIO_RemoveFile(MKPATH_NEW(MENU_ORDER_FILENAME));
     }
 }
 

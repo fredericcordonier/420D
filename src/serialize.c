@@ -19,8 +19,6 @@ static int serialize_structure(int file, int *px_data,
                                const char *struct_name);
 static int handle_settings_line(void *user, int lineno, const char *section,
                                 char *name, char *value);
-static int handle_menu_order_line(void *user, int lineno, const char *section,
-                                  char *name, char *value);
 static int handle_section(void *user, int lineno, const char *section);
 
 // Get the list of parameters in settings structure
@@ -72,14 +70,10 @@ static int serialize_structure(int file, int *px_data,
 }
 
 // Write settings into ini file
-int write_settings_file(int file, settings_t *px_settings) {
-    return serialize_structure(file, (int *)px_settings, settings_structure,
+int write_settings_file(int file) {
+    return serialize_structure(file, (int *)(&settings), settings_structure,
                                "settings");
-}
-
-// Write menu_order into ini file
-int write_menu_order_file(int file, menu_order_t *px_menu_order) {
-    return serialize_structure(file, (int *)px_menu_order, menu_order_structure,
+    return serialize_structure(file, (int *)(&menu_order), menu_order_structure,
                                "menu_order");
 }
 
@@ -112,7 +106,7 @@ static int parse_field_name(char *name, field_def *result) {
 }
 
 // Read ini file: handle a line containing a parameter
-static int handle_data_line(void *px_data_struct, int lineno,
+static int handle_data_line(int *px_data_struct, int lineno,
                             const char *section, char *name, char *value,
                             const field_def *struct_definition) {
     const field_def *p_field = struct_definition;
@@ -132,12 +126,12 @@ static int handle_data_line(void *px_data_struct, int lineno,
                     current_value++;
                 }
                 *current_value = '\0';
-                *((int *)(px_data_struct) + offset) = atoi(value);
+                *(px_data_struct + offset) = atoi(value);
                 current_value += 1;
                 value = current_value;
                 offset += 1;
             }
-            *((int *)(px_data_struct) + offset) = atoi(value);
+            *(px_data_struct + offset) = atoi(value);
             break;
         }
         p_field++;
@@ -148,17 +142,19 @@ static int handle_data_line(void *px_data_struct, int lineno,
 // Read one line of settings structure from ini file
 static int handle_settings_line(void *user, int lineno, const char *section,
                                 char *name, char *value) {
+    int *data_struct;
+    if (strcmp(section, "settings") == 0) {
+        data_struct = (int *)(&settings);
+    }
+    else if (strcmp(section, "menu_order")) {
+        data_struct = (int *)(&menu_order);
+    }
+    else {
+        return 1;
+    }
     // Call generic function with settings structure
-    return handle_data_line(user, lineno, section, name, value,
+    return handle_data_line(data_struct, lineno, section, name, value,
                             settings_structure);
-}
-
-// Read one line of menu_order structure from ini
-static int handle_menu_order_line(void *user, int lineno, const char *section,
-                                  char *name, char *value) {
-
-    return handle_data_line(user, lineno, section, name, value,
-                            menu_order_structure);
 }
 
 // Read ini file: handle a section name
@@ -167,23 +163,13 @@ static int handle_section(void *user, int lineno, const char *section) {
 }
 
 // Read an ini file containing settings
-int read_settings_file(int file, settings_t *px_settings) {
+int read_settings_file(int file) {
     int error;
 
     error =
         ini_parse_file(file, "settings", (ini_line_handler)handle_settings_line,
-                       handle_section, px_settings);
+                       handle_section, NULL);
 
-    return error;
-}
-
-// Read menu_orders in ini file
-int read_menu_order_file(int file, menu_order_t *px_menu_order) {
-    int error = -1;
-
-    error = ini_parse_file(file, "menu_order",
-                           (ini_line_handler)handle_menu_order_line,
-                           handle_section, px_menu_order);
     return error;
 }
 
