@@ -6,6 +6,7 @@
 #define SHORTCUT_LABEL_AEB " AEB "
 #define SHORTCUT_LABEL_FLASH "FLASH"
 #define SHORTCUT_LABEL_DISPLAY "DISPL"
+#define SHORTCUT_LABEL_AFCFG   "ORIEN"
 
 extern void shortcut_jump(void);
 extern void shortcut_trash(void);

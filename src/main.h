@@ -26,6 +26,12 @@ typedef enum {
     VF_STATUS_QEXP, //< Quick exposure
 } vf_status_t;
 
+typedef enum {
+    ORIENTATION_H,
+    ORIENTATION_VL,
+    ORIENTATION_VR,
+} camera_orientation;
+
 // Global status
 typedef struct {
     int button_down;      // A button is down, and which one
@@ -53,6 +59,7 @@ typedef struct {
     vf_status_t vf_status; // Status of viewfinder
     int folder_exists;     // 420D folder exists
     int lock_redraw;       // Lock redrawing of dialogs
+    int orientation;       // Camera orientation (set manually by user)
 } status_t;
 
 // Our own code

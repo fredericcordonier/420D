@@ -36,6 +36,7 @@ typedef enum {
     SHORTCUT_HACK_MENU,
     SHORTCUT_FLASH,
     SHORTCUT_DISPLAY,
+    SHORTCUT_AFCFG,
 #ifdef DEV_BTN_ACTION
     SHORTCUT_DEV_BTN,
 #endif
@@ -106,7 +107,7 @@ typedef struct {
 } settings_t;
 
 typedef struct {
-    #include "menu_order.def"
+#include "menu_order.def"
 } menu_order_t;
 #undef PARAM_INT_DEF
 #undef PARAM_INT_ARRAY_DEF

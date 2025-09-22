@@ -83,6 +83,7 @@ const char *label_mlu = SHORTCUT_LABEL_MLU;
 const char *label_aeb = SHORTCUT_LABEL_AEB;
 const char *label_flash = SHORTCUT_LABEL_FLASH;
 const char *label_display = SHORTCUT_LABEL_DISPLAY;
+const char *label_afcfg = SHORTCUT_LABEL_AFCFG;
 
 static void repeat_last_script(void);
 
@@ -104,12 +105,15 @@ static void shortcut_info_mlu(void);
 static void shortcut_info_aeb(void);
 static void shortcut_info_flash(void);
 static void shortcut_info_display(void);
+static void shortcut_info_afcfg(void);
 
 static void shortcut_info(const char *label);
 static void shortcut_info_str(const char *label, const char *value);
 static void shortcut_info_int(const char *label, const int value);
 static void shortcut_info_ec(const char *label, const ec_t value);
 static void shortcut_info_end(void);
+
+static void shortcut_afcfg_orientation(camera_orientation orient);
 
 /**
  * @brief Activate the JUMP shortcut.
@@ -185,6 +189,9 @@ static void shortcut_start(shortcut_t action) {
         break;
     case SHORTCUT_DISPLAY:
         shortcut_info_display();
+        break;
+    case SHORTCUT_AFCFG:
+        shortcut_info_afcfg();
         break;
 #ifdef DEV_BTN_ACTION
     case SHORTCUT_DEV_BTN:
@@ -270,6 +277,9 @@ void shortcut_event_set(void) {
     case SHORTCUT_FLASH:
         shortcut_efl_toggle();
         break;
+    case SHORTCUT_AFCFG:
+        shortcut_afcfg_orientation(ORIENTATION_H);
+        break;
     case SHORTCUT_DISPLAY:
         enqueue_action(beep);
         shortcut_event_end();
@@ -347,6 +357,9 @@ void shortcut_event_right(void) {
     case SHORTCUT_DISPLAY:
         shortcut_disp_set(MIN(DPData.lcd_brightness + 1, 7));
         break;
+    case SHORTCUT_AFCFG:
+        shortcut_afcfg_orientation(ORIENTATION_VR);
+        break;
     default:
         break;
     }
@@ -369,6 +382,9 @@ void shortcut_event_left(void) {
         break;
     case SHORTCUT_DISPLAY:
         shortcut_disp_set(MAX(DPData.lcd_brightness - 1, 1));
+        break;
+    case SHORTCUT_AFCFG:
+        shortcut_afcfg_orientation(ORIENTATION_VL);
         break;
     default:
         break;
@@ -450,6 +466,28 @@ static void shortcut_f2c_toggle(void) {
                          1 - DPData.cf_flash_sync_rear);
 
     shortcut_info_flash();
+}
+
+/**
+ * @brief (manually) Set camera orientation to get
+ *
+ */
+static void shortcut_afcfg_orientation(camera_orientation orient) {
+    // Remember orientation
+    status.orientation = orient;
+    // Set the corresponding AF point
+    switch (status.orientation) {
+    case ORIENTATION_H:
+        send_to_intercom(IC_SET_AF_POINT, settings.af_pattern_horizontal);
+        break;
+    case ORIENTATION_VL:
+        send_to_intercom(IC_SET_AF_POINT, settings.af_pattern_vertical_left);
+        break;
+    case ORIENTATION_VR:
+        send_to_intercom(IC_SET_AF_POINT, settings.af_pattern_vertical_right);
+        break;
+    }
+    shortcut_info_afcfg();
 }
 
 /**
@@ -555,6 +593,22 @@ static void shortcut_info_flash() {
             DPData.cf_emit_flash ? (DPData.cf_flash_sync_rear ? "2nd" : "On")
                                  : "Off");
     shortcut_info_str(label_flash, buffer);
+}
+
+/**
+ * @brief Display info about AF configuration shortcut
+ *
+ */
+static void shortcut_info_afcfg(void) {
+    char buffer[8] = "";
+    if (status.orientation == ORIENTATION_H) {
+        sprintf(buffer, "^");
+    } else if (status.orientation == ORIENTATION_VL) {
+        sprintf(buffer, "<");
+    } else if (status.orientation == ORIENTATION_VR) {
+        sprintf(buffer, ">");
+    }
+    shortcut_info_str(label_afcfg, buffer);
 }
 
 /**

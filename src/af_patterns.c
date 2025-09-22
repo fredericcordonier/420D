@@ -1,4 +1,5 @@
 #include <vxworks.h>
+#include "settings.h"
 
 /**
  * @file af_patterns.c
@@ -71,6 +72,8 @@
 #include "utils.h"
 
 #include "af_patterns.h"
+
+static void afp_set(int afp);
 
 /**
  * @brief List of AF patterns
@@ -146,35 +149,72 @@ pattern_map_item_t pattern_map[] = {
 int afp_transformer(int pattern, direction_t direction);
 
 /**
+ * @brief set AFP selection and store it depending on orientation.
+ */
+static void afp_set(int afp) {
+    send_to_intercom(IC_SET_AF_POINT, afp);
+    switch (status.orientation) {
+    case ORIENTATION_H:
+        settings.af_pattern_horizontal = afp;
+        break;
+    case ORIENTATION_VL:
+        settings.af_pattern_vertical_left = afp;
+        break;
+    case ORIENTATION_VR:
+        settings.af_pattern_vertical_right = afp;
+        break;
+    }
+}
+
+/**
  * @brief Enter the AFP selection
  * @ingroup af_pattern
  *
  */
 void afp_enter() { beep(); }
 
+/**
+ * @brief SET button in AFP selection
+ * @ingroup af_pattern
+ *
+ */
 void afp_center() {
-    send_to_intercom(IC_SET_AF_POINT,
-                     afp_transformer(DPData.af_point, DIRECTION_CENTER));
+    afp_set(afp_transformer(DPData.af_point, DIRECTION_CENTER));
 }
 
+/**
+ * @brief Up button in AFP selection
+ * @ingroup af_pattern
+ *
+ */
 void afp_top() {
-    send_to_intercom(IC_SET_AF_POINT,
-                     afp_transformer(DPData.af_point, DIRECTION_UP));
-}
+    afp_set(afp_transformer(DPData.af_point, DIRECTION_UP));}
 
+/**
+ * @brief Down button in AFP selection
+ * @ingroup af_pattern
+ *
+ */
 void afp_bottom() {
-    send_to_intercom(IC_SET_AF_POINT,
-                     afp_transformer(DPData.af_point, DIRECTION_DOWN));
+    afp_set(afp_transformer(DPData.af_point, DIRECTION_DOWN));
 }
 
+/**
+ * @brief Left button in AFP selection
+ * @ingroup af_pattern
+ *
+ */
 void afp_left() {
-    send_to_intercom(IC_SET_AF_POINT,
-                     afp_transformer(DPData.af_point, DIRECTION_LEFT));
+    afp_set(afp_transformer(DPData.af_point, DIRECTION_LEFT));
 }
 
+/**
+ * @brief Right button in AFP selection
+ * @ingroup af_pattern
+ *
+ */
 void afp_right() {
-    send_to_intercom(IC_SET_AF_POINT,
-                     afp_transformer(DPData.af_point, DIRECTION_RIGHT));
+    afp_set(afp_transformer(DPData.af_point, DIRECTION_RIGHT));
 }
 
 /**
