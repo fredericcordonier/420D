@@ -304,196 +304,200 @@ const char *debug_gui_name(int event) {
 
 #endif // ENABLE_DEBUG
 
-#ifdef ENABLE_DEBUG_DPR_DATA
+#ifdef ENABLE_DEBUG // _DPR_DATA
 
 void dump_dpr_data(void) {
-    printf("\n\nDUMPING DPR_DATA\n\n");
-    printf("\t%24s : 0x%08X [%d]\n", "ae", DPData.ae, DPData.ae);
-    printf("\t%24s : 0x%08X [%d]\n", "metering", DPData.metering,
-           DPData.metering);
-    printf("\t%24s : 0x%08X [%d]\n", "efcomp", DPData.efcomp, DPData.efcomp);
-    printf("\t%24s : 0x%08X [%d]\n", "drive", DPData.drive, DPData.drive);
-    printf("\t%24s : 0x%08X [%d]\n", "wb", DPData.wb, DPData.wb);
-    printf("\t%24s : 0x%08X [%d]\n", "af", DPData.af, DPData.af);
-    printf("\t%24s : 0x%08X [%d]\n", "af_point", DPData.af_point,
-           DPData.af_point);
-    printf("\t%24s : 0x%08X [%d]\n", "tv_val", DPData.tv_val, DPData.tv_val);
-    printf("\t%24s : 0x%08X [%d]\n", "av_val", DPData.av_val, DPData.av_val);
-    printf("\t%24s : 0x%08X [%d]\n", "av_comp", DPData.av_comp, DPData.av_comp);
-    printf("\t%24s : 0x%08X [%d]\n", "iso", DPData.iso, DPData.iso);
-    printf("\t%24s : 0x%08X [%d]\n", "red_eye", DPData.red_eye, DPData.red_eye);
-    printf("\t%24s : 0x%08X [%d]\n", "ae_bkt", DPData.ae_bkt, DPData.ae_bkt);
-    printf("\t%24s : 0x%08X [%d]\n", "wb_bkt", DPData.wb_bkt, DPData.wb_bkt);
-    printf("\t%24s : 0x%08X [%d]\n", "beep", DPData.beep, DPData.beep);
-    printf("\t%24s : 0x%08X [%d]\n", "color_temp", DPData.color_temp,
-           DPData.color_temp);
-    printf("\t%24s : 0x%08X [%d]\n", "auto_power_off", DPData.auto_power_off,
-           DPData.auto_power_off);
-    printf("\t%24s : 0x%08X [%d]\n", "view_type", DPData.view_type,
-           DPData.view_type);
-    printf("\t%24s : 0x%08X [%d]\n", "review_time", DPData.review_time,
-           DPData.review_time);
-    printf("\t%24s : 0x%08X [%d]\n", "auto_rotate", DPData.auto_rotate,
-           DPData.auto_rotate);
-    printf("\t%24s : 0x%08X [%d]\n", "lcd_brightness", DPData.lcd_brightness,
-           DPData.lcd_brightness);
-    printf("\t%24s : 0x%08X [%d]\n", "date_time", DPData.date_time,
-           DPData.date_time);
-    printf("\t%24s : 0x%08X [%d]\n", "file_numbering", DPData.file_numbering,
-           DPData.file_numbering);
-    printf("\t%24s : 0x%08X [%d]\n", "language", DPData.language,
-           DPData.language);
-    printf("\t%24s : 0x%08X [%d]\n", "video_system", DPData.video_system,
-           DPData.video_system);
-    printf("\t%24s : 0x%08X [%d]\n", "picture_style_mode",
-           DPData.picture_style_mode, DPData.picture_style_mode);
-    printf("\t%24s : 0x%08X [%d]\n", "histogram", DPData.histogram,
-           DPData.histogram);
-    printf("\t%24s : 0x%08X [%d]\n", "disp_afpoint", DPData.disp_afpoint,
-           DPData.disp_afpoint);
-    printf("\t%24s : 0x%08X [%d]\n", "color_space", DPData.color_space,
-           DPData.color_space);
-    printf("\t%24s : 0x%08X [%d]\n", "img_format", DPData.img_format,
-           DPData.img_format);
-    printf("\t%24s : 0x%08X [%d]\n", "img_size", DPData.img_size,
-           DPData.img_size);
-    printf("\t%24s : 0x%08X [%d]\n", "img_quality", DPData.img_quality,
-           DPData.img_quality);
-    printf("\t%24s : 0x%08X [%d]\n", "cfmenupos", DPData.cfmenupos,
-           DPData.cfmenupos);
-    printf("\t%24s : 0x%08X [%d]\n", "menupos", DPData.menupos, DPData.menupos);
-    printf("\t%24s : 0x%08X [%d]\n", "wbcomp_gm", DPData.wbcomp_gm,
-           DPData.wbcomp_gm);
-    printf("\t%24s : 0x%08X [%d]\n", "wbcomp_ab", DPData.wbcomp_ab,
-           DPData.wbcomp_ab);
-    printf("\t%24s : 0x%08X [%d]\n", "forbid_rel", DPData.forbid_rel,
-           DPData.forbid_rel);
-    printf("\t%24s : 0x%08X [%d]\n", "cf_set_button_func",
-           DPData.cf_set_button_func, DPData.cf_set_button_func);
-    printf("\t%24s : 0x%08X [%d]\n", "cf_nr_for_long_exposure",
-           DPData.cf_nr_for_long_exposure, DPData.cf_nr_for_long_exposure);
-    printf("\t%24s : 0x%08X [%d]\n", "cf_efav_fix_x", DPData.cf_efav_fix_x,
-           DPData.cf_efav_fix_x);
-    printf("\t%24s : 0x%08X [%d]\n", "cf_afael_active_button",
-           DPData.cf_afael_active_button, DPData.cf_afael_active_button);
-    printf("\t%24s : 0x%08X [%d]\n", "cf_emit_aux", DPData.cf_emit_aux,
-           DPData.cf_emit_aux);
-    printf("\t%24s : 0x%08X [%d]\n", "cf_explevel_inc_third",
-           DPData.cf_explevel_inc_third, DPData.cf_explevel_inc_third);
-    printf("\t%24s : 0x%08X [%d]\n", "cf_emit_flash", DPData.cf_emit_flash,
-           DPData.cf_emit_flash);
-    printf("\t%24s : 0x%08X [%d]\n", "cf_extend_iso", DPData.cf_extend_iso,
-           DPData.cf_extend_iso);
-    printf("\t%24s : 0x%08X [%d]\n", "cf_aeb_sequence", DPData.cf_aeb_sequence,
-           DPData.cf_aeb_sequence);
-    printf("\t%24s : 0x%08X [%d]\n", "cf_si_indicate", DPData.cf_si_indicate,
-           DPData.cf_si_indicate);
-    printf("\t%24s : 0x%08X [%d]\n", "cf_menu_pos", DPData.cf_menu_pos,
-           DPData.cf_menu_pos);
-    printf("\t%24s : 0x%08X [%d]\n", "cf_mirror_up_lock",
-           DPData.cf_mirror_up_lock, DPData.cf_mirror_up_lock);
-    printf("\t%24s : 0x%08X [%d]\n", "cf_fpsel_method", DPData.cf_fpsel_method,
-           DPData.cf_fpsel_method);
-    printf("\t%24s : 0x%08X [%d]\n", "cf_flash_metering",
-           DPData.cf_flash_metering, DPData.cf_flash_metering);
-    printf("\t%24s : 0x%08X [%d]\n", "cf_flash_sync_rear",
-           DPData.cf_flash_sync_rear, DPData.cf_flash_sync_rear);
-    printf("\t%24s : 0x%08X [%d]\n", "cf_safety_shift", DPData.cf_safety_shift,
-           DPData.cf_safety_shift);
-    printf("\t%24s : 0x%08X [%d]\n", "cf_lens_button", DPData.cf_lens_button,
-           DPData.cf_lens_button);
-    printf("\t%24s : 0x%08X [%d]\n", "cf_original_eval",
-           DPData.cf_original_eval, DPData.cf_original_eval);
-    printf("\t%24s : 0x%08X [%d]\n", "cf_qr_magnify", DPData.cf_qr_magnify,
-           DPData.cf_qr_magnify);
-    printf("\t%24s : 0x%08X [%d]\n", "batt_bclevel", DPData.batt_bclevel,
-           DPData.batt_bclevel);
-    printf("\t%24s : 0x%08X [%d]\n", "batt_type", DPData.batt_type,
-           DPData.batt_type);
-    printf("\t%24s : 0x%08X [%d]\n", "print_user_property",
-           DPData.print_user_property, DPData.print_user_property);
-    printf("\t%24s : 0x%08X [%d]\n", "printer_property",
-           DPData.printer_property, DPData.printer_property);
-    printf("\t%24s : 0x%08X [%d]\n", "cluster_size", DPData.cluster_size,
-           DPData.cluster_size);
-    printf("\t%24s : 0x%08X [%d]\n", "remain_cluster", DPData.remain_cluster,
-           DPData.remain_cluster);
-    printf("\t%24s : 0x%08X [%d]\n", "file_id", DPData.file_id, DPData.file_id);
-    printf("\t%24s : 0x%08X [%d]\n", "avo", DPData.avo, DPData.avo);
-    printf("\t%24s : 0x%08X [%d]\n", "avmax", DPData.avmax, DPData.avmax);
-    printf("\t%24s : 0x%08X [%d]\n", "ef_lens_exist", DPData.ef_lens_exist,
-           DPData.ef_lens_exist);
-    printf("\t%24s : 0x%08X [%d]\n", "avail_shot", DPData.avail_shot,
-           DPData.avail_shot);
-    printf("\t%24s : 0x%08X [%d]\n", "qrev_imgprop", DPData.qrev_imgprop,
-           DPData.qrev_imgprop);
-    printf("\t%24s : 0x%08X [%d]\n", "printer_connect_type",
-           DPData.printer_connect_type, DPData.printer_connect_type);
-    printf("\t%24s : 0x%08X [%d]\n", "mwbdat_red", DPData.mwbdat_red,
-           DPData.mwbdat_red);
-    printf("\t%24s : 0x%08X [%d]\n", "mwbdat_green1", DPData.mwbdat_green1,
-           DPData.mwbdat_green1);
-    printf("\t%24s : 0x%08X [%d]\n", "mwbdat_green2", DPData.mwbdat_green2,
-           DPData.mwbdat_green2);
-    printf("\t%24s : 0x%08X [%d]\n", "mwbdat_blue", DPData.mwbdat_blue,
-           DPData.mwbdat_blue);
-    printf("\t%24s : 0x%08X [%d]\n", "videojack_connect",
-           DPData.videojack_connect, DPData.videojack_connect);
-    printf("\t%24s : 0x%08X [%d]\n", "incomp_image", DPData.incomp_image,
-           DPData.incomp_image);
-    printf("\t%24s : 0x%08X [%d]\n", "status_busy_flag",
-           DPData.status_busy_flag, DPData.status_busy_flag);
-    printf("\t%24s : 0x%08X [%d]\n", "special_bc_result",
-           DPData.special_bc_result, DPData.special_bc_result);
-    printf("\t%24s : 0x%08X [%d]\n", "reset_offtimer", DPData.reset_offtimer,
-           DPData.reset_offtimer);
-    printf("\t%24s : 0x%08X [%d]\n", "printer_device_property",
-           DPData.printer_device_property, DPData.printer_device_property);
-    printf("\t%24s : 0x%08X [%d]\n", "printer_job_property",
-           DPData.printer_job_property, DPData.printer_job_property);
-    printf("\t%24s : 0x%08X [%d]\n", "dpof_setting", DPData.dpof_setting,
-           DPData.dpof_setting);
-    printf("\t%24s : 0x%08X [%d]\n", "gui_mode", DPData.gui_mode,
-           DPData.gui_mode);
-    printf("\t%24s : 0x%08X [%d]\n", "dp_request_return",
-           DPData.dp_request_return, DPData.dp_request_return);
-    printf("\t%24s : 0x%08X [%d]\n", "commadp_chg_config",
-           DPData.commadp_chg_config, DPData.commadp_chg_config);
-    printf("\t%24s : 0x%08X [%d]\n", "play_jump_type", DPData.play_jump_type,
-           DPData.play_jump_type);
-    printf("\t%24s : 0x%08X [%d]\n", "capability_setting",
-           DPData.capability_setting, DPData.capability_setting);
-    printf("\t%24s : 0x%08X [%d]\n", "selected_af_mode",
-           DPData.selected_af_mode, DPData.selected_af_mode);
-    printf("\t%24s : 0x%08X [%d]\n", "disable_ui_lock", DPData.disable_ui_lock,
-           DPData.disable_ui_lock);
-    printf("\t%24s : 0x%08X [%d]\n", "isd_style_flag", DPData.isd_style_flag,
-           DPData.isd_style_flag);
-    printf("\t%24s : 0x%08X [%d]\n", "ptp", DPData.ptp, DPData.ptp);
-    printf("\t%24s : 0x%08X [%d]\n", "playback_file_id",
-           DPData.playback_file_id, DPData.playback_file_id);
-    printf("\t%24s : 0x%08X [%d]\n", "playback_file_id_pos",
-           DPData.playback_file_id_pos, DPData.playback_file_id_pos);
-    printf("\t%24s : 0x%08X [%d]\n", "usb_connect_type",
-           DPData.usb_connect_type, DPData.usb_connect_type);
-    printf("\t%24s : 0x%08X [%d]\n", "face_sensor_disable",
-           DPData.face_sensor_disable, DPData.face_sensor_disable);
-    printf("\t%24s : 0x%08X [%d]\n", "field_178", DPData.field_178,
-           DPData.field_178);
-    printf("\t%24s : 0x%08X [%d]\n", "field_17C", DPData.field_17C,
-           DPData.field_17C);
-    printf("\t%24s : 0x%08X [%d]\n", "field_180", DPData.field_180,
-           DPData.field_180);
-    printf("\t%24s : 0x%08X [%d]\n", "field_184", DPData.field_184,
-           DPData.field_184);
-    printf("\t%24s : 0x%08X [%d]\n", "cf_tft_on_power_on",
-           DPData.cf_tft_on_power_on, DPData.cf_tft_on_power_on);
-    printf("\t%24s : 0x%08X [%d]\n", "field_18C", DPData.field_18C,
-           DPData.field_18C);
-    printf("\t%24s : 0x%08X [%d]\n", "field_190", DPData.field_190,
-           DPData.field_190);
+    debug_log("\nDUMPING DPR_DATA\n");
+    debug_log("\t%s : 0x%08X [%d]", "ae", DPData.ae, DPData.ae);
+    debug_log("\t%s : 0x%08X [%d]", "metering", DPData.metering,
+              DPData.metering);
+    debug_log("\t%s : 0x%08X [%d]", "efcomp", DPData.efcomp, DPData.efcomp);
+    debug_log("\t%s : 0x%08X [%d]", "drive", DPData.drive, DPData.drive);
+    debug_log("\t%s : 0x%08X [%d]", "wb", DPData.wb, DPData.wb);
+    debug_log("\t%s : 0x%08X [%d]", "af", DPData.af, DPData.af);
+    debug_log("\t%s : 0x%08X [%d]", "af_point", DPData.af_point,
+              DPData.af_point);
+    debug_log("\t%s : 0x%08X [%d]", "tv_val", DPData.tv_val, DPData.tv_val);
+    debug_log("\t%s : 0x%08X [%d]", "av_val", DPData.av_val, DPData.av_val);
+    debug_log("\t%s : 0x%08X [%d]", "av_comp", DPData.av_comp,
+              DPData.av_comp);
+    debug_log("\t%s : 0x%08X [%d]", "iso", DPData.iso, DPData.iso);
+    debug_log("\t%s : 0x%08X [%d]", "red_eye", DPData.red_eye,
+              DPData.red_eye);
+    debug_log("\t%s : 0x%08X [%d]", "ae_bkt", DPData.ae_bkt, DPData.ae_bkt);
+    debug_log("\t%s : 0x%08X [%d]", "wb_bkt", DPData.wb_bkt, DPData.wb_bkt);
+    debug_log("\t%s : 0x%08X [%d]", "beep", DPData.beep, DPData.beep);
+    debug_log("\t%s : 0x%08X [%d]", "color_temp", DPData.color_temp,
+              DPData.color_temp);
+    debug_log("\t%s : 0x%08X [%d]", "auto_power_off", DPData.auto_power_off,
+              DPData.auto_power_off);
+    debug_log("\t%s : 0x%08X [%d]", "view_type", DPData.view_type,
+              DPData.view_type);
+    debug_log("\t%s : 0x%08X [%d]", "review_time", DPData.review_time,
+              DPData.review_time);
+    debug_log("\t%s : 0x%08X [%d]", "auto_rotate", DPData.auto_rotate,
+              DPData.auto_rotate);
+    debug_log("\t%s : 0x%08X [%d]", "lcd_brightness", DPData.lcd_brightness,
+              DPData.lcd_brightness);
+    debug_log("\t%s : 0x%08X [%d]", "date_time", DPData.date_time,
+              DPData.date_time);
+    debug_log("\t%s : 0x%08X [%d]", "file_numbering", DPData.file_numbering,
+              DPData.file_numbering);
+    debug_log("\t%s : 0x%08X [%d]", "language", DPData.language,
+              DPData.language);
+    debug_log("\t%s : 0x%08X [%d]", "video_system", DPData.video_system,
+              DPData.video_system);
+    debug_log("\t%s : 0x%08X [%d]", "picture_style_mode",
+              DPData.picture_style_mode, DPData.picture_style_mode);
+    debug_log("\t%s : 0x%08X [%d]", "histogram", DPData.histogram,
+              DPData.histogram);
+    debug_log("\t%s : 0x%08X [%d]", "disp_afpoint", DPData.disp_afpoint,
+              DPData.disp_afpoint);
+    debug_log("\t%s : 0x%08X [%d]", "color_space", DPData.color_space,
+              DPData.color_space);
+    debug_log("\t%s : 0x%08X [%d]", "img_format", DPData.img_format,
+              DPData.img_format);
+    debug_log("\t%s : 0x%08X [%d]", "img_size", DPData.img_size,
+              DPData.img_size);
+    debug_log("\t%s : 0x%08X [%d]", "img_quality", DPData.img_quality,
+              DPData.img_quality);
+    debug_log("\t%s : 0x%08X [%d]", "cfmenupos", DPData.cfmenupos,
+              DPData.cfmenupos);
+    debug_log("\t%s : 0x%08X [%d]", "menupos", DPData.menupos,
+              DPData.menupos);
+    debug_log("\t%s : 0x%08X [%d]", "wbcomp_gm", DPData.wbcomp_gm,
+              DPData.wbcomp_gm);
+    debug_log("\t%s : 0x%08X [%d]", "wbcomp_ab", DPData.wbcomp_ab,
+              DPData.wbcomp_ab);
+    debug_log("\t%s : 0x%08X [%d]", "forbid_rel", DPData.forbid_rel,
+              DPData.forbid_rel);
+    debug_log("\t%s : 0x%08X [%d]", "cf_set_button_func",
+              DPData.cf_set_button_func, DPData.cf_set_button_func);
+    debug_log("\t%s : 0x%08X [%d]", "cf_nr_for_long_exposure",
+              DPData.cf_nr_for_long_exposure, DPData.cf_nr_for_long_exposure);
+    debug_log("\t%s : 0x%08X [%d]", "cf_efav_fix_x", DPData.cf_efav_fix_x,
+              DPData.cf_efav_fix_x);
+    debug_log("\t%s : 0x%08X [%d]", "cf_afael_active_button",
+              DPData.cf_afael_active_button, DPData.cf_afael_active_button);
+    debug_log("\t%s : 0x%08X [%d]", "cf_emit_aux", DPData.cf_emit_aux,
+              DPData.cf_emit_aux);
+    debug_log("\t%s : 0x%08X [%d]", "cf_explevel_inc_third",
+              DPData.cf_explevel_inc_third, DPData.cf_explevel_inc_third);
+    debug_log("\t%s : 0x%08X [%d]", "cf_emit_flash", DPData.cf_emit_flash,
+              DPData.cf_emit_flash);
+    debug_log("\t%s : 0x%08X [%d]", "cf_extend_iso", DPData.cf_extend_iso,
+              DPData.cf_extend_iso);
+    debug_log("\t%s : 0x%08X [%d]", "cf_aeb_sequence",
+              DPData.cf_aeb_sequence, DPData.cf_aeb_sequence);
+    debug_log("\t%s : 0x%08X [%d]", "cf_si_indicate", DPData.cf_si_indicate,
+              DPData.cf_si_indicate);
+    debug_log("\t%s : 0x%08X [%d]", "cf_menu_pos", DPData.cf_menu_pos,
+              DPData.cf_menu_pos);
+    debug_log("\t%s : 0x%08X [%d]", "cf_mirror_up_lock",
+              DPData.cf_mirror_up_lock, DPData.cf_mirror_up_lock);
+    debug_log("\t%s : 0x%08X [%d]", "cf_fpsel_method",
+              DPData.cf_fpsel_method, DPData.cf_fpsel_method);
+    debug_log("\t%s : 0x%08X [%d]", "cf_flash_metering",
+              DPData.cf_flash_metering, DPData.cf_flash_metering);
+    debug_log("\t%s : 0x%08X [%d]", "cf_flash_sync_rear",
+              DPData.cf_flash_sync_rear, DPData.cf_flash_sync_rear);
+    debug_log("\t%s : 0x%08X [%d]", "cf_safety_shift",
+              DPData.cf_safety_shift, DPData.cf_safety_shift);
+    debug_log("\t%s : 0x%08X [%d]", "cf_lens_button", DPData.cf_lens_button,
+              DPData.cf_lens_button);
+    debug_log("\t%s : 0x%08X [%d]", "cf_original_eval",
+              DPData.cf_original_eval, DPData.cf_original_eval);
+    debug_log("\t%s : 0x%08X [%d]", "cf_qr_magnify", DPData.cf_qr_magnify,
+              DPData.cf_qr_magnify);
+    debug_log("\t%s : 0x%08X [%d]", "batt_bclevel", DPData.batt_bclevel,
+              DPData.batt_bclevel);
+    debug_log("\t%s : 0x%08X [%d]", "batt_type", DPData.batt_type,
+              DPData.batt_type);
+    debug_log("\t%s : 0x%08X [%d]", "print_user_property",
+              DPData.print_user_property, DPData.print_user_property);
+    debug_log("\t%s : 0x%08X [%d]", "printer_property",
+              DPData.printer_property, DPData.printer_property);
+    debug_log("\t%s : 0x%08X [%d]", "cluster_size", DPData.cluster_size,
+              DPData.cluster_size);
+    debug_log("\t%s : 0x%08X [%d]", "remain_cluster", DPData.remain_cluster,
+              DPData.remain_cluster);
+    debug_log("\t%s : 0x%08X [%d]", "file_id", DPData.file_id,
+              DPData.file_id);
+    debug_log("\t%s : 0x%08X [%d]", "avo", DPData.avo, DPData.avo);
+    debug_log("\t%s : 0x%08X [%d]", "avmax", DPData.avmax, DPData.avmax);
+    debug_log("\t%s : 0x%08X [%d]", "ef_lens_exist", DPData.ef_lens_exist,
+              DPData.ef_lens_exist);
+    debug_log("\t%s : 0x%08X [%d]", "avail_shot", DPData.avail_shot,
+              DPData.avail_shot);
+    debug_log("\t%s : 0x%08X [%d]", "qrev_imgprop", DPData.qrev_imgprop,
+              DPData.qrev_imgprop);
+    debug_log("\t%s : 0x%08X [%d]", "printer_connect_type",
+              DPData.printer_connect_type, DPData.printer_connect_type);
+    debug_log("\t%s : 0x%08X [%d]", "mwbdat_red", DPData.mwbdat_red,
+              DPData.mwbdat_red);
+    debug_log("\t%s : 0x%08X [%d]", "mwbdat_green1", DPData.mwbdat_green1,
+              DPData.mwbdat_green1);
+    debug_log("\t%s : 0x%08X [%d]", "mwbdat_green2", DPData.mwbdat_green2,
+              DPData.mwbdat_green2);
+    debug_log("\t%s : 0x%08X [%d]", "mwbdat_blue", DPData.mwbdat_blue,
+              DPData.mwbdat_blue);
+    debug_log("\t%s : 0x%08X [%d]", "videojack_connect",
+              DPData.videojack_connect, DPData.videojack_connect);
+    debug_log("\t%s : 0x%08X [%d]", "incomp_image", DPData.incomp_image,
+              DPData.incomp_image);
+    debug_log("\t%s : 0x%08X [%d]", "status_busy_flag",
+              DPData.status_busy_flag, DPData.status_busy_flag);
+    debug_log("\t%s : 0x%08X [%d]", "special_bc_result",
+              DPData.special_bc_result, DPData.special_bc_result);
+    debug_log("\t%s : 0x%08X [%d]", "reset_offtimer", DPData.reset_offtimer,
+              DPData.reset_offtimer);
+    debug_log("\t%s : 0x%08X [%d]", "printer_device_property",
+              DPData.printer_device_property, DPData.printer_device_property);
+    debug_log("\t%s : 0x%08X [%d]", "printer_job_property",
+              DPData.printer_job_property, DPData.printer_job_property);
+    debug_log("\t%s : 0x%08X [%d]", "dpof_setting", DPData.dpof_setting,
+              DPData.dpof_setting);
+    debug_log("\t%s : 0x%08X [%d]", "gui_mode", DPData.gui_mode,
+              DPData.gui_mode);
+    debug_log("\t%s : 0x%08X [%d]", "dp_request_return",
+              DPData.dp_request_return, DPData.dp_request_return);
+    debug_log("\t%s : 0x%08X [%d]", "commadp_chg_config",
+              DPData.commadp_chg_config, DPData.commadp_chg_config);
+    debug_log("\t%s : 0x%08X [%d]", "play_jump_type", DPData.play_jump_type,
+              DPData.play_jump_type);
+    debug_log("\t%s : 0x%08X [%d]", "capability_setting",
+              DPData.capability_setting, DPData.capability_setting);
+    debug_log("\t%s : 0x%08X [%d]", "selected_af_mode",
+              DPData.selected_af_mode, DPData.selected_af_mode);
+    debug_log("\t%s : 0x%08X [%d]", "disable_ui_lock",
+              DPData.disable_ui_lock, DPData.disable_ui_lock);
+    debug_log("\t%s : 0x%08X [%d]", "isd_style_flag", DPData.isd_style_flag,
+              DPData.isd_style_flag);
+    debug_log("\t%s : 0x%08X [%d]", "ptp", DPData.ptp, DPData.ptp);
+    debug_log("\t%s : 0x%08X [%d]", "playback_file_id",
+              DPData.playback_file_id, DPData.playback_file_id);
+    debug_log("\t%s : 0x%08X [%d]", "playback_file_id_pos",
+              DPData.playback_file_id_pos, DPData.playback_file_id_pos);
+    debug_log("\t%s : 0x%08X [%d]", "usb_connect_type",
+              DPData.usb_connect_type, DPData.usb_connect_type);
+    debug_log("\t%s : 0x%08X [%d]", "face_sensor_disable",
+              DPData.face_sensor_disable, DPData.face_sensor_disable);
+    debug_log("\t%s : 0x%08X [%d]", "field_178", DPData.field_178,
+              DPData.field_178);
+    debug_log("\t%s : 0x%08X [%d]", "field_17C", DPData.field_17C,
+              DPData.field_17C);
+    debug_log("\t%s : 0x%08X [%d]", "field_180", DPData.field_180,
+              DPData.field_180);
+    debug_log("\t%s : 0x%08X [%d]", "field_184", DPData.field_184,
+              DPData.field_184);
+    debug_log("\t%s : 0x%08X [%d]", "cf_tft_on_power_on",
+              DPData.cf_tft_on_power_on, DPData.cf_tft_on_power_on);
+    debug_log("\t%s : 0x%08X [%d]", "field_18C", DPData.field_18C,
+              DPData.field_18C);
+    debug_log("\t%s : 0x%08X [%d]", "field_190", DPData.field_190,
+              DPData.field_190);
 
-    printf("\n\nEND\n\n");
+    debug_log("\nEND\n");
 }
 
 #endif // ENABLE_DEBUG_DPR_DATA

@@ -32,6 +32,7 @@
     LANG_PAIR(I_MEMSPY_DISABLE, "MemSpy Disable")                              \
     LANG_PAIR(I_DUMP_LOG_TO_FILE, "Dump log to file")                          \
     LANG_PAIR(I_PRINT_INFO, "Print info to log")                               \
+    LANG_PAIR(I_DUMP_DPR, "Dump DPR Data")                                     \
     LANG_PAIR(I_ENTER_FACTORY_MODE, "Enter factory Mode")                      \
     LANG_PAIR(I_EXIT_FACTORY_MODE, "Exit  factory Mode")                       \
     LANG_PAIR(I_TEST_DIALOGS, "Test dialogs")                                  \
@@ -155,6 +156,7 @@
     LANG_PAIR(V_REPEAT, "Repeat last script")                                  \
     LANG_PAIR(V_HACK_MENU, "420D Main Menu")                                   \
     LANG_PAIR(V_TOGGLE_FLASH, "Flash on/off")                                  \
+    LANG_PAIR(V_AF_CONFIG, "Configuration AF")                                 \
     LANG_PAIR(S_CMODE_NAME, "Custom mode")                                     \
     LANG_PAIR(S_INFINITE, "INF!")                                              \
     LANG_PAIR(V_CAMERA, "Camera")                                              \

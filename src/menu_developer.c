@@ -40,12 +40,19 @@ static void test_dialog_create(const menuitem_t *menu);
 
 static void menupage_developer_dump_log(const menuitem_t *menuitem);
 static void menupage_developer_print_info(const menuitem_t *menuitem);
+#ifdef ENABLE_DEBUG
+static void menupage_developer_dump_dpr(const menuitem_t *menuitem);
+#endif
 
 menuitem_t menu_developer_items[] = {
     MENUITEM_LAUNCH(MENUPAGE_DEVEL_DUMP, LP_WORD(L_I_DUMP_LOG_TO_FILE),
                     menupage_developer_dump_log),
     MENUITEM_LAUNCH(MENUPAGE_DEVEL_PRINT, LP_WORD(L_I_PRINT_INFO),
                     menupage_developer_print_info),
+#ifdef ENABLE_DEBUG
+    MENUITEM_LAUNCH(MENUPAGE_DEVEL_DPR, LP_WORD(L_I_DUMP_DPR),
+                    menupage_developer_dump_dpr),
+#endif
     MENUITEM_BOOLEAN(MENUPAGE_DEVEL_DEBUG, LP_WORD(L_I_DEBUG_ON_POWERON),
                      &settings.debug_on_poweron, NULL),
     MENUITEM_LOGFILE(MENUPAGE_DEVEL_MODE, LP_WORD(L_I_LOGFILE_MODE),
@@ -95,6 +102,13 @@ static void menupage_developer_dump_log(const menuitem_t *menuitem) {
 static void menupage_developer_print_info(const menuitem_t *menuitem) {
     print_info();
 }
+
+#ifdef ENABLE_DEBUG
+static void menupage_developer_dump_dpr(const menuitem_t *menuitem) {
+    dump_dpr_data();
+    beep();
+}
+#endif
 
 static int test_dialog_event_handler(dialog_t *dialog, int *r1,
                                      gui_event_t event, int *r3, int r4, int r5,
