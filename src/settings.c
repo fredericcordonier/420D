@@ -11,6 +11,7 @@
 #include "main.h"
 #include "utils.h"
 
+#include "af_patterns.h"
 #include "serialize.h"
 #include "settings.h"
 
@@ -79,6 +80,10 @@ settings_t settings_default = {
     .qexp_weight = QEXP_WEIGHT_NONE,
     .persist_aeb = TRUE,
     .invert_olc = 0,
+    .af_orientation = 1,
+    .af_pattern_horizontal = AF_PATTERN_CENTER,
+    .af_pattern_vertical_left = AF_PATTERN_CENTER,
+    .af_pattern_vertical_right = AF_PATTERN_CENTER,
 };
 
 menu_order_t menu_order_default;
