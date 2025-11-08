@@ -22,7 +22,6 @@ ifdef ENABLE_DEBUG
 	D_FLAGS += -DENABLE_DEBUG
 endif
 
-
 USE_FONTS := -DUSE_FONT_SMALL
 
 COMMON_FLAGS := \
@@ -37,33 +36,15 @@ COMMON_FLAGS := \
 	-fno-strict-aliasing              \
 	-mfloat-abi=soft                  \
 	-msoft-float                      \
-	-mfpu=auto                         \
-
-	#-nostdinc                         \
-	#-fno-builtin-puts                 \
-	#-fno-builtin-sprintf              \
-	#-fno-builtin-bzero                \
-	#-fno-builtin-memset               \
-	#-fno-builtin-printf               \
-
-	#-mlong-calls or -fPIC will fix the rellocation problems with the linker on 64bit toolchain
-	#-mlong-calls                      \
-
-	#-fomit-frame-pointer \
-	#-fno-strict-aliasing \
-
-	# alex had issues with struct alignment (gcc-4.6.0, -Os) in ML
-	# this fixes them, keep it here in case we need it
-	#-mstructure-size-boundary=32 \
+	-mfpu=auto                        \
 
 CC     := $(CROSS_COMPILE)gcc
 CFLAGS += $(COMMON_FLAGS)              \
 	$(D_FLAGS)                         \
-	-Wp,-MMD,$(patsubst %.o,.%.d,$(@)) \
-	-Wp,-MT,$@                         \
 	-Os                                \
 	-nostdinc                          \
 	-Ivxworks                          \
+	-Iinc                              \
 	-Werror                            \
 	-Wstrict-prototypes                \
 	-Wmissing-prototypes               \
@@ -71,27 +52,43 @@ CFLAGS += $(COMMON_FLAGS)              \
 	-fdata-sections                    \
 	-ffunction-sections                \
 
-	#-fomit-frame-pointer  \
-	#-fno-strict-aliasing  \
-	#-Wno-unused-parameter \
-	#-Wno-unused-function  \
-
 AS      := $(CROSS_COMPILE)as
 ASFLAGS := $(COMMON_FLAGS)
+ASFLAGS += -Iinc
 
 LD      := $(CROSS_COMPILE)ld
 LDFLAGS := -Wl,-Ttext,$(ADDRESS) -Wl,-T,link.script -Wl,-Map,autoexec.map -Wl,--gc-sections -e _start -lm -lgcc -lc -z muldefs
 
 OBJCOPY := $(CROSS_COMPILE)objcopy
 
-S_SRCS := $(wildcard *.S) $(wildcard vxworks/*.S) $(wildcard firmware/*.S)
-C_SRCS := $(wildcard *.c) $(wildcard vxworks/*.c) $(wildcard firmware/*.c)
+# === Source structure ===
+CSRC_DIR := c
+SSRC_DIR := asm
+VX_DIR := vxworks
+FW_DIR := firmware
+OBJ_DIR := .
+ASM_DIRS := $(SSRC_DIR) $(VX_DIR) $(FW_DIR)
 
-S_OBJS := $(S_SRCS:.S=.o)
-C_OBJS := $(C_SRCS:.c=.o)
+# === Source discovery ===
+C_SRCS := $(wildcard $(CSRC_DIR)/*.c)
+ASM_SRCS := $(wildcard $(SSRC_DIR)/*.S)
+VX_SRCS := $(wildcard $(VX_DIR)/*.S)
+FW_SRCS := $(wildcard $(FW_DIR)/*.S)
+SRCS   := $(C_SRCS) $(VX_SRCS) $(FW_SRCS) $(ASM_SRCS)
 
-OBJS  := $(S_OBJS) $(C_OBJS)
-DEPS  := $(patsubst %.o,.%.d,$(C_OBJS))
+OBJS := $(notdir $(SRCS))
+OBJS := $(OBJS:.c=.o)
+OBJS := $(OBJS:.S=.o)
+OBJS := $(addprefix $(OBJ_DIR)/,$(OBJS))
+
+DEPS := $(OBJS:%.o=%.d)
+
+# === Automatically mirror obj subfolders ===
+# (e.g. obj/src, obj/vxworks, obj/firmware)
+OBJ_SUBDIRS := $(addprefix $(OBJ_DIR)/,$(SRC_DIRS))
+
+$(info OBJS = $(OBJS))
+$(info SRCS = $(SRCS))
 
 ECHO := "/bin/echo"
 
@@ -113,7 +110,6 @@ endif
 ifdef INSTALL_PATH
 	@install    AUTOEXEC.BIN  $(INSTALL_PATH)/
 	@install -D languages.ini $(INSTALL_PATH)/420D
-#	@umount $(INSTALL_PATH)
 endif
 
 all: $(PROJECT).BIN languages.ini languages/new_lang.ini
@@ -128,7 +124,7 @@ release: clean
 	@mkdir $(RELNAME)/bin
 	@cd $(RELNAME)/src && CFLAGS="" make
 	@cp $(RELNAME)/src/AUTOEXEC.BIN $(RELNAME)/src/languages.ini $(RELNAME)/bin/
-	@zip -9 -r $(RELNAME).bin.zip $(RELNAME)/bin/
+	@zip -9 -r $(RELNAME).bin.zip $(RELNAME)
 
 	@$(ECHO) -e $(BOLD)[ZIP]$(NORM)
 	@rm -rf $(RELNAME)
@@ -142,26 +138,38 @@ $(PROJECT).arm.elf: $(OBJS)
 	@$(ECHO) -e $(BOLD)[LINK]:$(NORM) $@
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
-%.o: %.c
-	@$(ECHO) -e $(CFLAGS) $(BOLD)[C]:$(NORM) $<
-	@$(CC) $(CFLAGS) -c $<
+# === Pattern rules for compilation ===
+# --- Pattern rules for C and ASM ---
+vpath %.c $(CSRC_DIR)
+vpath %.S $(ASM_DIRS)
 
-%.o: %.S
-	@$(ECHO) -e $(BOLD)[ASM]:$(NORM) $<
-	@$(CC) $(ASFLAGS) -c -o $@ $<
+$(OBJ_DIR)/%.o: %.c
+	@mkdir -p $(OBJ_DIR)
+	$(CC) $(CFLAGS) -MMD -MF $(OBJ_DIR)/$*.d -MT $@ -c $< -o $@
+
+$(OBJ_DIR)/%.o: %.S
+	@mkdir -p $(OBJ_DIR)
+	$(CC) $(ASFLAGS) -c $< -o $@
+
+# === Directory creation rule (optional, for bulk init) ===
+# Create obj/src obj/vxworks obj/firmware once if you like
+dirs:
+	@mkdir -p $(addprefix $(OBJ_DIR)/,$(SRC_DIRS))
+
+# === Dependency include ===
+-include $(DEPS)
 
 clean:
 	@$(ECHO) -e $(BOLD)[CLEAN]$(NORM)
-	rm -f $(OBJS) $(DEPS)
+	rm -rf $(OBJ_DIR)/*.o $(OBJ_DIR)/*.d
 	rm -f $(PROJECT).arm.elf $(PROJECT).BIN
 
-languages.ini: languages.h languages/*.ini
+languages.ini: inc/languages.h languages/*.ini
 	@$(ECHO) -e $(BOLD)[I18N]:$(NORM) $@
-	@./languages/lang_tool.pl -q -f languages -l languages.h -o languages.ini
+	@./languages/lang_tool.pl -q -f languages -l inc/languages.h -o languages.ini
 
-languages/new_lang.ini: languages.h
+languages/new_lang.ini: inc/languages.h
 	@$(ECHO) -e $(BOLD)[I18N]:$(NORM) $@
-	@./languages/lang_tool.pl -q -f languages -l languages.h -g
+	@./languages/lang_tool.pl -q -f languages -l inc/languages.h -g
 
--include .*.d
-
+.PHONY: all clean release install

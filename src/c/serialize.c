@@ -26,11 +26,11 @@ static int handle_section(void *user, int lineno, const char *section);
 #define PARAM_INT_ARRAY_DEF(s, f, i) {#f, (long)(&(((s *)NULL)->f)), i},
 
 const field_def settings_structure[] = {
-#include "settings.def"
+#include "../def/settings.def"
     {NULL, 0}};
 
 const field_def menu_order_structure[] = {
-#include "menu_order.def"
+#include "../def/menu_order.def"
     {NULL, 0}};
 #undef PARAM_INT_DEF
 #undef PARAM_INT_ARRAY_DEF

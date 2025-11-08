@@ -103,11 +103,11 @@ typedef enum {
 #define PARAM_INT_DEF(s, f) int f;
 #define PARAM_INT_ARRAY_DEF(s, f, i) int f[i];
 typedef struct {
-#include "settings.def"
+#include "../def/settings.def"
 } settings_t;
 
 typedef struct {
-#include "menu_order.def"
+#include "../def/menu_order.def"
 } menu_order_t;
 #undef PARAM_INT_DEF
 #undef PARAM_INT_ARRAY_DEF
