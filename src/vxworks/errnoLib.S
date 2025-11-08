@@ -1,4 +1,4 @@
-#include "../stub.h"
+#include "stub.h"
 
 DEF(0xFFB50E0C,errnoGet)
 DEF(0xFFB50DC8,errnoOfTaskGet)

@@ -1,4 +1,4 @@
-#include "../stub.h"
+#include "stub.h"
 
 DEF(0xFFB57AD8,isalnum)
 DEF(0xFFB57AC0,isalpha)

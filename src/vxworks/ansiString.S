@@ -1,4 +1,4 @@
-#include "../stub.h"
+#include "stub.h"
 
 DEF(0xFFB53D84,memchr)
 DEF(0xFFB53D44,memcmp)

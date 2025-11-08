@@ -1,4 +1,4 @@
-#include "../stub.h"
+#include "stub.h"
 
 DEF(0xFF838F78,GUI_PaletteChange)
 DEF(0xFF838FD0,GUI_PalettePush)

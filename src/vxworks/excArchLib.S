@@ -1,4 +1,4 @@
-#include "../stub.h"
+#include "stub.h"
 
 DEF(0xFFB5EE18,excVecInit)
 DEF(0xFFB5EDF8,excIntConnect)

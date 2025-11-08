@@ -1,4 +1,4 @@
-#include "../stub.h"
+#include "stub.h"
 
 DEF(0xFFB421BC,msgQCreate)
 DEF(0xFFB41FF0,msgQDelete)

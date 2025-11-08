@@ -1,4 +1,4 @@
-#include "../stub.h"
+#include "stub.h"
 
 DEF(0xFFB45AB8,bcmp)
 DEF(0xFFB45A84,binvert)

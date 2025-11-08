@@ -1,4 +1,4 @@
-#include "../stub.h"
+#include "stub.h"
 
 DEF(0xFFB3F718,taskSpawn)
 DEF(0xFFB3F0E8,taskInit)

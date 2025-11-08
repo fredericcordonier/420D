@@ -1,2 +1,2 @@
-#include "../stub.h"
+#include "stub.h"
 

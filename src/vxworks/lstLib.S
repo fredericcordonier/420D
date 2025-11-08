@@ -1,4 +1,4 @@
-#include "../stub.h"
+#include "stub.h"
 
 DEF(0xFFB4425C,lstLibInit)
 DEF(0xFFB44248,lstInit)

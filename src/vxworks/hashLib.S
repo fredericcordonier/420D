@@ -1,4 +1,4 @@
-#include "../stub.h"
+#include "stub.h"
 
 DEF(0xFFB4E9A0,hashLibInit)
 DEF(0xFFB4E93C,hashTblCreate)

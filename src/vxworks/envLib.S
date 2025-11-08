@@ -1,4 +1,4 @@
-#include "../stub.h"
+#include "stub.h"
 
 DEF(0xFFB51440,envLibInit)
 DEF(0xFFB51168,envPrivateCreate)

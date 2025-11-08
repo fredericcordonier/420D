@@ -1,4 +1,4 @@
-#include "../stub.h"
+#include "stub.h"
 
 DEF(0xFFB4D8E0,iosInit)
 DEF(0xFFB4D810,iosDrvInstall)

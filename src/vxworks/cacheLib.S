@@ -1,4 +1,4 @@
-#include "../stub.h"
+#include "stub.h"
 
 DEF(0xFFB52100,cacheLibInit)
 DEF(0xFFB520D4,cacheEnable)

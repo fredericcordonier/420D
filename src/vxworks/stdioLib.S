@@ -1,4 +1,4 @@
-#include "../stub.h"
+#include "stub.h"
 
 DEF(0xFFB5571C,stdioInit)
 DEF(0xFFB5551C,stdioFp)

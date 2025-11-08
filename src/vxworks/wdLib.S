@@ -1,4 +1,4 @@
-#include "../stub.h"
+#include "stub.h"
 
 DEF(0xFFB3C8BC,wdCreate)
 DEF(0xFFB3C82C,wdDelete)

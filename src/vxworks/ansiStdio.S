@@ -1,4 +1,4 @@
-#include "../stub.h"
+#include "stub.h"
 
 DEF(0xFFB578A4,clearerr)
 DEF(0xFFB577B4,fclose)

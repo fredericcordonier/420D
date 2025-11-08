@@ -1,4 +1,4 @@
-#include "../stub.h"
+#include "stub.h"
 
 DEF(0x00006538,hPtpMgr)
 DEF(0x00016B60,DPData)

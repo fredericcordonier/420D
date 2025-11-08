@@ -1,4 +1,4 @@
-#include "../stub.h"
+#include "stub.h"
 
 DEF(0xFFB51970,clock_getres)
 DEF(0xFFB51968,clock_setres)

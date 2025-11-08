@@ -1,4 +1,4 @@
-#include "../stub.h"
+#include "stub.h"
 
 DEF(0xFFB4CC48,logInit)
 DEF(0xFFB4CB90,logMsg)

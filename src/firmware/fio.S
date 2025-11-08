@@ -1,4 +1,4 @@
-#include "../stub.h"
+#include "stub.h"
 
 DEF(0xFFA9EA34,FIO_OpenFile)
 DEF(0xFFA9EA44,FIO_CreateFile)

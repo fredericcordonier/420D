@@ -1,4 +1,4 @@
-#include "../stub.h"
+#include "stub.h"
 
 DEF(0xFFB3FA84,taskOptionsSet)
 DEF(0xFFB3FA5C,taskOptionsGet)

@@ -1,4 +1,4 @@
-#include "../stub.h"
+#include "stub.h"
 
 DEF(0xFFB4A150,selectInit)
 DEF(0xFFB49D10,select)

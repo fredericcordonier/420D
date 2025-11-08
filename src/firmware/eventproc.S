@@ -1,4 +1,4 @@
-#include "../stub.h"
+#include "stub.h"
 
 DEF(0xFF8242B8,eventproc_PrintICUInfo)
 

@@ -1,4 +1,4 @@
-#include "../stub.h"
+#include "stub.h"
 
 DEF(0xFFB455A0,bootStringToStruct)
 DEF(0xFFB4521C,bootStructToString)

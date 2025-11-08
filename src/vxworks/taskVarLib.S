@@ -1,4 +1,4 @@
-#include "../stub.h"
+#include "stub.h"
 
 DEF(0xFFB474A4,taskVarInit)
 DEF(0xFFB47378,taskVarAdd)

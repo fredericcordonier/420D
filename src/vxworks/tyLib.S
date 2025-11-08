@@ -1,4 +1,4 @@
-#include "../stub.h"
+#include "stub.h"
 
 DEF(0xFFB46E5C,tyDevInit)
 DEF(0xFFB46DE0,tyDevRemove)

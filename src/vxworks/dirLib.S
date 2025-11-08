@@ -1,4 +1,4 @@
-#include "../stub.h"
+#include "stub.h"
 
 DEF(0xFFB51644,opendir)
 DEF(0xFFB51618,readdir)

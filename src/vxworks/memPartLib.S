@@ -1,4 +1,4 @@
-#include "../stub.h"
+#include "stub.h"
 
 DEF(0xFFB4BD20,memPartCreate)
 DEF(0xFFB4BA10,memPartAddToPool)

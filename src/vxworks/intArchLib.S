@@ -1,4 +1,4 @@
-#include "../stub.h"
+#include "stub.h"
 
 DEF(0xFFB5E5B0,intLevelSet)
 DEF(0xFFB33EE4,intLock)

@@ -1,4 +1,4 @@
-#include "../stub.h"
+#include "stub.h"
 
 DEF(0xFFB49788,sigInit)
 DEF(0xFFB49700,sigqueueInit)

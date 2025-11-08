@@ -1,4 +1,4 @@
-#include "../stub.h"
+#include "stub.h"
 
 DEF(0xFFB4C594,memPartOptionsSet)
 DEF(0xFFB4C578,memalign)

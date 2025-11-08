@@ -1,4 +1,4 @@
-#include "../stub.h"
+#include "stub.h"
 
 DEF(0xFFB50C90,excInit)
 DEF(0xFFB50C80,excHookAdd)

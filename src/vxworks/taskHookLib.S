@@ -1,4 +1,4 @@
-#include "../stub.h"
+#include "stub.h"
 
 DEF(0xFFB47A58,taskHookInit)
 DEF(0xFFB47A40,taskCreateHookAdd)

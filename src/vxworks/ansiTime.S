@@ -1,4 +1,4 @@
-#include "../stub.h"
+#include "stub.h"
 
 DEF(0xFFB53368,asctime)
 DEF(0xFFB53348,asctime_r)

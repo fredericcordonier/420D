@@ -1,4 +1,4 @@
-#include "../stub.h"
+#include "stub.h"
 
 DEF(0xFFB50AE8,fioLibInit)
 DEF(0xFFB50AA0,printf)

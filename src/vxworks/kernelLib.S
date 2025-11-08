@@ -1,4 +1,4 @@
-#include "../stub.h"
+#include "stub.h"
 
 DEF(0xFFB42424,kernelInit)
 DEF(0xFFB42418,kernelVersion)
