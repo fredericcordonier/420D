@@ -22,6 +22,7 @@ ifdef ENABLE_DEBUG
 	D_FLAGS += -DENABLE_DEBUG
 endif
 
+
 USE_FONTS := -DUSE_FONT_SMALL
 
 COMMON_FLAGS := \
@@ -36,11 +37,31 @@ COMMON_FLAGS := \
 	-fno-strict-aliasing              \
 	-mfloat-abi=soft                  \
 	-msoft-float                      \
-	-mfpu=auto                        \
+	-mfpu=auto                         \
+
+	#-nostdinc                         \
+	#-fno-builtin-puts                 \
+	#-fno-builtin-sprintf              \
+	#-fno-builtin-bzero                \
+	#-fno-builtin-memset               \
+	#-fno-builtin-printf               \
+
+	#-mlong-calls or -fPIC will fix the rellocation problems with the linker on 64bit toolchain
+	#-mlong-calls                      \
+
+	#-fomit-frame-pointer \
+	#-fno-strict-aliasing \
+
+	# alex had issues with struct alignment (gcc-4.6.0, -Os) in ML
+	# this fixes them, keep it here in case we need it
+	#-mstructure-size-boundary=32 \
 
 CC     := $(CROSS_COMPILE)gcc
+#	-Wp,-MMD,$(patsubst %.o,.%.d,$(@))
 CFLAGS += $(COMMON_FLAGS)              \
 	$(D_FLAGS)                         \
+	-Wp,-MMD                           \
+	-Wp,-MT,$@                         \
 	-Os                                \
 	-nostdinc                          \
 	-Ivxworks                          \
@@ -52,6 +73,11 @@ CFLAGS += $(COMMON_FLAGS)              \
 	-fdata-sections                    \
 	-ffunction-sections                \
 
+	#-fomit-frame-pointer  \
+	#-fno-strict-aliasing  \
+	#-Wno-unused-parameter \
+	#-Wno-unused-function  \
+
 AS      := $(CROSS_COMPILE)as
 ASFLAGS := $(COMMON_FLAGS)
 ASFLAGS += -Iinc
@@ -61,30 +87,20 @@ LDFLAGS := -Wl,-Ttext,$(ADDRESS) -Wl,-T,link.script -Wl,-Map,autoexec.map -Wl,--
 
 OBJCOPY := $(CROSS_COMPILE)objcopy
 
-# === Source structure ===
-CSRC_DIR := c
-SSRC_DIR := asm
-VX_DIR := vxworks
-FW_DIR := firmware
-OBJ_DIR := .
-ASM_DIRS := $(SSRC_DIR) $(VX_DIR) $(FW_DIR)
+#SRC_DIRS := c asm vxworks firmware
+SRC_DIRS := src vxworks firmware
+OBJ_DIR := obj
+# Gather source files
+# Collect sources
+C_SRCS := $(foreach dir,$(SRC_DIRS),$(wildcard $(dir)/*.c))
+S_SRCS := $(foreach dir,$(SRC_DIRS),$(wildcard $(dir)/*.S))
+SRCS   := $(C_SRCS) $(S_SRCS)
 
-# === Source discovery ===
-C_SRCS := $(wildcard $(CSRC_DIR)/*.c)
-ASM_SRCS := $(wildcard $(SSRC_DIR)/*.S)
-VX_SRCS := $(wildcard $(VX_DIR)/*.S)
-FW_SRCS := $(wildcard $(FW_DIR)/*.S)
-SRCS   := $(C_SRCS) $(VX_SRCS) $(FW_SRCS) $(ASM_SRCS)
+# Map src/foo/bar.c -> obj/foo/bar.o
+OBJS := $(patsubst %.c,$(OBJ_DIR)/%.o,$(patsubst %.S,$(OBJ_DIR)/%.o,$(SRCS)))
+C_OBJS := $(patsubst %.c,$(OBJ_DIR)/%.o,$(patsubst %.S,$(OBJ_DIR)/%.o,$(C_SRCS)))
 
-OBJS := $(notdir $(SRCS))
-OBJS := $(OBJS:.c=.o)
-OBJS := $(OBJS:.S=.o)
-OBJS := $(addprefix $(OBJ_DIR)/,$(OBJS))
-
-DEPS := $(OBJS:%.o=%.d)
-
-$(info OBJS = $(OBJS))
-$(info SRCS = $(SRCS))
+DEPS  := $(OBJS:%.o=%.d)
 
 ECHO := "/bin/echo"
 
@@ -106,6 +122,7 @@ endif
 ifdef INSTALL_PATH
 	@install    AUTOEXEC.BIN  $(INSTALL_PATH)/
 	@install -D languages.ini $(INSTALL_PATH)/420D
+#	@umount $(INSTALL_PATH)
 endif
 
 all: $(PROJECT).BIN languages.ini languages/new_lang.ini
@@ -120,7 +137,7 @@ release: clean
 	@mkdir $(RELNAME)/bin
 	@cd $(RELNAME)/src && CFLAGS="" make
 	@cp $(RELNAME)/src/AUTOEXEC.BIN $(RELNAME)/src/languages.ini $(RELNAME)/bin/
-	@zip -9 -r $(RELNAME).bin.zip $(RELNAME)
+	@zip -9 -r $(RELNAME).bin.zip $(RELNAME)/bin/
 
 	@$(ECHO) -e $(BOLD)[ZIP]$(NORM)
 	@rm -rf $(RELNAME)
@@ -134,25 +151,20 @@ $(PROJECT).arm.elf: $(OBJS)
 	@$(ECHO) -e $(BOLD)[LINK]:$(NORM) $@
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
-# === Pattern rules for compilation ===
-# --- Pattern rules for C and ASM ---
-vpath %.c $(CSRC_DIR)
-vpath %.S $(ASM_DIRS)
-
 $(OBJ_DIR)/%.o: %.c
-	@mkdir -p $(OBJ_DIR)
-	$(CC) $(CFLAGS) -MMD -MF $(OBJ_DIR)/$*.d -MT $@ -c $< -o $@
+	@$(ECHO) -e $(CFLAGS) $(BOLD)[C]:$(NORM) $<
+	@$(CC) $(CFLAGS) -c $<
 
 $(OBJ_DIR)/%.o: %.S
-	@mkdir -p $(OBJ_DIR)
-	$(CC) $(ASFLAGS) -c $< -o $@
+	@$(ECHO) -e $(BOLD)[ASM]:$(NORM) $<
+	@$(CC) $(ASFLAGS) -c -o $@ $<
 
-# === Dependency include ===
+# Include generated dependency files, if they exist
 -include $(DEPS)
 
 clean:
 	@$(ECHO) -e $(BOLD)[CLEAN]$(NORM)
-	rm -rf $(OBJ_DIR)/*.o $(OBJ_DIR)/*.d
+	rm -f $(OBJS) $(DEPS)
 	rm -f $(PROJECT).arm.elf $(PROJECT).BIN
 
 languages.ini: inc/languages.h languages/*.ini
@@ -163,4 +175,5 @@ languages/new_lang.ini: inc/languages.h
 	@$(ECHO) -e $(BOLD)[I18N]:$(NORM) $@
 	@./languages/lang_tool.pl -q -f languages -l inc/languages.h -g
 
-.PHONY: all clean release install
+-include .*.d
+

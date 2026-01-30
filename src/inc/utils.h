@@ -3,6 +3,9 @@
 
 #include <stdio.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 // this is the way canon checks the pointers
 // if (PTR_VALID(some_ptr)) { ... } else { ... }
 // this will check if the pointer is even and not 0
@@ -77,6 +80,10 @@ char *hack_fgets_simple_but_slow(char *s, int n, int fd);
 char *hack_fgets_faster(char *s, int n, int fd);
 #define hack_fgets_init() hack_fgets_faster(NULL, 0, -1)
 #define hack_fgets hack_fgets_faster
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif /* UTILS_H_ */

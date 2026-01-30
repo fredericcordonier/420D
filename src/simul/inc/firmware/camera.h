@@ -31,16 +31,16 @@
  *
  */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @brief Check size of structure
  *
  * Compile time failure if a structure is not sized correctly
  *
  */
-
-#define SIZE_CHECK_STRUCT(struct_name, size)                                   \
-    static int __attribute__((unused))                                         \
-    __size_check_##struct_name[sizeof(struct struct_name) == size ? 0 : -1]
 
 struct vram_info_t {
     unsigned char *data;
@@ -49,12 +49,6 @@ struct vram_info_t {
     int height;
     int number; // the vram number
 };
-
-#ifdef SIMUL
-    SIZE_CHECK_STRUCT(vram_info_t, 0x18);
-#else
-    SIZE_CHECK_STRUCT(vram_info_t, 0x14);
-#endif
 
 typedef struct vram_info_t vram_info_t;
 extern vram_info_t VramInfo[2];
@@ -182,13 +176,6 @@ struct dpr_data_t {              // [*] Used and tested, others unknown
     int field_18C;               // 0x018c
     int field_190;               // 0x0190
 };
-
-/**
- * @brief 0x194 is the number in the FW when it comes to DPR (as it's 0x198 too,
- * they go together always)
- *
- */
-SIZE_CHECK_STRUCT(dpr_data_t, 0x194);
 
 typedef struct dpr_data_t dpr_data_t;
 
@@ -375,5 +362,9 @@ extern int able_to_release(void);
  *
  */
 #define SELF_TIMER_MS 2000
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

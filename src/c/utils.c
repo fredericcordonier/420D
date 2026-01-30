@@ -19,6 +19,10 @@
 
 #include "utils.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void display_float(char *dest, float value);
 
 void calculate_dof(int focal_length, int focus_distance, int av, char *min,
@@ -193,7 +197,10 @@ char *strncpy0(char *dest, const char *src, size_t size) {
 // 2. cannot use it in multi-thread/multi-task. use it only at one place in one
 // time.
 char *hack_fgets_faster(char *s, int n, int fd) {
-    register char *cs;
+    #ifndef __cplusplus
+    register
+    #endif
+    char *cs;
 
     // TODO: Do not explicitly overflow an unsigned char
     static char buf[256];          // local buffer
@@ -252,5 +259,9 @@ char *hack_fgets_simple_but_slow(char *s, int n, int fd) {
         return NULL;
 
     return s;
+}
+#endif
+
+#ifdef __cplusplus
 }
 #endif

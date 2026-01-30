@@ -185,7 +185,7 @@ typedef struct {
  * @brief Dialog structure
  *
  */
-struct dialog_t {
+struct _dialog_t {
 	char * pSignature;   ///< 0x0000 - "DIALOG"
 	int field_0x0004;    ///< 0x0004
 	int window_struct;   ///< 0x0008 - window instance
@@ -256,12 +256,12 @@ extern dialog_t *hMainDialog;
 
 // Dialogs
 
-#define dialog_create(template, handler) CreateDialogBox(0, 0, handler, template, 0)
+#define dialog_create(dlg_template, handler) CreateDialogBox(0, 0, handler, dlg_template, 0)
 
 #define dialog_set_property_int dialog_item_set_int
 #define dialog_set_property_str dialog_item_set_str
 
-extern dialog_t *CreateDialogBox(int parm1, int parm2, event_handler_t, int template, int is_busy_maybe);
+extern dialog_t *CreateDialogBox(int parm1, int parm2, event_handler_t, int dlg_template, int is_busy_maybe);
 extern int       DeleteDialogBox(dialog_t *dialog);
 
 extern void dialog_redraw        (dialog_t *dialog);

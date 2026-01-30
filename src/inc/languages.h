@@ -18,6 +18,7 @@
     LANG_PAIR(P_PARAMS, "Parameters")                                          \
     LANG_PAIR(P_SETTINGS, "Settings")                                          \
     LANG_PAIR(P_SCRIPTS, "Scripts")                                            \
+	LANG_PAIR( P_SHOOTMODE,          "Shoot mode"                ) \
     LANG_PAIR(P_INFO, "Info")                                                  \
     LANG_PAIR(P_RENAME, "Rename")                                              \
     LANG_PAIR(P_DEVELOPERS, "Developers' Menu")                                \

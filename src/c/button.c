@@ -219,8 +219,13 @@ reaction_t *button_actions_af[BUTTON_COUNT] = {
  */
 reaction_t reaction_drive_set = {FALSE, drivemode_set};
 
+/** Pressing DP while setting Drive mode opens the Shooting scripts menu */
+reaction_t
+	reaction_drive_dp = {TRUE, menu_shoot_mode_start};
+
 reaction_t *button_actions_drive[BUTTON_COUNT] = {
     [BUTTON_SET] = &reaction_drive_set,
+	[BUTTON_DP]    = &reaction_drive_dp,
 };
 
 /**

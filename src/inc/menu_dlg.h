@@ -7,6 +7,17 @@
  */
 #include "settings.h"
 
+enum {
+    MENUPAGE_SHOOT_MODE_INTERVAl,
+    MENUPAGE_SHOOT_MODE_BRAMP,
+    MENUPAGE_SHOOT_MODE_HANDWAVE,
+    MENUPAGE_SHOOT_MODE_TIMER,
+    MENUPAGE_SHOOT_MODE_LEXP,
+    MENUPAGE_SHOOT_MODE_COUNT,
+    MENUPAGE_SHOOT_MODE_FIRST = 0,
+    MENUPAGE_SHOOT_MODE_LAST  = MENUPAGE_SHOOT_MODE_COUNT - 1
+};
+
 typedef struct {
     int temps[CCT_COUNT];
     char names[CCT_COUNT][LP_MAX_WORD];
@@ -14,5 +25,6 @@ typedef struct {
 
 extern named_temps_t named_temps;
 void menu_named_temps_start(void);
+void menu_shoot_mode_start(void);
 
 #endif /* MENU_DLG_H_ */

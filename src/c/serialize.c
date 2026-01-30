@@ -8,7 +8,7 @@
 
 // Struct used to define a structure field
 typedef struct {
-    char *param_name;
+    const char *param_name;
     int param_addr_offset;
     int nb_values;
 } field_def;
@@ -71,10 +71,13 @@ static int serialize_structure(int file, int *px_data,
 
 // Write settings into ini file
 int write_settings_file(int file) {
-    return serialize_structure(file, (int *)(&settings), settings_structure,
+    int result = serialize_structure(file, (int *)(&settings), settings_structure,
                                "settings");
-    return serialize_structure(file, (int *)(&menu_order), menu_order_structure,
+    if (result != FALSE) {
+        result = serialize_structure(file, (int *)(&menu_order), menu_order_structure,
                                "menu_order");
+    }
+    return result;
 }
 
 // Parse the first part of the ini file line (before the '=' sign).
@@ -173,35 +176,3 @@ int read_settings_file(int file) {
     return error;
 }
 
-#ifdef SIMUL
-int main(int argc, char *argv[]) {
-    FILE *ini_file;
-    settings_t my_settings;
-    settings_t rsett;
-    memset(&my_settings, 0, sizeof(my_settings));
-    my_settings.use_dpad = 1;
-    my_settings.autoiso_enable = 2;
-    my_settings.autoiso_miniso = 3;
-    my_settings.autoiso_maxiso = 4;
-    my_settings.autoiso_mintv = 20;
-    my_settings.autoiso_maxav = 234;
-    my_settings.autoiso_relaxed = 10649;
-    ini_file = fopen("settings.ini", "w");
-    write_settings_ini(ini_file, &my_settings);
-    fclose(ini_file);
-
-    ini_file = fopen("settings.ini", "r");
-    read_settings_ini(ini_file, &rsett);
-    fclose(ini_file);
-
-    printf("%i\n", my_settings.use_dpad);
-    printf("%i\n", my_settings.autoiso_enable);
-    printf("%i\n", my_settings.autoiso_miniso);
-    printf("%i\n", my_settings.autoiso_maxiso);
-    printf("%i\n", my_settings.autoiso_mintv);
-    printf("%i\n", my_settings.autoiso_maxav);
-    printf("%i\n", my_settings.autoiso_relaxed);
-
-    return 0;
-}
-#endif // SIMUL
