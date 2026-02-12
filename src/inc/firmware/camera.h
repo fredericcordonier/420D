@@ -31,6 +31,10 @@
  *
  */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @brief Check size of structure
  *
@@ -375,5 +379,9 @@ extern int able_to_release(void);
  *
  */
 #define SELF_TIMER_MS 2000
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

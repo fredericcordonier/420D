@@ -3,6 +3,10 @@
 
 // Flags
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define FLAG_GUI_MODE       GUIMode
 #define FLAG_DISPLAY_ON     DisplayOn
 
@@ -302,5 +306,9 @@ extern void GUI_StartMode    (guimode_t mode);
 // Udocumented
 
 extern int GUI_IDLEHandler(int unk0, int event, int unused, int unk1);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -15,8 +15,12 @@
 
 #include "exposure.h"
 
-extern void display_refresh(void);
-extern void hack_dialog_redraw(window_t *window);
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern void display_refresh    (void);
+extern void hack_dialog_redraw (window_t *window);
 
 extern int hack_GUI_IDLEHandler(int unk0, int event, int unused, int unk1);
 
@@ -42,6 +46,10 @@ extern void *hack_invert_olc_screen(char *dst, char *src, int size);
 extern int hack_FF92E704(int r0, int r1, int r2, int r3);
 extern int hack_FF92E4C4(int r0, int r1, int r2, int r3);
 
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif /* DISPLAY_H_ */

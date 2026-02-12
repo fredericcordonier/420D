@@ -1,6 +1,10 @@
 #ifndef EVENTPROC_H_
 #define EVENTPROC_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
+
 // Event generation
 
 extern int eventproc_RiseEvent(const char *event);
@@ -23,5 +27,9 @@ extern int eventproc_Release(void);
 
 extern int eventproc_RemOn(void);
 extern int eventproc_RemOff(void);
+
+#ifdef __cplusplus
+}
+#endif // __cplusplus
 
 #endif

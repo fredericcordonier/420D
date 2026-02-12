@@ -2,6 +2,9 @@
 #define FIO_H_
 
 /* whence value for FIO_SeekSkipFile */
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include <vxworks.h>
 
@@ -34,5 +37,9 @@ extern int  FIO_CreateDirectory (const char *dirname);
 //FIO_GetFileTime
 //FIO_SetFileTime
 //FIO_GetFileInfo
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -7,6 +7,9 @@
 #include "exposure.h"
 #include "scripts.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 typedef struct {
     ec_t ev_comp;         // Exposure compensation for AutoISO + M
     script_t last_script; // Last executed script
@@ -19,5 +22,9 @@ extern persist_t persist;
 
 extern int persist_read(void);
 extern void persist_write(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

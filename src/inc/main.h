@@ -8,6 +8,10 @@
 #include "firmware.h"
 #include "scripts.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // Our folder
 #define FOLDER_ROOT "A:"
 #define FOLDER_NAME "420D"
@@ -68,5 +72,9 @@ extern void start_up(void);
 
 // Shared globals
 extern status_t status;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* MAIN_H_ */

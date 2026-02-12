@@ -5,8 +5,12 @@
 
 #include "firmware/camera.h"
 
-#define CMODES_MAX 16  // Max number of custom modes available
-#define CMODES_MODES 7 // Number of auto modes where a custom mode may be used
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#define CMODES_MAX       16 // Max number of custom modes available
+#define CMODES_MODES      7 // Number of auto modes where a custom mode may be used
 
 #define CMODES_CONFIG "CMODES" // File that contains custom modes configuration
 #define CMODES_FILE                                                            \
@@ -44,5 +48,9 @@ extern void cmode_apply(void);
 
 extern int get_current_cmode(void);
 extern void set_current_cmode(int cmode_id);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* CMODES_H_ */

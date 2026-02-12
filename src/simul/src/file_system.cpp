@@ -64,7 +64,7 @@ int  FIO_OpenFile(const char *filename, int mode) {
 int  FIO_ReadFile(int fd, void *buffer, size_t count) {
     FILE *stream = my_camera.flash_420d.get_fstream(fd);
     if (stream != nullptr) {
-        return fread(buffer, count, 1, stream);
+        return fread(buffer, 1, count, stream);
     }
     else {
         return 0;
@@ -97,5 +97,10 @@ void FIO_CloseFile(int fd) {
 }
 
 int FIO_RemoveFile(const char *filename) {
+    return 0;
+}
+
+int FIO_CreateDirectory(const char *dirname)
+{
     return 0;
 }

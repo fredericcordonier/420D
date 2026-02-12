@@ -597,8 +597,8 @@ void start_debug_mode() {
     localtime_r(&t, &tm);
 
     if (settings.logfile_mode == LOGFILE_MODE_NEW)
-        sprintf(filename, "A:/%02d%02d%02d%02d.LOG", tm.tm_mon + 1, tm.tm_mday,
-                tm.tm_hour, tm.tm_min);
+        sprintf(filename, "A:/%02d%02d%02d%02d.LOG", (unsigned char)tm.tm_mon + 1, (unsigned char)tm.tm_mday,
+                (unsigned char)tm.tm_hour, (unsigned char)tm.tm_min);
 
     // O_APPEND is not working in VxWorks, so we seek to the end later
     if ((file = FIO_OpenFile(filename, O_CREAT | O_WRONLY)) != -1) {

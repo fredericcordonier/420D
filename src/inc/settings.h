@@ -15,6 +15,10 @@
 #include "menu_scripts.h"
 #include "menu_settings.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum {
     SHOT_ACTION_SHOT,
     SHOT_ACTION_EXT_AEB,
@@ -119,5 +123,9 @@ int settings_read(void);
 void settings_write(void);
 void settings_apply(void);
 void settings_restore(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* SETTINGS_H_ */

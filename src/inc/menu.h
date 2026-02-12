@@ -2,6 +2,9 @@
 #define MENU_H_
 
 #include "firmware/camera.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define MENU_WAIT_FW 100
 
@@ -123,5 +126,9 @@ void menu_prev(menu_t *menu);
 
 void menu_repeat(menu_t *menu,
                  void (*action)(menu_t *menu, const int repeating));
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* MENU_H_ */

@@ -30,26 +30,26 @@
 #include "intercom.h"
 
 // Proxy listeners
-int proxy_script_restore(char *message);
-int proxy_script_stop(char *message);
-int proxy_set_language(char *message);
-int proxy_dialog_enter(char *message);
-int proxy_dialog_exit(char *message);
-int proxy_dialog_afoff(char *message);
-int proxy_measuring(char *message);
-int proxy_measurement(char *message);
-int proxy_shoot_start(char *message);
-int proxy_shoot_finish(char *message);
-int proxy_settings0(char *message);
-int proxy_settings3(char *message);
-int proxy_button(char *message);
-int proxy_wheel(char *message);
-int proxy_initialize(char *message);
-int proxy_tv(char *message);
-int proxy_av(char *message);
-int proxy_aeb(char *message);
+int proxy_script_restore(unsigned char *message);
+int proxy_script_stop(unsigned char *message);
+int proxy_set_language(unsigned char *message);
+int proxy_dialog_enter(unsigned char *message);
+int proxy_dialog_exit(unsigned char *message);
+int proxy_dialog_afoff(unsigned char *message);
+int proxy_measuring(unsigned char *message);
+int proxy_measurement(unsigned char *message);
+int proxy_shoot_start(unsigned char *message);
+int proxy_shoot_finish(unsigned char *message);
+int proxy_settings0(unsigned char *message);
+int proxy_settings3(unsigned char *message);
+int proxy_button(unsigned char *message);
+int proxy_wheel(unsigned char *message);
+int proxy_initialize(unsigned char *message);
+int proxy_tv(unsigned char *message);
+int proxy_av(unsigned char *message);
+int proxy_aeb(unsigned char *message);
 
-typedef int (*proxy_t)(char *);
+typedef int (*proxy_t)(unsigned char *);
 
 proxy_t listeners_script[0x100] = {
     [IC_SHUTDOWN] = proxy_script_restore,
@@ -130,7 +130,7 @@ int send_to_intercom(int message, int parm) {
     return result;
 }
 
-void intercom_proxy(const int handler, char *message) {
+void intercom_proxy(const int handler, unsigned char *message) {
     proxy_t listener;
     proxy_t *listeners;
 
@@ -154,7 +154,7 @@ void intercom_proxy(const int handler, char *message) {
                 return;
     }
 
-    IntercomHandler(handler, message);
+    IntercomHandler(handler, (char *)message);
 }
 
 #ifdef ENABLE_DEBUG
@@ -171,25 +171,25 @@ void message_logger(char *message) {
 }
 #endif
 
-int proxy_script_restore(char *message) {
+int proxy_script_restore(unsigned char *message) {
     script_restore();
 
     return FALSE;
 }
 
-int proxy_script_stop(char *message) {
+int proxy_script_stop(unsigned char *message) {
     status.script_stopping = TRUE;
 
     return TRUE;
 }
 
-int proxy_set_language(char *message) {
+int proxy_set_language(unsigned char *message) {
     enqueue_action(lang_pack_config);
 
     return FALSE;
 }
 
-int proxy_dialog_enter(char *message) {
+int proxy_dialog_enter(unsigned char *message) {
     status.afp_dialog = (message[2] == IC_SET_AF);
 
     shortcut_stop();
@@ -197,13 +197,13 @@ int proxy_dialog_enter(char *message) {
     return FALSE;
 }
 
-int proxy_dialog_exit(char *message) {
+int proxy_dialog_exit(unsigned char *message) {
     enqueue_action(menu_event_finish);
 
     return FALSE;
 }
 
-int proxy_dialog_afoff(char *message) {
+int proxy_dialog_afoff(unsigned char *message) {
     if (status.afp_dialog) {
         // Open Extended AF-Point selection dialog
         message[1] = IC_AFPDLGON;
@@ -214,7 +214,7 @@ int proxy_dialog_afoff(char *message) {
     return FALSE;
 }
 
-int proxy_measuring(char *message) {
+int proxy_measuring(unsigned char *message) {
     status.measuring = message[2];
 
     if (!status.measuring)
@@ -223,7 +223,7 @@ int proxy_measuring(char *message) {
     return FALSE;
 }
 
-int proxy_measurement(char *message) {
+int proxy_measurement(unsigned char *message) {
     if (status.measuring) {
         status.measured_tv = message[2];
         status.measured_av = message[3];
@@ -243,14 +243,14 @@ int proxy_measurement(char *message) {
     return FALSE;
 }
 
-int proxy_shoot_start(char *message) {
+int proxy_shoot_start(unsigned char *message) {
     status.last_shot_tv = message[2];
     status.last_shot_av = message[3];
 
     return FALSE;
 }
 
-int proxy_shoot_finish(char *message) {
+int proxy_shoot_finish(unsigned char *message) {
     status.last_shot_fl = message[2] | (message[3] << 8);
 
     shortcut_stop();
@@ -261,7 +261,7 @@ int proxy_shoot_finish(char *message) {
     return FALSE;
 }
 
-int proxy_initialize(char *message) {
+int proxy_initialize(unsigned char *message) {
     static int first = TRUE;
 
     if (first) {
@@ -279,7 +279,7 @@ int proxy_initialize(char *message) {
  * @param message received from intercom.
  * @return int blocks message or not
  */
-int proxy_settings0(char *message) {
+int proxy_settings0(unsigned char *message) {
     static int first = TRUE;
 
     if (!status.msm_active)
@@ -300,7 +300,7 @@ int proxy_settings0(char *message) {
     return FALSE;
 }
 
-int proxy_settings3(char *message) {
+int proxy_settings3(unsigned char *message) {
     //	enqueue_action(restore_display);
 
     if (settings.autoiso_enable)
@@ -309,25 +309,25 @@ int proxy_settings3(char *message) {
     return FALSE;
 }
 
-int proxy_button(char *message) {
+int proxy_button(unsigned char *message) {
     return button_handler(message2button[message[1]],
                           message[0] > 3 ? message[2] : TRUE);
 }
 
-int proxy_wheel(char *message) {
+int proxy_wheel(unsigned char *message) {
     debug_log("proxy_wheel");
     return button_handler(
         (message[2] & 0x80) ? BUTTON_WHEEL_LEFT : BUTTON_WHEEL_RIGHT, TRUE);
 }
 
-int proxy_av(char *message) {
+int proxy_av(unsigned char *message) {
     if (status.vf_status == VF_STATUS_FEXP)
         enqueue_action(fexp_update_tv);
 
     return FALSE;
 }
 
-int proxy_tv(char *message) {
+int proxy_tv(unsigned char *message) {
     if (settings.autoiso_enable)
         enqueue_action(autoiso_restore);
 
@@ -337,7 +337,7 @@ int proxy_tv(char *message) {
     return FALSE;
 }
 
-int proxy_aeb(char *message) {
+int proxy_aeb(unsigned char *message) {
     persist.aeb = message[2];
 
     if (persist.aeb)

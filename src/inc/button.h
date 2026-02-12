@@ -1,6 +1,10 @@
 #ifndef BUTTON_H_
 #define BUTTON_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum {
 	BUTTON_NONE,
 	BUTTON_DP,
@@ -24,6 +28,10 @@ typedef enum {
 	BUTTON_COUNT,
 } button_t;
 
-extern int button_handler(button_t button, int is_button_down);
+int button_handler(button_t button, int is_button_down);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

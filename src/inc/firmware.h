@@ -7,6 +7,10 @@
 
 #include <vxworks.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // Variables, Flags, Pointers, Handlers
 #define BTN_PRESSED 0x20
 #define BTN_NOT_PRESSED 0x21
@@ -231,7 +235,7 @@ extern int taskDeleteHookAdd(void *deleteHook);
 
 // Task intercommunication
 
-extern int InitIntercomData(void (*proxy)(const int, char *));
+extern int InitIntercomData(void (*proxy)(const int, unsigned char *));
 extern int IntercomHandler(const int handler, const char *message);
 extern int SendToIntercom(int message, int length, int parm);
 extern int IntercomHandlerButton(int button, int unknown);
@@ -327,5 +331,9 @@ extern void set_2A0E0_to_1(void);
 
 extern void *PTP_Actions(void *arg0, void *arg1, void *arg2, void *arg3,
                          void *arg4);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* FIRMWARE_H_ */

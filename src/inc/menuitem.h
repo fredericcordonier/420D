@@ -43,7 +43,7 @@ typedef struct {
 } menuitem_enum_t;
 
 typedef struct {
-    char *value;
+    const char *value;
 } menuitem_info_t;
 
 typedef struct {

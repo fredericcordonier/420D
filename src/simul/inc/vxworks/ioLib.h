@@ -2,6 +2,11 @@
 #define VXWORKS_IOLIB_H_
 
 // #include <vxworks.h>
+#include <stdio.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* IOCTL Functions */
 
@@ -87,7 +92,7 @@
 // extern STATUS  remove         (const char *name);
 // extern STATUS  close          (int fd);
 // extern int     rename         (const char *oldname, const char * newname);
-// extern int     read           (int fd, char *buffer, size_t maxbytes);
+extern ssize_t     read           (int fd, void *buffer, size_t maxbytes);
 // extern int     write          (int fd, char *buffer, size_t nbytes);
 // extern int     ioctl          (int fd, int function, int arg);
 // extern int     lseek          (int fd, long offset, int whence);
@@ -96,10 +101,14 @@
 // extern STATUS  chdir          (char *pathname);
 // extern char   *getcwd         (char *buffer, int size);
 // extern char   *getwd          (char *pathname);
-// extern void    ioGlobalStdSet (int stdFd, int newFd);
+extern void    ioGlobalStdSet (int stdFd, int newFd);
 // extern int     ioGlobalStdGet (int stdFd);
 // extern void    ioTaskStdSet   (int taskId, int stdFd, int newFd);
 // extern int     ioTaskStdGet   (int taskId, int stdFd);
 // extern BOOL    isatty         (int fd);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* VXWORKS_IOLIB_H_ */

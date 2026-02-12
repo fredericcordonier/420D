@@ -69,8 +69,6 @@ extern int timestamp(void);
 
 char* strncpy0(char* dest, const char* src, size_t size);
 
-#define FGETS_USE_SLOW
-
 #ifdef FGETS_USE_SLOW
 // this version will read byte-by-byte ... it is slow
 char * hack_fgets_simple_but_slow(char *s, int n, int fd);
@@ -81,7 +79,7 @@ char * hack_fgets_simple_but_slow(char *s, int n, int fd);
 // though it is faster than reading byte-by-byte, it has a special init too.
 char * hack_fgets_faster(char *s, int n, int fd);
 #define hack_fgets_init() hack_fgets_faster((char *)NULL, 0, -1)
-#define hack_fgets hack_fgets_faster() ;
+#define hack_fgets hack_fgets_faster
 #endif
 
 #ifdef __cplusplus
