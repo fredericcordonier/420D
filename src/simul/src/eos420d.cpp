@@ -264,7 +264,7 @@ void EOS420D::post_message(action_t pMessage) {
 
 std::map<button_t, guimode_t> switch_guimode = {
     {BUTTON_ZOOM_OUT, GUIMODE_AFPATTERN},
-    {BUTTON_LEFT, GUIMODE_WB}
+    {BUTTON_DOWN, GUIMODE_WB}
 };
 
 void EOS420D::hw_control(const Button button) {
@@ -284,6 +284,7 @@ void EOS420D::button_received(KeypadInput ki) {
         std::map<button_t, guimode_t>::iterator it = switch_guimode.find(ki.button);
         if (it != switch_guimode.end()) {
             GUIMode = it->second;
+            FaceStatus = 0;
         }
     }
     else if (ki.button == BUTTON_RELEASE) {

@@ -55,6 +55,7 @@ int       DeleteDialogBox(dialog_t *dialog)
 void dialog_redraw        (dialog_t *dialog)
 {
 	my_camera.display.redraw();
+	std::cout << "dialog_item_set_int: " <<  std::endl;
 }
 void dialog_item_set_int  (dialog_t *dialog, const int item, const int   data)
 {
@@ -70,7 +71,10 @@ void dialog_item_set_str  (dialog_t *dialog, const int item, const char *data)
 void dialog_item_set_label(dialog_t *dialog, const int type, const void *data, const int length, const int item)
 {}
 int dialog_event_handler (dialog_t *dialog, int *r1, gui_event_t event, int *r3, int r4, int r5, int r6, int code)
-{return 0;}
+{
+	std::cout << "dialog_event_handler: " <<  std::endl;
+	return 0;
+}
 int olc_event_handler    (dialog_t *dialog, int *r1, gui_event_t event, int *r3, int r4, int r5, int r6, int code)
 {return 0;}
 void GUI_Select_Item  (void *menu_handle, int menu_item)
