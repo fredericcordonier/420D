@@ -52,7 +52,7 @@ Some of the most popular features of `400plus` are:
   * Fixed exposure for M mode.
   * Quick exposure button for M mode.
   * Configurable buttons.
-  * RAW file format output for auto modes. 
+  * RAW file format output for auto modes.
   * Release counter.
 
 `400plus` has been translated into several languages, and can even be translated to languages not supported by the camera.
@@ -64,6 +64,14 @@ Some of the most popular features of `400plus` are:
 - Few modifications/corrections according to 400plus issue tracker
 
 ---
+
+## Generating language files (until integrated to makefile)
+
+Install the python virtual environment to run the script in ./utils (pipenv install).
+Run the script ./utils/languages.py to build or update the languages .ini files; new
+messages will be translated with GoogleTranslator, to be checked.
+Messages no more referenced by the software will be kept in the language ini files but
+commented, so that the original translation is not lost if the message comes back one day.
 
 ## 🐳 Building with Docker/Podman
 
