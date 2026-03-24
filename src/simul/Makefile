@@ -1,6 +1,10 @@
 # Compilers
 CPP := g++
 CC  = gcc
+PYTHON := python3
+UTILS :=
+GEN_SCRIPT := ../../utils/gen_struct_hashtables.py
+GEN_STAMP  := .gen_stamp
 
 CFLAGS := -Iinc -Iinc/vxworks -I../inc              \
 	-Werror                            \
@@ -11,11 +15,15 @@ LDFLAGS :=
 
 UT_SRC_DIR := src
 SRC_420D := ../c
+INC_420D := ../inc
 OBJ_DIR := obj
 BIN_DIR := bin
+DEF_DIR := ../def
+
 GTK_CFLAGS := $(shell pkg-config --cflags gtk+-3.0)
 GTK_LIBS   := $(shell pkg-config --libs gtk+-3.0)
 
+DEFS := $(wildcard $(DEF_DIR)/*.def)
 # Source files
 CPP_SRCS := $(wildcard $(UT_SRC_DIR)/*.cpp)
 C_SRCS   := $(SRC_420D)/ini.c $(SRC_420D)/settings.c $(SRC_420D)/serialize.c $(SRC_420D)/languages.c $(SRC_420D)/button.c \
@@ -25,7 +33,8 @@ C_SRCS   := $(SRC_420D)/ini.c $(SRC_420D)/settings.c $(SRC_420D)/serialize.c $(S
 			$(SRC_420D)/menuoptions.c $(SRC_420D)/menupage.c $(SRC_420D)/exposure.c $(SRC_420D)/cmodes.c $(SRC_420D)/snapshots.c \
 			$(SRC_420D)/scripts.c $(SRC_420D)/shutter.c $(SRC_420D)/float.c  $(SRC_420D)/display.c $(SRC_420D)/menu_dlg.c $(SRC_420D)/csv.c \
 			$(SRC_420D)/msm.c $(SRC_420D)/qexp.c $(SRC_420D)/persist.c $(SRC_420D)/fexp.c $(SRC_420D)/debug.c $(SRC_420D)/bmp.c \
-			$(SRC_420D)/font-large.c $(SRC_420D)/font-med.c $(SRC_420D)/font-small.c $(SRC_420D)/memspy.c $(SRC_420D)/intercom.c
+			$(SRC_420D)/font-large.c $(SRC_420D)/font-med.c $(SRC_420D)/font-small.c $(SRC_420D)/memspy.c $(SRC_420D)/intercom.c \
+			$(SRC_420D)/settings_t.c $(SRC_420D)/menu_order_t.c
 
 # CPP_SRCS := $(wildcard $(UT_SRC_DIR)/*.cpp) $(SRC_420D)/ini.c $(SRC_420D)/settings.c $(SRC_420D)/serialize.c $(SRC_420D)/languages.c $(SRC_420D)/button.c \
 # 			$(SRC_420D)/menu.c $(SRC_420D)/shortcuts.c $(SRC_420D)/menu_main.c $(SRC_420D)/actions.c $(SRC_420D)/viewfinder.c \
@@ -48,8 +57,8 @@ OBJS := $(patsubst %.c,$(OBJ_DIR)/%.o,$(notdir $(C_SRCS))) \
 
 DEPS := $(OBJS:%.o=%.d)
 
-$(info OBJS = $(OBJS))
-$(info SRCS = $(SRCS))
+#$(info OBJS = $(OBJS))
+#$(info SRCS = $(SRCS))
 
 ECHO := "/bin/echo"
 
@@ -61,6 +70,21 @@ endif
 all: $(BIN_DIR)/simul languages.ini languages/new_lang.ini
 	@$(ECHO) -e $(BOLD)[ALL]$(NORM)
 	@ls -l $(BIN_DIR)
+
+## Generation of structure definition files, used for serialization
+DEF_NAMES := $(notdir $(basename $(DEFS)))
+$(info DEF_NAMES = $(DEF_NAMES))
+
+
+GEN_HEADERS := $(addprefix $(INC_420D)/,$(addsuffix .h,$(DEF_NAMES)))
+GEN_SOURCES := $(addprefix $(SRC_420D)/,$(addsuffix .c,$(DEF_NAMES)))
+PARAM_HEADER := $(INC_420D)/param_def.h
+
+GENERATED := $(GEN_HEADERS) $(GEN_SOURCES) $(PARAM_HEADER)
+
+$(GENERATED): $(DEFS) $(GEN_SCRIPT)
+	python3 $(GEN_SCRIPT) $(DEF_DIR) $(INC_DIR) $(SRC_DIR)
+
 
 $(BIN_DIR)/simul: $(OBJS)
 	@$(ECHO) -e $(BOLD)[LINK]:$(NORM) $@
@@ -89,7 +113,7 @@ $(OBJ_DIR)/%.o: $(SRC_420D)/%.c | $(OBJ_DIR)
 
 clean:
 	@$(ECHO) -e $(BOLD)[CLEAN]$(NORM)
-	rm -rf $(OBJ_DIR)/*.o $(OBJ_DIR)/*.d
+	rm -rf $(OBJ_DIR)/*.o $(OBJ_DIR)/*.d $(GENERATED)
 
 distclean: clean
 	rm -f $(BIN_DIR)

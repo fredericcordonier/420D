@@ -61,13 +61,26 @@ LDFLAGS := -Wl,-Ttext,$(ADDRESS) -Wl,-T,link.script -Wl,-Map,autoexec.map -Wl,--
 
 OBJCOPY := $(CROSS_COMPILE)objcopy
 
+PYTHON := python3
+GEN_SCRIPT := ../utils/gen_struct_hashtables.py
+
 # === Source structure ===
 CSRC_DIR := c
 SSRC_DIR := asm
 VX_DIR := vxworks
 FW_DIR := firmware
+DEF_DIR := def
 OBJ_DIR := .
 ASM_DIRS := $(SSRC_DIR) $(VX_DIR) $(FW_DIR)
+
+# === Generate structure definition files (used for serializiation) ===
+DEFS := $(wildcard $(DEF_DIR)/*.def)
+DEF_NAMES := $(notdir $(basename $(DEFS)))
+GEN_HEADERS := $(addprefix $(INC_420D)/,$(addsuffix .h,$(DEF_NAMES)))
+GEN_SOURCES := $(addprefix $(SRC_420D)/,$(addsuffix .c,$(DEF_NAMES)))
+PARAM_HEADER := $(INC_420D)/param_def.h
+GEN_STAMP := gen_stamp
+GENERATED := $(GEN_HEADERS) $(GEN_SOURCES) $(PARAM_HEADER)
 
 # === Source discovery ===
 C_SRCS := $(wildcard $(CSRC_DIR)/*.c)
@@ -83,8 +96,8 @@ OBJS := $(addprefix $(OBJ_DIR)/,$(OBJS))
 
 DEPS := $(OBJS:%.o=%.d)
 
-$(info OBJS = $(OBJS))
-$(info SRCS = $(SRCS))
+# $(info OBJS = $(OBJS))
+# $(info SRCS = $(SRCS))
 
 ECHO := "/bin/echo"
 
@@ -134,6 +147,13 @@ $(PROJECT).arm.elf: $(OBJS)
 	@$(ECHO) -e $(BOLD)[LINK]:$(NORM) $@
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
+$(GEN_STAMP): $(DEFS) $(GEN_SCRIPT)
+	@$(ECHO) -e python3 $@
+	python3 $(GEN_SCRIPT) $(DEF_DIR) $(INC_DIR) $(SRC_DIR)
+	touch $(GEN_STAMP)
+
+$(GENERATED): $(GEN_STAMP)
+
 # === Pattern rules for compilation ===
 # --- Pattern rules for C and ASM ---
 vpath %.c $(CSRC_DIR)
@@ -153,7 +173,7 @@ $(OBJ_DIR)/%.o: %.S
 clean:
 	@$(ECHO) -e $(BOLD)[CLEAN]$(NORM)
 	rm -rf $(OBJ_DIR)/*.o $(OBJ_DIR)/*.d
-	rm -f $(PROJECT).arm.elf $(PROJECT).BIN
+	rm -f $(PROJECT).arm.elf $(PROJECT).BIN $(GENERATED)
 
 languages.ini: inc/languages.h languages/*.ini
 	@$(ECHO) -e $(BOLD)[I18N]:$(NORM) $@
