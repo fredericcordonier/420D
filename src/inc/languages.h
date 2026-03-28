@@ -64,7 +64,10 @@
     LANG_PAIR(I_USE_FLASH, "Disable flash")                                    \
     LANG_PAIR(I_AEB, "AEB")                                                    \
     LANG_PAIR(I_COLOR_TEMP_K, "Color temp. (K)")                               \
+    LANG_PAIR(I_START_ACTION, "Launch method")                                  \
     LANG_PAIR(I_DELAY, "2s Delay")                                             \
+    LANG_PAIR(I_SET, "Button SET")                                             \
+    LANG_PAIR(I_WAVE, "Eye sensor")                                            \
     LANG_PAIR(I_TIME, "Time (s)")                                              \
     LANG_PAIR(I_ACTION, "Action")                                              \
     LANG_PAIR(I_REPEAT, "Repeat")                                              \
@@ -90,6 +93,7 @@
     LANG_PAIR(S_APT_AEB, "Aperture AEB")                                       \
     LANG_PAIR(S_ISO_AEB, "ISO AEB")                                            \
     LANG_PAIR(S_INTERVAL, "Intervalometer")                                    \
+    LANG_PAIR(S_TIMELAPSE, "Timelapse")                                        \
     LANG_PAIR(S_BRAMP, "Bulb ramping")                                         \
     LANG_PAIR(S_HANDWAVE, "Handwaving")                                        \
     LANG_PAIR(S_TIMER, "Self-Timer")                                           \

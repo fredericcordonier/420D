@@ -17,6 +17,7 @@ enum class Button {
     RIGHT,
     SET,
     AV,
+    DRIVE,
     WHEEL_L,
     WHEEL_R,
     SHUTTER_HALF,

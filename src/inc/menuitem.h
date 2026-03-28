@@ -246,6 +246,8 @@ struct menuitem_t {
     MENUITEM_ENUM(_ID_, _NAME_, _VALUE_, TRUE, &menuoptions_flash, _ON_CHANGE_)
 #define MENUITEM_ACTION(_ID_, _NAME_, _VALUE_, _ON_CHANGE_)                    \
     MENUITEM_ENUM(_ID_, _NAME_, _VALUE_, TRUE, &menuoptions_action, _ON_CHANGE_)
+#define MENUITEM_START_SCRIPT(_ID_, _NAME_, _VALUE_, _ON_CHANGE_)              \
+    MENUITEM_ENUM(_ID_, _NAME_, _VALUE_, TRUE, &menuoptions_start_act, _ON_CHANGE_)
 #define MENUITEM_LOGFILE(_ID_, _NAME_, _VALUE_, _ON_CHANGE_)                   \
     MENUITEM_ENUM(_ID_, _NAME_, _VALUE_, TRUE, &menuoptions_logfile,           \
                   _ON_CHANGE_)
@@ -305,8 +307,8 @@ struct menuitem_t {
 #define MENUITEM_BRTIME(_ID_, _NAME_, _VALUE_, _ON_CHANGE_)                    \
     MENUITEM_TIME(_ID_, _NAME_, _VALUE_, FALSE, 0, 18000, 1, 10, 60,           \
                   _ON_CHANGE_)
-#define MENUITEM_INFTIME(_ID_, _NAME_, _VALUE_)                                \
-    MENUITEM_TIME(_ID_, _NAME_, _VALUE_, TRUE, 1, 18000, 1, 10, 60, NULL)
+#define MENUITEM_INFTIME(_ID_, _NAME_, _VALUE_, _RO_)                   \
+    MENUITEM_TIME(_ID_, _NAME_, _VALUE_, _RO_, 1, 18000, 1, 10, 60, NULL)
 
 extern void menuitem_display(const menuitem_t *item, char *buffer,
                              const int length);

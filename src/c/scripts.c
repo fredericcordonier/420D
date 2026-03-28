@@ -14,6 +14,7 @@
 #include "settings.h"
 #include "shutter.h"
 #include "utils.h"
+#include "actions.h"
 
 #include "scripts.h"
 
@@ -93,6 +94,91 @@ void script_iso_aeb() {
     script_stop();
 
     persist.last_script = SCRIPT_ISO_AEB;
+}
+
+void script_timelapse() {
+    int i;
+    int target, gap = 0, pause = 0, jump = 0;
+    int i_l_interval_time, i_l_interval_shots;
+    int i_l_save_img_format, i_l_save_img_size;
+
+    if ((settings.timelapse_playtime == 0) ||
+        (settings.timelapse_rectime == 0) ) {
+        return;
+    }
+
+    i_l_save_img_format = DPData.img_format;
+    i_l_save_img_size = DPData.img_size;
+
+    // Force img format to jpeg and size to small:
+    //   enough for full-HD, and allows fast buffering of images
+    set_img_format_size(IMG_FORMAT_JPG, IMG_SIZE_S);
+
+    switch (settings.timelapse_vf) {
+    case VIDEO_FORMAT_25FPS:
+        i_l_interval_shots = settings.timelapse_playtime * 25;
+        break;
+    case VIDEO_FORMAT_30FPS:
+        i_l_interval_shots = settings.timelapse_playtime * 30;
+        break;
+    case VIDEO_FORMAT_50FPS:
+        i_l_interval_shots = settings.timelapse_playtime * 50;
+        break;
+    case VIDEO_FORMAT_60FPS:
+        i_l_interval_shots = settings.timelapse_playtime * 60;
+        break;
+    default:
+        i_l_interval_shots = 0;
+        break;
+    }
+    i_l_interval_time = settings.timelapse_rectime / i_l_interval_shots;
+
+    int delay = i_l_interval_time * TIME_RESOLUTION;
+
+    script_start();
+
+    if (settings.timelapse_start == SHOT_START_DELAY2S)
+        script_delay(SCRIPT_DELAY_START);
+
+    // "target" is the timestamp when we are supposed to shot
+    target = timestamp();
+
+    for (i = 0; i < i_l_interval_shots || i_l_interval_shots == 0;
+         i++) {
+        // We pause before each shot, after waiting for the camera to finish the
+        // previous one
+        if (i > 0) {
+            wait_for_camera();
+
+            if (!can_continue())
+                break;
+
+            // Calculate how much time is left until target, and wait;
+            // automatically aim for the next target, if already missed this
+            gap = target - timestamp();
+            pause = gap % delay;
+            pause += pause > 0 ? 0 : delay;
+
+            script_delay(pause);
+        }
+
+        if (!can_continue())
+            break;
+
+        script_action(SHOT_ACTION_SHOT);
+
+        // Recalculate the next target,
+        // but considering we may have already missed it
+        jump = (pause % delay) - gap;
+        jump += jump > delay ? 0 : delay;
+        target += jump;
+    }
+
+    script_stop();
+    // Restore img format and size
+    set_img_format_size(i_l_save_img_format, i_l_save_img_size);
+
+    persist.last_script = SCRIPT_TIMELAPSE;
 }
 
 void script_interval() {

@@ -2,7 +2,6 @@ import os
 import subprocess
 import re
 import locale
-import codecs
 from pathlib import Path
 
 from deep_translator import GoogleTranslator, exceptions as dp_exceptions
@@ -72,14 +71,14 @@ class LocaleFile:
     def __init__(self, language: str, lang_folder: Path, language_string: str):
         self.language = language
         self.language_string = language_string
-        self.input_file = lang_folder / f'{language}.ini'
+        self.input_file = lang_folder / f'{language_string}.ini'
         self.active_messages = {}
         self.inactive_messages = {}
         self.to_be_translated = {}
 
     def read(self):
         # Read existing locale file and recover the existing translations
-        lines = codecs.open(self.input_file, encoding='utf-8').read()
+        lines = open(self.input_file, encoding='utf-8').read()
         pattern = r'\[(\w+)\]'
         results = re.findall(pattern, lines)
         if len(results) != 1:
@@ -129,8 +128,8 @@ class LocaleFile:
         # Write strings in ini file
         self.message_names = list(self.active_messages.keys()) + list(self.inactive_messages.keys())
         if not out_file_name:
-            out_file_name = f'{self.language}_new.ini'
-        with codecs.open(self.input_file.parent / out_file_name, 'w', "utf-8") as out_file:
+            out_file_name = f'{self.language_string}_new.ini'
+        with open(self.input_file.parent / out_file_name, 'w', "utf-8") as out_file:
             # Write section name
             out_file.write(f'[{self.language_string}]\n')
             out_file.write('\n'.join([f'{k_name:<22} = {self.active_messages[k_name]}' if k_name in self.active_messages.keys() else f';{k_name:<21} = {self.inactive_messages[k_name]}'
@@ -154,20 +153,20 @@ if __name__ == "__main__":
     # lang_file.generate_new_lang_ini()
     print('Translating language strings')
     locales = {
-            #    'fr': 'FRENCH',
-            #    'it': 'ITALIAN',
-            #    'es': 'SPANISH',
-            #    'zh-CN': 'SIMPLIFIED_CHINESE',
-            #    'nl': 'DUTCH',
-            #    'fi': 'FINNISH',
-            #    'is': 'ÍSLENSKA',
-            #    'pl': 'POLISH',
-            #    'ru': 'RUSSIAN',
-            #    'sv': 'SWEDISH',
-            #     # # galego.ini
-            #     # # magyar.ini
-            #     # # new_lang.ini
-            #     # # srpski.ini
+               'fr': 'FRENCH',
+               'it': 'ITALIAN',
+               'es': 'SPANISH',
+               'zh-CN': 'SIMPLIFIED_CHINESE',
+               'nl': 'DUTCH',
+               'fi': 'FINNISH',
+               'is': 'ÍSLENSKA',
+               'pl': 'POLISH',
+               'ru': 'RUSSIAN',
+               'sv': 'SWEDISH',
+                # # galego.ini
+                # # magyar.ini
+                # # new_lang.ini
+                # # srpski.ini
                'de': 'GERMAN'
             }
     for code, string in locales.items():

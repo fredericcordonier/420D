@@ -32,6 +32,15 @@ typedef enum {
 } shot_action_t;
 
 typedef enum {
+    SHOT_START_SET,
+    SHOT_START_DELAY2S,
+    SHOT_START_WAVE,
+    SHOT_START_COUNT,
+    SHOT_START_FIRST = 0,
+    SHOT_START_LAST = SHOT_START_COUNT - 1
+} shot_start_t;
+
+typedef enum {
     SHORTCUT_NONE,
     SHORTCUT_ISO,
     SHORTCUT_SCRIPT,
@@ -104,7 +113,7 @@ typedef enum {
     QEXP_WEIGHT_LAST = QEXP_WEIGHT_COUNT - 1
 } qexp_weight_t;
 
-#define PARAM_INT_DEF(s, f) int f;
+#define PARAM_INT_DEF(s, f, v) int f;
 #define PARAM_INT_ARRAY_DEF(s, f, i) int f[i];
 typedef struct {
 #include "../def/settings_t.def"

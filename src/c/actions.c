@@ -99,6 +99,14 @@ void toggle_img_format() {
 }
 
 /**
+ * Set img size and format.
+ */
+void set_img_format_size(int i_x_img_format, int i_x_img_size) {
+    send_to_intercom(IC_SET_IMG_FORMAT, i_x_img_format);
+    send_to_intercom(IC_SET_IMG_SIZE, i_x_img_size);
+}
+
+/**
  * @brief Restore the ISO value previously memorized.
  *
  */

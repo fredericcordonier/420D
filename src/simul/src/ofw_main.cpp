@@ -59,6 +59,7 @@ void SimulFirmware::onButton(Button btn) {
 
 	map_table = {
 		{Button::AV, BUTTON_AV},
+		{Button::DRIVE, BUTTON_DRIVE},
 		{Button::WHEEL_R, BUTTON_WHEEL_RIGHT},
 		{Button::WHEEL_L, BUTTON_WHEEL_LEFT},
 		{Button::UP, BUTTON_UP},

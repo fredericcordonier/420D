@@ -20,6 +20,7 @@ Functions and variables names follow the following pattern:
 | <!--  -->    |  <!--  -->  |
 | ------------ | ----------- |
 | structure    |  s |
+| union        | u |
 | integer      | i |
 | char         | c |
 

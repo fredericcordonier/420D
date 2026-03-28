@@ -9,6 +9,7 @@ typedef struct {
 extern list_t menuoptions_bool;
 extern list_t menuoptions_flash;
 extern list_t menuoptions_action;
+extern list_t menuoptions_start_act;
 extern list_t menuoptions_logfile;
 extern list_t menuoptions_btnactn;
 extern list_t menuoptions_direction;

@@ -26,6 +26,12 @@ char *menuoptions_action_strings[SHOT_ACTION_COUNT] = {
     [SHOT_ACTION_LONG_EXP] = LP_WORD(L_V_LEXP),
 };
 
+char *menuoptions_action_start_strings[SHOT_START_COUNT] = {
+    [SHOT_START_SET] = LP_WORD(L_I_SET),
+    [SHOT_START_DELAY2S] = LP_WORD(L_I_DELAY),
+    [SHOT_START_WAVE] = LP_WORD(L_I_WAVE),
+};
+
 char *menuoptions_logfile_strings[LOGFILE_MODE_COUNT] = {
     [LOGFILE_MODE_OVERWRITE] = LP_WORD(L_V_OVERWRITE),
     [LOGFILE_MODE_NEW] = LP_WORD(L_V_NEW),
@@ -124,6 +130,7 @@ char *menuoptions_olcinv_steps_strings[] = {
 list_t menuoptions_bool = LIST(menuoptions_bool_strings);
 list_t menuoptions_flash = LIST(menuoptions_flash_strings);
 list_t menuoptions_action = LIST(menuoptions_action_strings);
+list_t menuoptions_start_act = LIST(menuoptions_action_start_strings);
 list_t menuoptions_logfile = LIST(menuoptions_logfile_strings);
 list_t menuoptions_btnactn = LIST(menuoptions_btnactn_strings);
 list_t menuoptions_direction = LIST(menuoptions_direction_strings);

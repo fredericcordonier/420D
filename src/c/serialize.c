@@ -22,7 +22,7 @@ static int handle_settings_line(void *user, int lineno, const char *section,
 static int handle_section(void *user, int lineno, const char *section);
 
 // Get the list of parameters in settings structure
-#define PARAM_INT_DEF(s, f) {#f, (long)(&(((s *)NULL)->f)), 1},
+#define PARAM_INT_DEF(s, f, v) {#f, (long)(&(((s *)NULL)->f)), 1},
 #define PARAM_INT_ARRAY_DEF(s, f, i) {#f, (long)(&(((s *)NULL)->f)), i},
 
 const field_def settings_structure[] = {

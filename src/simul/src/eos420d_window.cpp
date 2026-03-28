@@ -70,6 +70,7 @@ EOS400DWindow::EOS400DWindow(FirmwareBridge& fw)
     gtk_grid_attach(GTK_GRID(grid), makeButton("SHUTTER", Button::SHUTTER_FULL),
                     3, 0, 1, 1);
     gtk_grid_attach(GTK_GRID(grid), makeButton("AV", Button::AV),             1, 1, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid), makeButton("DRIVE", Button::DRIVE),       1, 2, 1, 1);
     gtk_grid_attach(GTK_GRID(grid), makeButton("ZOOM OUT", Button::ZOOM_OUT), 2, 1, 1, 1);
     gtk_grid_attach(GTK_GRID(grid), makeButton("ZOOM IN", Button::ZOOM_IN),   3, 1, 1, 1);
 

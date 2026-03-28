@@ -6,7 +6,7 @@ extern void dp_action(void);
 extern void set_metering_spot(void);
 extern void set_whitebalance_colortemp(void);
 extern void toggle_img_format(void);
-
+void set_img_format_size(int i_x_img_format, int i_x_img_size);
 extern void restore_iso(void);
 extern void restore_wb(void);
 extern void restore_metering(void);
