@@ -31,6 +31,7 @@
     LANG_PAIR(I_DUMP_MEMORY, "Dump RAM after 5s")                              \
     LANG_PAIR(I_MEMSPY_ENABLE, "MemSpy Enable")                                \
     LANG_PAIR(I_MEMSPY_DISABLE, "MemSpy Disable")                              \
+    LANG_PAIR(I_MALLOC_TEST, "Test malloc")                                    \
     LANG_PAIR(I_DUMP_LOG_TO_FILE, "Dump log to file")                          \
     LANG_PAIR(I_PRINT_INFO, "Print info to log")                               \
     LANG_PAIR(I_DUMP_DPR, "Dump DPR Data")                                     \

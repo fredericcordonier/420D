@@ -15,6 +15,7 @@
 
 #include <stdio.h>
 #include <vxworks.h>
+#include <memPartLib.h>
 
 #include "firmware/gui.h"
 
@@ -37,6 +38,8 @@ static int template = 1;
 static int curr_palette = 0;
 
 static void test_dialog_create(const menuitem_t *menu);
+
+static void test_malloc(const menuitem_t *menu);
 
 static void menupage_developer_dump_log(const menuitem_t *menuitem);
 static void menupage_developer_print_info(const menuitem_t *menuitem);
@@ -67,6 +70,8 @@ menuitem_t menu_developer_items[] = {
     MENUITEM_LAUNCH(MENUPAGE_DEVEL_MEMSPYDISABLE, LP_WORD(L_I_MEMSPY_DISABLE),
                     memspy_disable),
 #endif
+    MENUITEM_LAUNCH(MENUPAGE_DEVEL_MALLOC_TEST, LP_WORD(L_I_MALLOC_TEST),
+                    test_malloc),
 #ifdef BREAK_CAMERA
     MENUITEM_LAUNCH(MENUPAGE_DEVEL_ENTERFACTMODE,
                     LP_WORD(L_I_ENTER_FACTORY_MODE), enter_factory_mode),
@@ -165,6 +170,20 @@ static void test_dialog_create(const menuitem_t *menu) {
 
     dialog_redraw(menu_handler);
 }
+
+static void test_malloc(const menuitem_t *menu) {
+    const int i_l_size = 256;
+    char *pc_l_buf = (char *)malloc(i_l_size + sizeof(int));
+    char *pc_l_bufpt = pc_l_buf;
+    char c_l;
+    for (c_l = '0'; c_l < 'z'; c_l++) {
+        *pc_l_bufpt++ = c_l;
+    }
+    *pc_l_bufpt = '\0';
+    debug_log("%s", pc_l_buf);
+    free((void *)pc_l_buf);
+}
+
 
 #if 0
 

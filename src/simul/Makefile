@@ -31,10 +31,10 @@ C_SRCS   := $(SRC_420D)/ini.c $(SRC_420D)/settings.c $(SRC_420D)/serialize.c $(S
 			$(SRC_420D)/autoiso.c $(SRC_420D)/af_patterns.c $(SRC_420D)/menu_cmodes.c $(SRC_420D)/menu_developer.c $(SRC_420D)/menu_info.c \
 			$(SRC_420D)/menu_params.c $(SRC_420D)/menu_rename.c $(SRC_420D)/menu_scripts.c $(SRC_420D)/menu_settings.c $(SRC_420D)/menuitem.c \
 			$(SRC_420D)/menuoptions.c $(SRC_420D)/menupage.c $(SRC_420D)/exposure.c $(SRC_420D)/cmodes.c $(SRC_420D)/snapshots.c \
-			$(SRC_420D)/scripts.c $(SRC_420D)/shutter.c $(SRC_420D)/float.c  $(SRC_420D)/display.c $(SRC_420D)/menu_dlg.c $(SRC_420D)/csv.c \
+			$(SRC_420D)/scripts.c $(SRC_420D)/shutter.c $(SRC_420D)/float.c  $(SRC_420D)/display.c $(SRC_420D)/menu_shoot.c $(SRC_420D)/csv.c \
 			$(SRC_420D)/msm.c $(SRC_420D)/qexp.c $(SRC_420D)/persist.c $(SRC_420D)/fexp.c $(SRC_420D)/debug.c $(SRC_420D)/bmp.c \
 			$(SRC_420D)/font-large.c $(SRC_420D)/font-med.c $(SRC_420D)/font-small.c $(SRC_420D)/memspy.c $(SRC_420D)/intercom.c \
-			$(SRC_420D)/settings_t.c $(SRC_420D)/menu_order_t.c
+			$(SRC_420D)/settings_t.c $(SRC_420D)/menu_order_t.c $(SRC_420D)/menu_temps.c
 
 # CPP_SRCS := $(wildcard $(UT_SRC_DIR)/*.cpp) $(SRC_420D)/ini.c $(SRC_420D)/settings.c $(SRC_420D)/serialize.c $(SRC_420D)/languages.c $(SRC_420D)/button.c \
 # 			$(SRC_420D)/menu.c $(SRC_420D)/shortcuts.c $(SRC_420D)/menu_main.c $(SRC_420D)/actions.c $(SRC_420D)/viewfinder.c \

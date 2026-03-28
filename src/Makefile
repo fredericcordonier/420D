@@ -87,7 +87,7 @@ C_SRCS := $(wildcard $(CSRC_DIR)/*.c)
 ASM_SRCS := $(wildcard $(SSRC_DIR)/*.S)
 VX_SRCS := $(wildcard $(VX_DIR)/*.S)
 FW_SRCS := $(wildcard $(FW_DIR)/*.S)
-SRCS   := $(C_SRCS) $(VX_SRCS) $(FW_SRCS) $(ASM_SRCS)
+SRCS   := $(C_SRCS) $(VX_SRCS) $(FW_SRCS) $(ASM_SRCS) $(GEN_SOURCES)
 
 OBJS := $(notdir $(SRCS))
 OBJS := $(OBJS:.c=.o)
@@ -121,7 +121,7 @@ ifdef INSTALL_PATH
 	@install -D languages.ini $(INSTALL_PATH)/420D
 endif
 
-all: $(PROJECT).BIN languages.ini languages/new_lang.ini
+all: $(GEN_STAMP) $(PROJECT).BIN languages.ini languages/new_lang.ini
 	@$(ECHO) -e $(BOLD)[ALL]$(NORM)
 	@ls -l AUTOEXEC.BIN
 
@@ -152,7 +152,11 @@ $(GEN_STAMP): $(DEFS) $(GEN_SCRIPT)
 	python3 $(GEN_SCRIPT) $(DEF_DIR) $(INC_DIR) $(SRC_DIR)
 	touch $(GEN_STAMP)
 
-$(GENERATED): $(GEN_STAMP)
+$(GEN_SOURCES): $(GEN_STAMP)
+$(GEN_HEADERS): $(GEN_STAMP)
+
+$(GEN_SOURCES) $(GEN_HEADERS) $(PARAM_HEADER): $(GEN_STAMP)
+	@true
 
 # === Pattern rules for compilation ===
 # --- Pattern rules for C and ASM ---
@@ -173,7 +177,7 @@ $(OBJ_DIR)/%.o: %.S
 clean:
 	@$(ECHO) -e $(BOLD)[CLEAN]$(NORM)
 	rm -rf $(OBJ_DIR)/*.o $(OBJ_DIR)/*.d
-	rm -f $(PROJECT).arm.elf $(PROJECT).BIN $(GENERATED)
+	rm -f $(PROJECT).arm.elf $(PROJECT).BIN $(GENERATED) $(GEN_STAMP)
 
 languages.ini: inc/languages.h languages/*.ini
 	@$(ECHO) -e $(BOLD)[I18N]:$(NORM) $@

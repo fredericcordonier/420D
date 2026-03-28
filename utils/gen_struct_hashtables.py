@@ -50,9 +50,9 @@ class StructDef:
                               self.inc_file_name,
                               inc_out.name]
             for incf in included_files:
-                out_file.write(f'#include "{incf}"\n')
+                out_file.write(f'#include "{incf}"\n\n')
             out_file.write(f'#define C_SIZE_{self.struct_name.upper()}_DEF      {len(hashes) + 1}\n\n')
-            out_file.write(f'extern const field_def {self.struct_name}_structure[C_SIZE_{self.struct_name.upper()}_DEF];\n')
+            out_file.write(f'extern const field_def_t as_{self.struct_name}[C_SIZE_{self.struct_name.upper()}_DEF];\n')
             out_file.write('\n\n')
         src_out = self.get_src_out_name()
         with open(src_out, 'w') as out_file:
@@ -64,7 +64,7 @@ class StructDef:
                               inc_out.name]
             for incf in included_files:
                 out_file.write(f'#include "{incf}"\n')
-            out_file.write(f'const field_def {self.struct_name}_structure[C_SIZE_{self.struct_name.upper()}_DEF] = ' + '{\n')
+            out_file.write(f'\n\nconst field_def_t as_{self.struct_name}[C_SIZE_{self.struct_name.upper()}_DEF] = ' + '{\n')
             for hash in hashes:
                 field_name = self.hash_table[hash]
                 lines.append('  {' + f'0x{hash:08x}, (long)(&((({self.struct_name} *)NULL)->{field_name})), sizeof((({self.struct_name} *)NULL)->{field_name})/sizeof(int)' + '},')
@@ -113,10 +113,10 @@ class DefFile:
             out_file.write('\n\n')
             out_file.write("""// Struct used to define a structure field
 typedef struct {
-    unsigned int field_name_hash;
-    int field_offset_in_struct;
-    int field_size;
-} field_def;
+    unsigned int i_field_name_hash;
+    int          i_field_offset_in_struct;
+    int          i_field_size;
+} field_def_t;
 
                            """)
             for struct in self.structures:
@@ -130,7 +130,7 @@ def main():
     os.chdir(pathlib.Path(__file__).parent.resolve())
     def_file = DefFile(INC_FOLDER / 'param_def.h')
     def_file.read_structure('settings_t', DEF_FOLDER / 'settings_t.def', 'settings.h')
-    # def_file.read_structure('dpr_data_t', DEF_FOLDER / 'dprdata.def', 'firmware/camera.h')
+    def_file.read_structure('dpr_data_t', DEF_FOLDER / 'dpr_data_t.def', 'firmware/camera.h')
     def_file.read_structure('menu_order_t', DEF_FOLDER / 'menu_order_t.def', 'settings.h')
     def_file.write_hash_tables()
     os.chdir(cur_dir)

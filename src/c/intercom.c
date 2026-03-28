@@ -135,7 +135,7 @@ void intercom_proxy(const int handler, unsigned char *message) {
     proxy_t *listeners;
 
 #ifdef ENABLE_DEBUG
-    message_logger(message);
+    message_logger((char *)message);
 #endif
 
     if (status.ignore_msg == message[1]) {
