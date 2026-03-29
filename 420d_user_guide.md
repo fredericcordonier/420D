@@ -52,17 +52,28 @@ _It is designed specifically for the Canon 400D/XTi and will not work with other
 
 # 1. Getting Started
 
-## Accessing the Menu
+## Accessing 420D features
 
-Press the **Direct Print (DP)** button to open the 420D menu.
-Half-press the shutter to exit.
+Press the **Direct Print (DP)** button to access most of the extended features of 420D.
 
-## Navigation
+| <!-- --> | <!-- --> |
+|:--------------|:----------------|
+| While in main 400D dialog | Open the 420D menu for extended configurations and settings |
+| In metering mode selection dialog | Enable the spot metering |
+| In WB selection dialog | Open the named color temperatures dialog |
+| In ISO selection dialog | Enable AutoISO |
+| In Drive selection dialog | Open the extended shooting modes dialog |
+
+Half-press the shutter to exit and 420D dialog or menu.
+
+Other features are activated with different button operations, and will be described later in this user guide.
+
+## Menu and dialog navigation
 
 - **UP/DOWN**: navigate items
 - **ZOOM+/ZOOM-**: navigate items (page-down, page-up)
-- **LEFT/RIGHT**: change values
-- **SET**: confirm / execute
+- **LEFT/RIGHT**: change values, enter sub-menu, sub-menus are indicated with a > sign on the right
+- **SET**: confirm selection, execute the action if applicable; actions are indicated with a ! on the left
 - **Front dial**: switch pages
 - Hold **AV** / **Front dial**: display the page headers and select the desired page
 
@@ -78,6 +89,10 @@ Half-press the shutter to exit.
 <p style="page-break-after: always;">&nbsp;</p>
 
 # 2. Quick Start Guide
+
+## Select spot metering
+- Open the metering mode dialog (**LEFT**)
+- Press **DP** button to enable spot metering. Notice the metering mode icon showing a '.'
 
 ## Change ISO with finer control
 `@TODO`
@@ -98,8 +113,12 @@ Half-press the shutter to exit.
 - Open the White balance selection dialog (**DOWN** button)
 - Press **DP** to display the list of custom named color temperatures
 - Select the desired preset
-- Adjust the temperature as needed
+- Adjust the temperature as needed with **LEFT** and **RIGHT** buttons
 - Press **SET** to store the white balance value
+
+## Launch various shooting automated actions
+- Open the Drive selection dialog **Drive** button
+- Press **DP** to display the list of possible automated shooting actions
 
 ---
 
@@ -120,6 +139,9 @@ Half-press the shutter to exit.
 
 ### Exposure Compensation
 - Extended beyond default limits (up to +/-6Ev)
+
+## Multi-metering mode
+- Measure the exposure as many times as desired, the photo will be taken with an average exposure value.
 
 ## Autofocus
 
@@ -235,7 +257,7 @@ In order to activate the zone focus selection, press AF button twice.
 ## Common Use Cases
 
 ### Time-lapse
-- Use Intervalometer
+- Use dedicated timelapse automation, or intervalometer for advanced parameters
 
 ### HDR Photography
 - Use Extended AEB
@@ -252,6 +274,29 @@ In order to activate the zone focus selection, press AF button twice.
 
 ## Advanced Shooting Modes Reference
 
+### Timelapse
+
+The timelapse will fire the camera as many times as configured. To configure the parameters, set the video format
+(number of frames per second), the duration desired for the final video (play time), and the duration of the shoot
+(recording time).
+
+The timelapse function targets a configuraiton as simple as possible. As the timelapse will shoot a large number
+of pictures at a rapid frequency, the camera buffer may fill and prevent a smooth result. For a maximal simplicity,
+this mode forces pictures in JPEG and size 'S', which is sufficient for a full HD final video.
+
+For more configuration possibilities (RAW, other sizes, etc..), the intervalometer can be used with the timelapse
+calculator.
+
+#### Configuration ####
+
+| <!-- --> | <!-- --> |
+|:--------------|:----------------|
+|Start             | Select how the shooting starts: immediately, wait for 2 seconds or use the eye-sensor.|
+|Video format (fps)| Intended playback frame-rate, if preparing a time-lapse.|
+|Recording time    | Estimated time that the camera will need to record the entire time-lapse (informative only).|
+|Playback time     | Estimated playback time of the resulting time-lapse (informative only).|
+
+
 ### Intervalometer
 
 The intervalometer will fire the camera as many times as configured, or endlessly, with a configurable delay between shots. It also includes a calculator
@@ -265,20 +310,15 @@ for video use case (stop motion movie).
 |Interval          | The interval time (in hours:minutes:seconds) between each shot (or group of shots); values range from 0:00:01 to 5:00:00.|
 |Action            | Shooting task to launch at each timeout |
 |Shots             | The total number of times the action configured above will be taken; values range from 1 to 9000, and also include a "No Limit" value to shoot endlessly.|
-
-
-#### Time-lapse calculator ####
-
-You can use the time-lapse calculator to specify a desired reproduction frame-rate, and `420D` will calculate the resulting reproduction time. You can then use these
-values to configure the intervalometer.
-
-| <!-- --> | <!-- --> |
-|:--------------|:----------------|
 |Video format (fps)| Intended playback frame-rate, if preparing a time-lapse.|
 |Recording time    | Estimated time that the camera will need to record the entire time-lapse (informative only).|
 |Playback time     | Estimated playback time of the resulting time-lapse (informative only).|
 
-`@TODO` --> implement a separate launching menu for intervalometer and time-lapse
+
+#### Time-lapse calculator ####
+
+You can use the time-lapse calculator to specify a desired reproduction frame-rate, and `420D` will calculate the resulting reproduction time. You can then use these values to configure the intervalometer.
+
 
 ---
 

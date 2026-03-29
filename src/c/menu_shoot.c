@@ -61,6 +61,45 @@ static union {
   timelapse_calc_t s_timelapse;
 } u_calc_parameters;
 
+typedef struct {
+  int i_timer_timeout;
+  int i_timer_action;
+} timer_save_t;
+
+typedef struct {
+  int i_wave_delay;
+  int i_wave_action;
+  int i_wave_repeat;
+  int i_wave_instant;
+} wave_save_t;
+
+typedef struct {
+  int i_lexp_delay;
+  int i_lexp_time;
+} lexp_save_t;
+
+typedef struct {
+  int i_interval_delay;
+  int i_interval_action;
+  int i_interval_time;
+  int i_interval_shots;
+} interval_save_t;
+
+typedef struct {
+  int i_timelapse_start;
+  int i_timelapse_vf;
+  int i_timelapse_rectime;
+  int i_timelapse_playtime;
+} timelapse_save_t;
+
+static union {
+  timer_save_t s_timer_save;
+  wave_save_t  s_wave_save;
+  lexp_save_t  s_lexp_save;
+  interval_save_t s_interval_save;
+  timelapse_save_t s_timelapse_save;
+} u_settings_save;
+
 static void menu_lexp_calc_open(menu_t *ps_x_menu);
 static void menu_shoot_mode_open_timelapse(menu_t *ps_x_menu);
 static void menu_shoot_mode_open_intervalometer(menu_t *ps_x_menu);
@@ -74,8 +113,14 @@ static void menu_shoot_mode_long_exp(const menuitem_t *ps_c_item);
 static void menu_shoot_mode_apply_calc_ev(const menuitem_t *ps_c_item);
 static void menu_shoot_mode_apply_calc_tv(const menuitem_t *ps_c_item);
 static void menu_shoot_mode_apply_calc(const menuitem_t *ps_c_item);
-
 static void menu_shoot_mode_launch(action_t s_x_script);
+static void timer_save_return(menu_t *ps_x_menu);
+static void timer_open(menu_t *ps_x_menu);
+static void wave_save_return(menu_t *ps_x_menu);
+static void wave_open(menu_t *ps_x_menu);
+static void lexp_save_return(menu_t *ps_x_menu);
+static void interval_save_return(menu_t *ps_x_menu);
+static void timelapse_save_return(menu_t *ps_x_menu);
 
 static menuitem_t a_timer_items[] = {
     MENUITEM_TIMEOUT(0, LP_WORD(L_I_TIME), &settings.timer_timeout, NULL),
@@ -85,7 +130,8 @@ static menupage_t s_timer_page = {
   name : LP_WORD(L_S_TIMER),
   items : LIST(a_timer_items),
   actions : {
-      [MENU_EVENT_AV] = menu_return,
+      [MENU_EVENT_OPEN] = timer_open,
+      [MENU_EVENT_AV] = timer_save_return,
   }
 };
 
@@ -99,7 +145,8 @@ static menupage_t s_wave_page = {
   name : LP_WORD(L_S_HANDWAVE),
   items : LIST(as_wave_items),
   actions : {
-      [MENU_EVENT_AV] = menu_return,
+      [MENU_EVENT_OPEN] = wave_open,
+      [MENU_EVENT_AV] = wave_save_return,
   }
 };
 
@@ -134,7 +181,7 @@ static menupage_t s_lexp_page = {
   name : LP_WORD(L_S_LEXP),
   items : LIST(as_lexp_items),
   actions : {
-      [MENU_EVENT_AV] = menu_return,
+      [MENU_EVENT_AV] = lexp_save_return,
   }
 };
 
@@ -159,7 +206,7 @@ static menupage_t s_interval_page = {
   items : LIST(as_interval_items),
   actions : {
       [MENU_EVENT_OPEN] = menu_shoot_mode_open_intervalometer,
-      [MENU_EVENT_AV] = menu_return,
+      [MENU_EVENT_AV] = interval_save_return,
   }
 };
 
@@ -178,7 +225,7 @@ static menupage_t s_timelapse_page = {
   .items = LIST(as_timelapse_items),
   .actions = {
       [MENU_EVENT_OPEN] = menu_shoot_mode_open_timelapse,
-      [MENU_EVENT_AV] = menu_return,
+      [MENU_EVENT_AV] = timelapse_save_return,
   }
 };
 
@@ -235,6 +282,11 @@ void menu_shoot_mode_start(void) {
 }
 
 static void menu_lexp_calc_open(menu_t *ps_x_menu) {
+  // First save lexp parameteres
+  u_settings_save.s_lexp_save.i_lexp_delay = settings.lexp_delay;
+  u_settings_save.s_lexp_save.i_lexp_time = settings.lexp_time;
+
+
   // Copy current parameters from camera to menu
   u_calc_parameters.s_long_exp.i_iso = DPData.iso;
   u_calc_parameters.s_long_exp.i_av = DPData.av_val;
@@ -249,11 +301,24 @@ static void menu_lexp_calc_open(menu_t *ps_x_menu) {
 }
 
 static void menu_shoot_mode_open_intervalometer(menu_t *ps_x_menu) {
+  // First save temporary settings values
+  u_settings_save.s_interval_save.i_interval_action = settings.interval_action;
+  u_settings_save.s_interval_save.i_interval_delay = settings.interval_delay;
+  u_settings_save.s_interval_save.i_interval_shots = settings.interval_shots;
+  u_settings_save.s_interval_save.i_interval_time = settings.interval_time;
+
+  // Initialize timelapse info values
   u_calc_parameters.s_timelapse.i_vformat = VIDEO_FORMAT_25FPS;
   menu_shoot_mode_calc_timelapse();
 }
 
 static void menu_shoot_mode_open_timelapse(menu_t *ps_x_menu) {
+  // Memorise settings before use
+  u_settings_save.s_timelapse_save.i_timelapse_vf = settings.timelapse_vf;
+  u_settings_save.s_timelapse_save.i_timelapse_start = settings.timelapse_start;
+  u_settings_save.s_timelapse_save.i_timelapse_rectime = settings.timelapse_rectime;
+  u_settings_save.s_timelapse_save.i_timelapse_playtime = settings.timelapse_playtime;
+
   u_calc_parameters.s_timelapse.i_vformat = VIDEO_FORMAT_25FPS;
   menu_shoot_mode_calc_timelapse();
 }
@@ -337,4 +402,63 @@ static void menu_shoot_mode_apply_calc(const menuitem_t *ps_c_item) {
 
   u_calc_parameters.s_long_exp.i_ev = EV_ZERO;
   menu_return(NULL); // TODO:FixMe
+}
+
+static void timer_open(menu_t *ps_x_menu) {
+  u_settings_save.s_timer_save.i_timer_action = settings.timer_action;
+  u_settings_save.s_timer_save.i_timer_timeout = settings.timer_timeout;
+}
+
+// Save settings if timer parameters have changed
+static void timer_save_return(menu_t *ps_x_menu) {
+  if ((u_settings_save.s_timer_save.i_timer_action != settings.timer_action) ||
+      (u_settings_save.s_timer_save.i_timer_timeout != settings.timer_timeout)) {
+        enqueue_action(settings_write);
+      }
+  menu_return(ps_x_menu);
+}
+
+static void wave_open(menu_t *ps_x_menu) {
+  u_settings_save.s_wave_save.i_wave_action = settings.wave_action;
+  u_settings_save.s_wave_save.i_wave_delay = settings.wave_delay;
+  u_settings_save.s_wave_save.i_wave_instant = settings.wave_instant;
+  u_settings_save.s_wave_save.i_wave_repeat = settings.wave_repeat;
+}
+
+static void wave_save_return(menu_t *ps_x_menu) {
+  if ((u_settings_save.s_wave_save.i_wave_action != settings.wave_action) ||
+      (u_settings_save.s_wave_save.i_wave_delay != settings.wave_delay) ||
+      (u_settings_save.s_wave_save.i_wave_instant != settings.wave_instant) ||
+      (u_settings_save.s_wave_save.i_wave_repeat != settings.wave_repeat)) {
+        enqueue_action(settings_write);
+      }
+  menu_return(ps_x_menu);
+}
+
+static void lexp_save_return(menu_t *ps_x_menu) {
+  if ((u_settings_save.s_lexp_save.i_lexp_delay != settings.lexp_delay) ||
+      (u_settings_save.s_lexp_save.i_lexp_time != settings.lexp_time)) {
+        enqueue_action(settings_write);
+      }
+  menu_return(ps_x_menu);
+}
+
+static void interval_save_return(menu_t *ps_x_menu) {
+  if ((u_settings_save.s_interval_save.i_interval_action != settings.interval_action) ||
+      (u_settings_save.s_interval_save.i_interval_delay != settings.interval_delay) ||
+      (u_settings_save.s_interval_save.i_interval_shots != settings.interval_shots) ||
+      (u_settings_save.s_interval_save.i_interval_time != settings.interval_time )) {
+        enqueue_action(settings_write);
+      }
+  menu_return(ps_x_menu);
+}
+
+static void timelapse_save_return(menu_t *ps_x_menu) {
+  if ((u_settings_save.s_timelapse_save.i_timelapse_vf != settings.timelapse_vf) ||
+      (u_settings_save.s_timelapse_save.i_timelapse_start != settings.timelapse_start) ||
+      (u_settings_save.s_timelapse_save.i_timelapse_rectime != settings.timelapse_rectime) ||
+      (u_settings_save.s_timelapse_save.i_timelapse_playtime != settings.timelapse_playtime)) {
+        enqueue_action(settings_write);
+      }
+  menu_return(ps_x_menu);
 }

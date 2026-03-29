@@ -69,6 +69,7 @@ CSRC_DIR := c
 SSRC_DIR := asm
 VX_DIR := vxworks
 FW_DIR := firmware
+INC_DIR := inc
 DEF_DIR := def
 OBJ_DIR := .
 ASM_DIRS := $(SSRC_DIR) $(VX_DIR) $(FW_DIR)
@@ -76,9 +77,9 @@ ASM_DIRS := $(SSRC_DIR) $(VX_DIR) $(FW_DIR)
 # === Generate structure definition files (used for serializiation) ===
 DEFS := $(wildcard $(DEF_DIR)/*.def)
 DEF_NAMES := $(notdir $(basename $(DEFS)))
-GEN_HEADERS := $(addprefix $(INC_420D)/,$(addsuffix .h,$(DEF_NAMES)))
-GEN_SOURCES := $(addprefix $(SRC_420D)/,$(addsuffix .c,$(DEF_NAMES)))
-PARAM_HEADER := $(INC_420D)/param_def.h
+GEN_HEADERS := $(addprefix $(INC_DIR)/,$(addsuffix .h,$(DEF_NAMES)))
+GEN_SOURCES := $(addprefix $(CSRC_DIR)/,$(addsuffix .c,$(DEF_NAMES)))
+PARAM_HEADER := $(INC_DIR)/param_def.h
 GEN_STAMP := gen_stamp
 GENERATED := $(GEN_HEADERS) $(GEN_SOURCES) $(PARAM_HEADER)
 
@@ -96,7 +97,7 @@ OBJS := $(addprefix $(OBJ_DIR)/,$(OBJS))
 
 DEPS := $(OBJS:%.o=%.d)
 
-# $(info OBJS = $(OBJS))
+$(info GENERATED = $(GENERATED))
 # $(info SRCS = $(SRCS))
 
 ECHO := "/bin/echo"
@@ -148,8 +149,7 @@ $(PROJECT).arm.elf: $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 $(GEN_STAMP): $(DEFS) $(GEN_SCRIPT)
-	@$(ECHO) -e python3 $@
-	python3 $(GEN_SCRIPT) $(DEF_DIR) $(INC_DIR) $(SRC_DIR)
+	python3 $(GEN_SCRIPT) $(DEF_DIR) $(INC_DIR) $(CSRC_DIR)
 	touch $(GEN_STAMP)
 
 $(GEN_SOURCES): $(GEN_STAMP)

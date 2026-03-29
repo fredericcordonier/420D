@@ -66,7 +66,7 @@ reaction_t reaction_420D_dp = {TRUE, menu_event_dp},
            reaction_420D_zoom_in = {TRUE, menu_event_in},
            /** AV button has push and release actions (diplay/select main menu
               items) */
-    reaction_420D_av = {TRUE, menu_event_av, menu_event_av_up},
+           reaction_420D_av = {TRUE, menu_event_av, menu_event_av_up},
            reaction_420D_set = {TRUE, menu_event_set},
            reaction_420D_up = {TRUE, menu_event_up},
            reaction_420D_down = {TRUE, menu_event_down},

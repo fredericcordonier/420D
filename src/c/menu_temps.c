@@ -215,11 +215,15 @@ static void get_namedtemps_file_name(char *pc_x_buf) {
  */
 static void named_temps_init(menu_t *ps_c_menu) {
     named_temps_parsing_t s_l_nt_parsed;
+
+    // Get current values of named temps menu
+    s_named_temps.named_temps_top_of_page_line = settings.named_temps_top_of_page_line;
+
     s_l_nt_parsed.i_nb_values = 0;
     char ac_l_folder_lang[LP_MAX_WORD];
     // Launch named temps from csv file
     get_namedtemps_file_name(ac_l_folder_lang);
-    csv_parse(ac_l_folder_lang, settings.named_temps_top_of_page_line,
+    csv_parse(ac_l_folder_lang, s_named_temps.named_temps_top_of_page_line,
                 i_named_temps_handler, &s_l_nt_parsed);
 
     // Change the size of items to match what was read from file
@@ -232,12 +236,22 @@ static void named_temps_init(menu_t *ps_c_menu) {
  * @param ps_c_menu
  */
 static void named_temp_save(menu_t *ps_c_menu) {
+    int i_l_settings_changed = 0;
     debug_log("curline: %d, top_of_page_line: %d",
               s_named_temps_page.current_line,
-              settings.named_temps_top_of_page_line);
-    settings.named_temps_cur_line = s_named_temps_page.current_line;
-    enqueue_action(settings_write);
-    debug_log("named_temp_save end");
+              s_named_temps.named_temps_top_of_page_line);
+    if (settings.named_temps_top_of_page_line != s_named_temps.named_temps_top_of_page_line) {
+        settings.named_temps_top_of_page_line = s_named_temps.named_temps_top_of_page_line;
+        i_l_settings_changed = 1;
+    }
+    if (settings.named_temps_cur_line != s_named_temps_page.current_line) {
+        settings.named_temps_cur_line = s_named_temps_page.current_line;
+        i_l_settings_changed = 1;
+    }
+    if (i_l_settings_changed) {
+        enqueue_action(settings_write);
+        debug_log("named_temp_save end");
+    }
 }
 
 /**
@@ -252,11 +266,11 @@ static void named_temps_pgdown(menu_t *ps_c_menu) {
         // Page was completely filled -> maybe some more elements in file
         named_temps_parsing_t s_l_nt_parsed;
         s_l_nt_parsed.i_nb_values = 0;
-        settings.named_temps_top_of_page_line += MENU_HEIGHT;
+        s_named_temps.named_temps_top_of_page_line += MENU_HEIGHT;
         // Launch named temps from csv file
         get_namedtemps_file_name(folder_lang);
         csv_parse(folder_lang,
-                  settings.named_temps_top_of_page_line, i_named_temps_handler,
+                  s_named_temps.named_temps_top_of_page_line, i_named_temps_handler,
                   &s_l_nt_parsed);
         if (s_l_nt_parsed.i_nb_values > 0) {
             // Do something only if there were remaining items in csv file
@@ -265,7 +279,7 @@ static void named_temps_pgdown(menu_t *ps_c_menu) {
             s_named_temps_page.current_posn = 0;
         } else {
             // Nothing found, keep the same top_of_page_line
-            settings.named_temps_top_of_page_line -= MENU_HEIGHT;
+            s_named_temps.named_temps_top_of_page_line -= MENU_HEIGHT;
             // And put cursor at last display line
             s_named_temps_page.current_line = MENU_HEIGHT - 1;
             s_named_temps_page.current_posn = s_named_temps_page.current_line;
@@ -287,9 +301,9 @@ static void named_temps_pgdown(menu_t *ps_c_menu) {
  */
 static int named_temps_load_pgup(void) {
     // get the previous named temps if any and send display event
-    if (settings.named_temps_top_of_page_line >= MENU_HEIGHT) {
+    if (s_named_temps.named_temps_top_of_page_line >= MENU_HEIGHT) {
         // We are not on first page, go back one page
-        settings.named_temps_top_of_page_line -= MENU_HEIGHT;
+        s_named_temps.named_temps_top_of_page_line -= MENU_HEIGHT;
 
         named_temps_parsing_t s_l_nt_parsed;
         char folder_lang[LP_MAX_WORD];
@@ -297,7 +311,7 @@ static int named_temps_load_pgup(void) {
         s_l_nt_parsed.i_nb_values = 0;
         // Launch named temps from csv file
         csv_parse(folder_lang,
-                  settings.named_temps_top_of_page_line, i_named_temps_handler,
+                  s_named_temps.named_temps_top_of_page_line, i_named_temps_handler,
                   &s_l_nt_parsed);
 
         if (s_l_nt_parsed.i_nb_values != 0) {
@@ -306,7 +320,7 @@ static int named_temps_load_pgup(void) {
             return 1;
         } else {
             // if no other item found, re-set the top of page line
-            settings.named_temps_top_of_page_line += MENU_HEIGHT;
+            s_named_temps.named_temps_top_of_page_line += MENU_HEIGHT;
             return 0;
         }
     }

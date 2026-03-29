@@ -13,7 +13,7 @@ extern "C" {
 #endif
 
 // Our folder
-#define FOLDER_ROOT "A:"
+#define FOLDER_ROOT "./"
 #define FOLDER_NAME "420D"
 #define FOLDER_PATH FOLDER_ROOT "/" FOLDER_NAME "/"
 #define MKPATH_OLD(FILENAME) FOLDER_ROOT "/" FILENAME

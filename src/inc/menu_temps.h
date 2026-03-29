@@ -31,6 +31,7 @@
 typedef struct {
     int temps[CCT_COUNT];
     char names[CCT_COUNT][LP_MAX_WORD];
+    int named_temps_top_of_page_line;
 } named_temps_t;
 
 extern named_temps_t s_named_temps;
