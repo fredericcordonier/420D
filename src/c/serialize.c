@@ -23,7 +23,8 @@ static int handle_section(void *user, int lineno, const char *section);
 
 // Get the list of parameters in settings structure
 #define PARAM_INT_DEF(s, f, v) {#f, (long)(&(((s *)NULL)->f)), 1},
-#define PARAM_INT_ARRAY_DEF(s, f, i) {#f, (long)(&(((s *)NULL)->f)), i},
+#define PARAM_INT_ARRAY_DEF(s, f, i, v) {#f, (long)(&(((s *)NULL)->f)), i},
+#define PARAM_INT_ARRAY_NO_INIT_DEF(s, f, i)  {#f, (long)(&(((s *)NULL)->f)), i},
 
 const field_def settings_structure[] = {
 #include "../def/settings_t.def"
@@ -34,6 +35,8 @@ const field_def menu_order_structure[] = {
     {NULL, 0}};
 #undef PARAM_INT_DEF
 #undef PARAM_INT_ARRAY_DEF
+#undef PARAM_INT_ARRAY_NO_INIT_DEF
+
 
 static int serialize_structure(int file, int *px_data,
                                const field_def *fields_structure,

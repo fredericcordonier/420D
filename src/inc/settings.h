@@ -114,7 +114,8 @@ typedef enum {
 } qexp_weight_t;
 
 #define PARAM_INT_DEF(s, f, v) int f;
-#define PARAM_INT_ARRAY_DEF(s, f, i) int f[i];
+#define PARAM_INT_ARRAY_DEF(s, f, i, v) int f[i];
+#define PARAM_INT_ARRAY_NO_INIT_DEF(s, f, i)    int f[i];
 typedef struct {
 #include "../def/settings_t.def"
 } settings_t;
@@ -124,6 +125,7 @@ typedef struct {
 } menu_order_t;
 #undef PARAM_INT_DEF
 #undef PARAM_INT_ARRAY_DEF
+#undef PARAM_INT_ARRAY_NO_INIT_DEF
 
 extern settings_t settings;
 extern menu_order_t menu_order;

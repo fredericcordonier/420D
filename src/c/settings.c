@@ -16,10 +16,11 @@
 #include "settings.h"
 
 #define PARAM_INT_DEF(s, f, v)     .f = (v),
-#define PARAM_INT_ARRAY_DEF(s, v, l)
+#define PARAM_INT_ARRAY_DEF(s, f, l, v)       .f = v,
+#define ISO_AEB_DEFAULT   {TRUE, TRUE, TRUE, TRUE, TRUE}
 settings_t settings_default = {
 #include "../def/settings_t.def"
-    .iso_aeb = {TRUE, TRUE, TRUE, TRUE, TRUE},
+    // .iso_aeb = {TRUE, TRUE, TRUE, TRUE, TRUE},
 };
 #undef PARAM_INT_DEF
 #undef PARAM_INT_ARRAY_DEF
