@@ -71,7 +71,7 @@ class LocaleFile:
     def __init__(self, language: str, lang_folder: Path, language_string: str):
         self.language = language
         self.language_string = language_string
-        self.input_file = lang_folder / f'{language_string}.ini'
+        self.input_file = lang_folder / f'{language_string.lower()}.ini'
         self.active_messages = {}
         self.inactive_messages = {}
         self.to_be_translated = {}
@@ -128,8 +128,8 @@ class LocaleFile:
         # Write strings in ini file
         self.message_names = list(self.active_messages.keys()) + list(self.inactive_messages.keys())
         if not out_file_name:
-            out_file_name = f'{self.language_string}_new.ini'
-        with open(self.input_file.parent / out_file_name, 'w', "utf-8") as out_file:
+            out_file_name = f'{self.language_string.lower()}_new.ini'
+        with open(self.input_file.parent / out_file_name, 'w', encoding="utf-8") as out_file:
             # Write section name
             out_file.write(f'[{self.language_string}]\n')
             out_file.write('\n'.join([f'{k_name:<22} = {self.active_messages[k_name]}' if k_name in self.active_messages.keys() else f';{k_name:<21} = {self.inactive_messages[k_name]}'
@@ -159,7 +159,7 @@ if __name__ == "__main__":
                'zh-CN': 'SIMPLIFIED_CHINESE',
                'nl': 'DUTCH',
                'fi': 'FINNISH',
-               'is': 'ÍSLENSKA',
+               'is': 'ICELANDIC',
                'pl': 'POLISH',
                'ru': 'RUSSIAN',
                'sv': 'SWEDISH',
@@ -172,7 +172,9 @@ if __name__ == "__main__":
     for code, string in locales.items():
         print(f'Language {string} ({code})')
         locale_file = LocaleFile(code, language_ini_folder, string)
+        print(str(locale_file.input_file))
         if locale_file.exists():
+            print(f'Reading {str(locale_file.input_file)}')
             locale_file.read()
         locale_file.update(lang_file.strings)
         locale_file.translate_messages()

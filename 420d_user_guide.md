@@ -11,15 +11,16 @@ _It is designed specifically for the Canon 400D/XTi and will not work with other
 
 # Table of Contents
 
-0. Introduction
+0. Welcome to 420D
 1. Getting Started
 2. Quick Start Guide
 3. Shooting Enhancements
-4. Automation (Scripts)
-5. Custom Modes
-6. Personalization
-7. Configuration Files (.ini)
-8. Reference
+4. Advanced Using Guide
+5. Automation (Scripts)
+6. Custom Modes
+7. Personalization
+8. Configuration Files (.ini)
+9. Reference
 
 ---
 
@@ -150,6 +151,68 @@ Other features are activated with different button operations, and will be descr
 420D supports multiple autofocus (AF) patterns allowing zone focusing rather than only point focusing.
 In order to activate the zone focus selection, press AF button twice.
 
+
+## White Balance
+
+### Color Temperature (K)
+- Direct Kelvin input set in the 420D menu
+
+### Named Temperatures
+- Stored in external file
+- No fixed limit
+- Fully customizable
+- Easier workflow than numeric values
+
+## Flash
+
+- Disable flash entirely
+- Additional control options
+
+---
+
+<p style="page-break-after: always;">&nbsp;</p>
+
+# 4. Advanced Using Guide
+
+## Metering improvements
+
+Several metering improvements are provided with 420D.
+
+### Spot metering
+
+The Spot metering mode is similar to the selective metering, but the zone included in the metering is smaller (about 3.5% in the center of the viewer,
+compared to about 9% for the selective metering).
+
+To activate the Spot metering, press the `METERING` button (**LEFT**); when the metering mode selection dialog is displayed,
+press **DP**. Notice the icon [.] displayed in the main dialog.
+
+### Multi-spot metering
+
+Multi-spot metering allows you to take more than one metering for a scene, and take a photograph using the average exposure. It would be used for example in difficult
+lighting situations.
+
+Multi-spot metering only works in `P`, `Tv`, and `Av` modes. The "Use D-Pad" option must be active (set to "Yes") to use this feature.
+
+To use multi-spot metering, follow this procedure:
+
+  * Set the camera to one of `P`, `Tv`, `Av` modes.
+  * Look through the viewfinder, and take a measurement by half-pressing the shutter button.
+  * Still while looking through the viewfinder, press the **DOWN** button; you'll hear a beep, and `420D` will register that measurement.
+  * Repeat this procedure to add as many readings as you need; after each reading is registered, the "burst counter" in the view finder will display the number of readings registered (notice that, while the counter has a upper limit of 9, `420D` does not have a limit on the number of readings you can register).
+  * If you want to delete the last reading, just press the **DOWN** button and hold it for two seconds; you'll hear another beep confirming the delete.
+  * Once you have taken enough readings, press the **SET** button (keep looking through the viewfinder); `420D` will set your camera to `M` mode, with the aperture and shutter speed set to the average of the apertures and shutter speeds from the readings registered.
+  * Take a photograph, and `420D` will automatically revert back to the `P` / `Av` / `Tv` mode you where using.
+
+
+<p style="page-break-after: always;">&nbsp;</p>
+
+## AF improvements
+
+This chapter describes in details the AF patterns the user can select. Up to three patterns are memorized; for example, one can use one pattern per
+camera orientation. First select the AF pattern you are working with either through the menu or by assigning a shortcut.
+Then, press twice the AF pattern selection button **ZOOM-**.
+
+
 **Legend**:
 - `[X]` = active AF point
 - `[ ]` = inactive AF point
@@ -218,27 +281,9 @@ In order to activate the zone focus selection, press AF button twice.
 ```
 
 
-## White Balance
-
-### Color Temperature (K)
-- Direct Kelvin input set in the 420D menu
-
-### Named Temperatures
-- Stored in external file
-- No fixed limit
-- Fully customizable
-- Easier workflow than numeric values
-
-## Flash
-
-- Disable flash entirely
-- Additional control options
-
----
-
 <p style="page-break-after: always;">&nbsp;</p>
 
-# 4. Shooting automation
+# 5. Shooting automation
 
 ## Overview
 
@@ -373,7 +418,7 @@ _**Notice**_: The Ev field in this calculator cannot display values smaller than
 
 <p style="page-break-after: always;">&nbsp;</p>
 
-# 5. Custom Modes
+# 6. Custom Modes
 
 ## What are Custom Modes?
 
@@ -398,7 +443,7 @@ Custom modes store full camera configurations.
 
 <p style="page-break-after: always;">&nbsp;</p>
 
-# 6. 420D Configuration
+# 7. 420D Configuration
 
 The 420D is configured in its own menu, accessed by pressing **DP**.
 
@@ -597,12 +642,12 @@ Allows ordering the main menu pages
 
 <p style="page-break-after: always;">&nbsp;</p>
 
-# 7. Advanced Configuration
+# 8. Advanced Configuration
 ---
 
 <p style="page-break-after: always;">&nbsp;</p>
 
-# 8. Personalization
+# 9. Personalization
 
 ## Menu Customization
 
