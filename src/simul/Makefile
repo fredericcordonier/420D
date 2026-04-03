@@ -83,6 +83,8 @@ $(GEN_STAMP): $(STRUCT_DEFS) $(GEN_SCRIPT)
 
 $(GENERATED) $(PARAM_HEADER): $(GEN_STAMP)
 	@true
+$(OBJ_DIR):
+	@mkdir -p $(OBJ_DIR)
 
 $(BIN_DIR)/simul: $(OBJS)
 	@$(ECHO) -e $(BOLD)[LINK]:$(NORM) $@
@@ -92,7 +94,7 @@ $(BIN_DIR)/simul: $(OBJS)
 # === Pattern rules for compilation ===
 vpath %.c $(SRC_420D)
 
-$(OBJ_DIR)/%.o: $(UT_SRC_DIR)/%.cpp
+$(OBJ_DIR)/%.o: $(UT_SRC_DIR)/%.cpp | $(OBJ_DIR)
 	@mkdir -p $(OBJ_DIR)
 	$(CPP) $(CFLAGS) $(GTK_CFLAGS) -MMD -MF $(OBJ_DIR)/$*.d -MT $@ -c $< -o $@
 
