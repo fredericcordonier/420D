@@ -6,4 +6,5 @@
 
 int write_settings_file(int file);
 int read_settings_file(int file);
+
 #endif // SERIALIZE_H

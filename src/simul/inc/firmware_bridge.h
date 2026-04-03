@@ -1,6 +1,7 @@
 #pragma once
 #include <array>
 #include <string>
+#include "button.h"
 
 constexpr int LCD_LINES = 6;
 constexpr int LCD_COLS  = 30;
@@ -31,7 +32,7 @@ class FirmwareBridge {
 public:
     virtual ~FirmwareBridge() = default;
 
-    virtual void onButton(Button btn) = 0;
+    virtual void onButton(button_t btn) = 0;
     virtual void redraw(void) = 0;
     virtual void setLCD(const std::array<std::string, LCD_LINES>& lines) = 0;
     virtual void setFaceSensor(bool active) = 0;

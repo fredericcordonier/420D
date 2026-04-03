@@ -62,7 +62,9 @@ LDFLAGS := -Wl,-Ttext,$(ADDRESS) -Wl,-T,link.script -Wl,-Map,autoexec.map -Wl,--
 OBJCOPY := $(CROSS_COMPILE)objcopy
 
 PYTHON := python3
-GEN_SCRIPT := ../utils/gen_struct_hashtables.py
+UTILS := ../utils
+GEN_SCRIPT := $(UTILS)/gen_struct_tables.py
+GEN_STAMP := .gen_stamp
 
 # === Source structure ===
 CSRC_DIR := c
@@ -75,13 +77,14 @@ OBJ_DIR := .
 ASM_DIRS := $(SSRC_DIR) $(VX_DIR) $(FW_DIR)
 
 # === Generate structure definition files (used for serializiation) ===
-DEFS := $(wildcard $(DEF_DIR)/*.def)
-DEF_NAMES := $(notdir $(basename $(DEFS)))
-GEN_HEADERS := $(addprefix $(INC_DIR)/,$(addsuffix .h,$(DEF_NAMES)))
-GEN_SOURCES := $(addprefix $(CSRC_DIR)/,$(addsuffix .c,$(DEF_NAMES)))
-PARAM_HEADER := $(INC_DIR)/param_def.h
-GEN_STAMP := gen_stamp
-GENERATED := $(GEN_HEADERS) $(GEN_SOURCES) $(PARAM_HEADER)
+STRUCT_DEFS := $(DEF_DIR)/structures.json
+GENERATED_MKFILE := generated.mk
+GEN_MKFILE := $(shell $(PYTHON) $(GEN_SCRIPT) --infile $(STRUCT_DEFS) --incdir $(INC_DIR) --srcdir $(CSRC_DIR) --gen-mkfile)
+include $(GENERATED_MKFILE)
+GENERATED := $(GEN_HEADERS) $(GEN_SOURCES)
+
+$(info GENERATED = $(GENERATED))
+
 
 # === Source discovery ===
 C_SRCS := $(wildcard $(CSRC_DIR)/*.c)
@@ -96,9 +99,6 @@ OBJS := $(OBJS:.S=.o)
 OBJS := $(addprefix $(OBJ_DIR)/,$(OBJS))
 
 DEPS := $(OBJS:%.o=%.d)
-
-$(info GENERATED = $(GENERATED))
-# $(info SRCS = $(SRCS))
 
 ECHO := "/bin/echo"
 
@@ -149,7 +149,7 @@ $(PROJECT).arm.elf: $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 $(GEN_STAMP): $(DEFS) $(GEN_SCRIPT)
-	$(PYTHON) $(GEN_SCRIPT) $(DEF_DIR) $(INC_DIR) $(CSRC_DIR)
+	$(PYTHON) $(GEN_SCRIPT) --infile $(STRUCT_DEFS) --incdir $(INC_DIR) --srcdir $(CSRC_DIR)
 	touch $(GEN_STAMP)
 
 $(GEN_SOURCES): $(GEN_STAMP)
@@ -177,7 +177,7 @@ $(OBJ_DIR)/%.o: %.S
 clean:
 	@$(ECHO) -e $(BOLD)[CLEAN]$(NORM)
 	rm -rf $(OBJ_DIR)/*.o $(OBJ_DIR)/*.d
-	rm -f $(PROJECT).arm.elf $(PROJECT).BIN $(GENERATED) $(GEN_STAMP)
+	rm -f $(PROJECT).arm.elf $(PROJECT).BIN $(GENERATED) $(GEN_STAMP) $(GENERATED_MKFILE)
 
 languages.ini: inc/languages.h languages/*.ini
 	@$(ECHO) -e $(BOLD)[I18N]:$(NORM) $@

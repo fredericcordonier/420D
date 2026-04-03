@@ -4,10 +4,16 @@
 #include <queue>
 #include <string>
 #include "main.h"
+#include "button.h"
 #include "file_system.h"
 #include "keypad.h"
 #include "firmware_bridge.h"
+
+#ifdef NO_GTK
+#include "eos420d_txtwin.h"
+#else
 #include "eos420d_window.h"
+#endif
 
 #define COL_DISPLAY  20
 
@@ -40,8 +46,10 @@ class EOS420D {
     Display    display;
     Keypad     keypad;
     void       post_message(action_t pMessage);
-    void       hw_control(const Button button);
-    void       button_received(KeypadInput ki);
+    void       hw_control(char button);
+    void       hw_button_control(button_t button);
+    void       button_received(button_t btn);
+    void       start();
     private:
     std::queue<action_t> message_queue;
     void display_af_patterns(void);

@@ -1,7 +1,7 @@
 #ifndef SETTINGS_H_
 #define SETTINGS_H_
 
-#define SETTINGS_FILENAME "SETTINGS.INI"
+#define SETTINGS_FILENAME "SETTINGS"
 
 #define SETTINGS_VERSION 0x40
 
@@ -14,6 +14,9 @@
 #include "menu_params.h"
 #include "menu_scripts.h"
 #include "menu_settings.h"
+
+#include "settings_t.h"
+#include "menu_order_t.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -113,19 +116,6 @@ typedef enum {
     QEXP_WEIGHT_LAST = QEXP_WEIGHT_COUNT - 1
 } qexp_weight_t;
 
-#define PARAM_INT_DEF(s, f, v) int f;
-#define PARAM_INT_ARRAY_DEF(s, f, i, v) int f[i];
-#define PARAM_INT_ARRAY_NO_INIT_DEF(s, f, i)    int f[i];
-typedef struct {
-#include "../def/settings_t.def"
-} settings_t;
-
-typedef struct {
-#include "../def/menu_order_t.def"
-} menu_order_t;
-#undef PARAM_INT_DEF
-#undef PARAM_INT_ARRAY_DEF
-#undef PARAM_INT_ARRAY_NO_INIT_DEF
 
 extern settings_t settings;
 extern menu_order_t menu_order;

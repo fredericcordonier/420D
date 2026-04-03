@@ -5,177 +5,126 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "hashtable.h"
+#include "param_def.h"
+#include "settings_t.h"
+#include "menu_order_t.h"
 
-// Struct used to define a structure field
 typedef struct {
-    const char *param_name;
-    int param_addr_offset;
-    int nb_values;
-} field_def;
+    int tag;
+    int len;
+} tag_len_t;
 
 // Prototypes for static functions
-static int serialize_structure(int file, int *px_data,
-                               const field_def *fields_structure,
-                               const char *struct_name);
-static int handle_settings_line(void *user, int lineno, const char *section,
-                                char *name, char *value);
-static int handle_section(void *user, int lineno, const char *section);
+static int serialize_structure(int file, unsigned char *pu_x_data, const list_field_def_t *ps_x_hash_table);
+static void read_structure(int file, unsigned char *base_addr, const list_field_def_t *fields, int data_size);
 
-// Get the list of parameters in settings structure
-#define PARAM_INT_DEF(s, f, v) {#f, (long)(&(((s *)NULL)->f)), 1},
-#define PARAM_INT_ARRAY_DEF(s, f, i, v) {#f, (long)(&(((s *)NULL)->f)), i},
-#define PARAM_INT_ARRAY_NO_INIT_DEF(s, f, i)  {#f, (long)(&(((s *)NULL)->f)), i},
+static int serialize_structure(int file, unsigned char *pu_x_data,
+                               const list_field_def_t *ps_x_hash_table) {
+#define MAX_BUF 20
+    const field_def_t *ps_l_field = ps_x_hash_table->data;
+    int i_l_param_value;
+    int i_l_write_result = 0;
+    int ai_l_buf[MAX_BUF];
+    int *pi_l_buf = ai_l_buf;
+    int i_l_nb_int_written = 0;
+    int i_l_field_cnt;
 
-const field_def settings_structure[] = {
-#include "../def/settings_t.def"
-    {NULL, 0}};
-
-const field_def menu_order_structure[] = {
-#include "../def/menu_order_t.def"
-    {NULL, 0}};
-#undef PARAM_INT_DEF
-#undef PARAM_INT_ARRAY_DEF
-#undef PARAM_INT_ARRAY_NO_INIT_DEF
-
-
-static int serialize_structure(int file, int *px_data,
-                               const field_def *fields_structure,
-                               const char *struct_name) {
-#define MAX_BUF 100
-    const field_def *p_field = fields_structure;
-    int param_value;
-    int ret_value;
-    char buf[MAX_BUF];
-
-    sprintf(buf, "[%s]\n", struct_name);
-    ret_value = FIO_WriteFile(file, buf, strlen(buf));
-    if (ret_value != -1) {
-        while ((p_field->param_name != NULL) && (ret_value != -1)) {
-            sprintf(buf, "%-30s", p_field->param_name);
-            int offset = (p_field->param_addr_offset / sizeof(int));
-            if (p_field->nb_values > 1) {
-                sprintf(buf + strlen(buf), "[%2i]: ", p_field->nb_values);
-                for (int i = 0; i < p_field->nb_values - 1; i++) {
-                    param_value = *(px_data + offset);
-                    offset += 1;
-                    sprintf(buf + strlen(buf), "%i,", param_value);
-                }
-            } else {
-                sprintf(buf + strlen(buf), "   : ");
-            }
-            param_value = *(px_data + offset);
-            sprintf(buf + strlen(buf), "%i\n", param_value);
-            ret_value = FIO_WriteFile(file, buf, strlen(buf));
-            p_field++;
+    for (i_l_field_cnt = 0; (i_l_field_cnt < ps_x_hash_table->size) && (i_l_write_result != -1); i_l_field_cnt++) {
+        *pi_l_buf++ = ps_l_field->i_field_name_hash;
+        *pi_l_buf++ = (ps_l_field->i_field_size);
+        int i_l_offset = (ps_l_field->i_field_offset_in_struct);
+        for (int i_l = 0; i_l < ps_l_field->i_field_size; i_l++) {
+            i_l_param_value = (int)(*(pu_x_data + i_l_offset));
+            i_l_offset += sizeof(int);
+            *pi_l_buf++ = i_l_param_value;
         }
+        i_l_write_result = FIO_WriteFile(file, ai_l_buf, (size_t)((pi_l_buf - ai_l_buf) * sizeof(int)));
+        i_l_nb_int_written += (size_t)(ps_l_field->i_field_size + 2);
+        ps_l_field++;
+        pi_l_buf = ai_l_buf;
     }
-    return ret_value;
+    return i_l_nb_int_written;
 }
 
 // Write settings into ini file
 int write_settings_file(int file) {
-    int result = serialize_structure(file, (int *)(&settings), settings_structure,
-                               "settings");
-    if (result != FALSE) {
-        result = serialize_structure(file, (int *)(&menu_order), menu_order_structure,
-                               "menu_order");
+    int val = 0;
+    val = C_SETTINGS_T_TAG;
+    FIO_WriteFile(file, &val, sizeof(int));
+    val = sizeof(settings) / sizeof(int) + (s_g_settings_t_hashtable.size) * 2;         // Size of structure data + size of metadata (tag & len)
+    FIO_WriteFile(file, &val, sizeof(int));
+    int result = serialize_structure(file, (unsigned char *)(&settings), &s_g_settings_t_hashtable);
+    if (result == val) {
+        // Success writing
+        val = C_MENU_ORDER_T_TAG;
+        FIO_WriteFile(file, &val, sizeof(int));
+        val = sizeof(menu_order_t) / sizeof(int) + (s_g_menu_order_t_hashtable.size) * 2;
+        FIO_WriteFile(file, &val, sizeof(int));
+        result += serialize_structure(file, (unsigned char *)(&menu_order), &s_g_menu_order_t_hashtable);
     }
     return result;
 }
 
-// Parse the first part of the ini file line (before the '=' sign).
-//  It contains the name of the structure field, plus potentially the
-//  size in int if higher than 1 (in the form [nb])
-static int parse_field_name(char *name, field_def *result) {
-    char *pt = name;
-    char val_buf[10];
-    char *val_buf_pt = val_buf;
-    while ((*pt != '[') && (*pt != '\0')) {
-        if (*pt == ' ') {
-            *pt = '\0'; // After name, put terminator
-        }
-        pt++;
-    }
-    result->nb_values = 1;
-    if (*pt == '[') {
-        *pt++ = '\0'; // Skip [ char
-        while ((*pt != ']') && (*pt != '\0')) {
-            if (*pt != ' ') {
-                *val_buf_pt++ = *pt;
+
+static void read_structure(int i_x_file, unsigned char *pu_x_base_addr, const list_field_def_t *ps_x_fields, int i_l_data_size) {
+    int i_l_success = 0;
+    int i_l_total_read = 0;
+    int i_l_nb_read = 0;
+    int i_l_expected = 0;          // Nb of int to be stored in structure (expected number of values)
+    int i_l_def_offset = 0;             // Offset of field in the field_def_t structure (hash table)
+    int i_l_struct_offset = 0;          // Offset of data in the structure to be filled
+    tag_len_t s_l_tl;
+    int i_l_value;
+
+    i_l_total_read = FIO_ReadFile(i_x_file, &s_l_tl, sizeof(tag_len_t));
+    while (i_l_total_read < i_l_data_size)
+    {
+        i_l_success = hashtable_get(s_l_tl.tag, &i_l_def_offset, ps_x_fields->data, ps_x_fields->size);
+        if (i_l_success) {
+            i_l_expected = ps_x_fields->data[i_l_def_offset].i_field_size;
+            i_l_struct_offset = ps_x_fields->data[i_l_def_offset].i_field_offset_in_struct;
+            // Ensure we don't read too many values, neither from file, not to store in struct
+            i_l_expected = MIN(i_l_expected, s_l_tl.len);
+            for (int i_l = 0; i_l < i_l_expected; i_l++) {
+                i_l_total_read += FIO_ReadFile(i_x_file, &i_l_value, sizeof(int));
+                *((int *)(pu_x_base_addr + i_l_struct_offset)) = i_l_value;
+                i_l_struct_offset += sizeof(int);
             }
-            pt++;
-        }
-        result->nb_values = atoi(val_buf);
-    }
-    result->param_name = name;
-    return 0;
-}
-
-// Read ini file: handle a line containing a parameter
-static int handle_data_line(int *px_data_struct, int lineno,
-                            const char *section, char *name, char *value,
-                            const field_def *struct_definition) {
-    const field_def *p_field = struct_definition;
-    field_def param_read;
-
-    // Read param name, check if multi-value written in file
-    parse_field_name(name, &param_read);
-    while (p_field->param_name != NULL) {
-        if (strcmp(p_field->param_name, param_read.param_name) == 0) {
-            // Read what we can read, but not more than exptected by our
-            // settings
-            int nb_values = MIN(p_field->nb_values, param_read.nb_values);
-            int offset = (p_field->param_addr_offset / sizeof(int));
-            for (int val_cnt = 0; val_cnt < nb_values - 1; val_cnt++) {
-                char *current_value = value;
-                while ((*current_value != ',') && (*current_value != '\0')) {
-                    current_value++;
-                }
-                *current_value = '\0';
-                *(px_data_struct + offset) = atoi(value);
-                current_value += 1;
-                value = current_value;
-                offset += 1;
+            if (s_l_tl.len > i_l_expected) {
+                i_l_nb_read = (s_l_tl.len - i_l_expected) * sizeof(int);
+                FIO_SeekFile(i_x_file, i_l_nb_read, SEEK_CUR);
+                i_l_total_read += i_l_nb_read;
             }
-            *(px_data_struct + offset) = atoi(value);
-            break;
         }
-        p_field++;
+        if (i_l_total_read < i_l_data_size) {
+            i_l_nb_read = FIO_ReadFile(i_x_file, &s_l_tl, sizeof(tag_len_t));
+            i_l_total_read += i_l_nb_read;
+        }
     }
-    return 1;
-}
-
-// Read one line of settings structure from ini file
-static int handle_settings_line(void *user, int lineno, const char *section,
-                                char *name, char *value) {
-    int *data_struct;
-    if (strcmp(section, "settings") == 0) {
-        data_struct = (int *)(&settings);
-    }
-    else if (strcmp(section, "menu_order")) {
-        data_struct = (int *)(&menu_order);
-    }
-    else {
-        return 1;
-    }
-    // Call generic function with settings structure
-    return handle_data_line(data_struct, lineno, section, name, value,
-                            settings_structure);
-}
-
-// Read ini file: handle a section name
-static int handle_section(void *user, int lineno, const char *section) {
-    return 1;
 }
 
 // Read an ini file containing settings
 int read_settings_file(int file) {
-    int error;
+    tag_len_t read_tag_len;
+    int read_len;
 
-    error =
-        ini_parse_file(file, "settings", (ini_line_handler)handle_settings_line,
-                       handle_section, NULL);
+    read_len = FIO_ReadFile(file, &read_tag_len, sizeof(tag_len_t));
+    while (read_len ==  sizeof(tag_len_t)) {
+        switch (read_tag_len.tag)
+        {
+            case C_SETTINGS_T_TAG:
+            read_structure(file, (unsigned char *)(&settings), &s_g_settings_t_hashtable, read_tag_len.len * sizeof(int));
+            break;
+            case C_MENU_ORDER_T_TAG:
+            read_structure(file, (unsigned char *)(&menu_order), &s_g_menu_order_t_hashtable, read_tag_len.len * sizeof(int));
+            default:
+            FIO_SeekFile(file, read_tag_len.len * sizeof(int), SEEK_CUR);
+            break;
+        }
+        read_len = FIO_ReadFile(file, &read_tag_len, sizeof(tag_len_t));
+    }
 
-    return error;
+    return 1;
 }
 

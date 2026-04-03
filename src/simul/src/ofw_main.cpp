@@ -25,8 +25,12 @@
 #include "cmodes.h"
 #include "debug.h"
 
+#ifdef NO_GTK
+#include "eos420d_txtwin.h"
+#else
 #include <gtk/gtk.h>
 #include "eos420d_window.h"
+#endif // NO_GTK
 
 #ifdef __cplusplus
 extern "C" {
@@ -35,7 +39,7 @@ extern "C" {
 class SimulFirmware : public FirmwareBridge {
 public:
     SimulFirmware(EOS400DWindow*& uiRef) : ui(uiRef) {}
-    void onButton(Button btn) override;
+    void onButton(button_t btn) override;
 	void redraw(void) override;
     void setLCD(const std::array<std::string, LCD_LINES>& lines) override;
     void setFaceSensor(bool active);
@@ -51,39 +55,8 @@ void SimulFirmware::setFaceSensor(bool active) {
 	}
 }
 
-void SimulFirmware::onButton(Button btn) {
-    std::map<Button, button_t>map_table;
-
-	// BUTTON_JUMP,
-	// BUTTON_DRIVE,
-
-	map_table = {
-		{Button::AV, BUTTON_AV},
-		{Button::DRIVE, BUTTON_DRIVE},
-		{Button::WHEEL_R, BUTTON_WHEEL_RIGHT},
-		{Button::WHEEL_L, BUTTON_WHEEL_LEFT},
-		{Button::UP, BUTTON_UP},
-		{Button::LEFT, BUTTON_LEFT},
-		{Button::SET, BUTTON_SET},
-		{Button::RIGHT, BUTTON_RIGHT},
-		{Button::DOWN, BUTTON_DOWN},
-		{Button::DP, BUTTON_DP},
-		{Button::MENU, BUTTON_MENU},
-		{Button::TRASH, BUTTON_TRASH},
-		{Button::PLAY, BUTTON_PLAY},
-		{Button::ZOOM_IN, BUTTON_ZOOM_IN},
-		{Button::ZOOM_OUT, BUTTON_ZOOM_OUT},
-		{Button::INFO, BUTTON_DISP},
-		// {'q', BUTTON_COUNT},
-		{Button::SHUTTER_FULL, BUTTON_RELEASE},
-	};
-	std::map<Button, button_t>::iterator it = map_table.find(btn);
-	if (it != map_table.end()) {
-		my_camera.button_received(KeypadInput(btn, it->second));
-	}
-	else {
-		my_camera.button_received(KeypadInput(btn, BUTTON_NONE));
-	}
+void SimulFirmware::onButton(button_t btn) {
+	my_camera.button_received(btn);
     std::array<std::string, LCD_LINES> screen;
     for (int item = 0; item < LCD_LINES; item++) {
         screen[item] = my_camera.display.get_display_line(item);
@@ -368,7 +341,7 @@ int ofw_entry_point(int argc, char *argv[]) {
     int result = settings_read();
     std::cout << "Result of settings_read(): " << result << std::endl;
 	// unsigned char button_msg[4] = {4, IC_BUTTON_UP, FALSE, 0};
-	// my_camera.start();
+	my_camera.start();
 	ui_main(argc, argv);
     settings_write();
     return 0;

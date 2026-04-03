@@ -7,15 +7,17 @@
 
 class KeypadInput {
     public:
-    KeypadInput(Button c, button_t b) {key=c; button=b;}
-    Button key;
+    KeypadInput(char c, button_t b) {key=c; button=b;}
+    KeypadInput() {key='q'; button=BUTTON_COUNT;}
+    char key;
     button_t button;
 };
 
 class Keypad {
     public:
     Keypad();
-    // KeypadInput read_kp();
+    void add_button(char btn_key, button_t btn);
+    KeypadInput read_kp();
     private:
     std::map<char, button_t>map_table;
 };

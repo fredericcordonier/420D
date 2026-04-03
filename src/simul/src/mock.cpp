@@ -228,10 +228,6 @@ int  TryPostMessageQueue(void *hMessageQueue, action_t pMessage, int forever)
 	my_camera.post_message(pMessage);
 	return 0;
 }
-int  hack_GUI_IDLEHandler(int unk0, int event, int unused, int unk1)
-{
-	return 0;
-}
 
 #ifdef __cplusplus
 }

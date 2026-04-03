@@ -3,6 +3,7 @@
 #include <gtk/gtk.h>
 #include <array>
 #include <string>
+#include "button.h"
 #include "firmware_bridge.h"
 
 class EOS400DWindow {
@@ -19,7 +20,7 @@ private:
     GtkWidget* lcdView;
     GtkTextBuffer* lcdBuffer;
     GtkWidget* faceSensorToggle;
-    GtkWidget* makeButton(const char* label, Button btn);
+    GtkWidget* makeButton(const char* label, button_t btn);
     static void onButtonClicked(GtkWidget*, gpointer user_data);
     static void onFaceSensorToggled(GtkWidget* widget, gpointer user_data);
     bool isFaceSensorActive() const;

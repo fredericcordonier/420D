@@ -1,10 +1,11 @@
 
 #include <gtk/gtk.h>
+#include "button.h"
 #include "eos420d_window.h"
 
 struct ButtonContext {
     EOS400DWindow* ui;
-    Button btn;
+    button_t btn;
 };
 
 EOS400DWindow::EOS400DWindow(FirmwareBridge& fw)
@@ -52,27 +53,29 @@ EOS400DWindow::EOS400DWindow(FirmwareBridge& fw)
     gtk_grid_set_column_spacing(GTK_GRID(grid), 5);
     gtk_box_pack_start(GTK_BOX(vbox), grid, TRUE, TRUE, 4);
 
-    gtk_grid_attach(GTK_GRID(grid), makeButton("WHEEL LEFT", Button::WHEEL_L),  2, 0, 1, 1);
-    gtk_grid_attach(GTK_GRID(grid), makeButton("WHEEL RIGHT", Button::WHEEL_R), 4, 0, 1, 1);
+	// BUTTON_JUMP,
+	// BUTTON_DRIVE,
 
-    gtk_grid_attach(GTK_GRID(grid), makeButton("DP", Button::DP),       0, 1, 1, 1);
-    gtk_grid_attach(GTK_GRID(grid), makeButton("MENU", Button::MENU),   0, 2, 1, 1);
-    gtk_grid_attach(GTK_GRID(grid), makeButton("INFO", Button::INFO),   0, 3, 1, 1);
-    gtk_grid_attach(GTK_GRID(grid), makeButton("PLAY", Button::PLAY),   0, 4, 1, 1);
-    gtk_grid_attach(GTK_GRID(grid), makeButton("TRASH", Button::TRASH), 0, 5, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid), makeButton("WHEEL LEFT", BUTTON_WHEEL_LEFT),  2, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid), makeButton("WHEEL RIGHT", BUTTON_WHEEL_RIGHT), 4, 0, 1, 1);
 
-    gtk_grid_attach(GTK_GRID(grid), makeButton("UP", Button::UP),       2, 3, 1, 1);
-    gtk_grid_attach(GTK_GRID(grid), makeButton("LEFT", Button::LEFT),   1, 4, 1, 1);
-    gtk_grid_attach(GTK_GRID(grid), makeButton("SET", Button::SET),     2, 4, 1, 1);
-    gtk_grid_attach(GTK_GRID(grid), makeButton("RIGHT", Button::RIGHT), 3, 4, 1, 1);
-    gtk_grid_attach(GTK_GRID(grid), makeButton("DOWN", Button::DOWN),   2, 5, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid), makeButton("DP", BUTTON_DP),       0, 1, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid), makeButton("MENU", BUTTON_MENU),   0, 2, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid), makeButton("INFO", BUTTON_DISP),   0, 3, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid), makeButton("PLAY", BUTTON_PLAY),   0, 4, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid), makeButton("TRASH", BUTTON_TRASH), 0, 5, 1, 1);
 
-    gtk_grid_attach(GTK_GRID(grid), makeButton("SHUTTER", Button::SHUTTER_FULL),
+    gtk_grid_attach(GTK_GRID(grid), makeButton("UP", BUTTON_UP),       2, 3, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid), makeButton("LEFT", BUTTON_LEFT),   1, 4, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid), makeButton("SET", BUTTON_SET),     2, 4, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid), makeButton("RIGHT", BUTTON_RIGHT), 3, 4, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid), makeButton("DOWN", BUTTON_DOWN),   2, 5, 1, 1);
+
+    gtk_grid_attach(GTK_GRID(grid), makeButton("SHUTTER", BUTTON_RELEASE),
                     3, 0, 1, 1);
-    gtk_grid_attach(GTK_GRID(grid), makeButton("AV", Button::AV),             1, 1, 1, 1);
-    gtk_grid_attach(GTK_GRID(grid), makeButton("DRIVE", Button::DRIVE),       1, 2, 1, 1);
-    gtk_grid_attach(GTK_GRID(grid), makeButton("ZOOM OUT", Button::ZOOM_OUT), 2, 1, 1, 1);
-    gtk_grid_attach(GTK_GRID(grid), makeButton("ZOOM IN", Button::ZOOM_IN),   3, 1, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid), makeButton("AV", BUTTON_AV),             1, 1, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid), makeButton("ZOOM OUT", BUTTON_ZOOM_OUT), 2, 1, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid), makeButton("ZOOM IN", BUTTON_ZOOM_IN),   3, 1, 1, 1);
 
     faceSensorToggle = gtk_toggle_button_new_with_label("Face Sensor");
     g_signal_connect(faceSensorToggle, "toggled",
@@ -94,7 +97,7 @@ void EOS400DWindow::onFaceSensorToggled(GtkWidget* widget, gpointer user_data)
     g_print("Face sensor is %s\n", active ? "ACTIVE" : "INACTIVE");
 }
 
-GtkWidget* EOS400DWindow::makeButton(const char* label, Button btn)
+GtkWidget* EOS400DWindow::makeButton(const char* label, button_t btn)
 {
     GtkWidget* button = gtk_button_new_with_label(label);
     ButtonContext* ctx = new ButtonContext{ this, btn };

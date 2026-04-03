@@ -3,10 +3,17 @@
 #include <cstring>
 #include "firmware/camera.h"
 #include "firmware/gui.h"
+#include "settings.h"
 #include "intercom.h"
 #include "af_patterns.h"
 #include "eos420d.h"
+#include "exposure.h"
+
+#ifdef NO_GTK
+#include "eos420d_txtwin.h"
+#else
 #include "eos420d_window.h"
+#endif
 
 
 EOS420D my_camera;
@@ -268,27 +275,77 @@ std::map<button_t, guimode_t> switch_guimode = {
     {BUTTON_DOWN, GUIMODE_WB}
 };
 
-void EOS420D::hw_control(const Button button) {
+static void print_settings() {
+    // #define PARAM_INT_DEF(s, f, v) std::cout << "settings." << (#f) << '=' << (settings.f) << std::endl;
+    // #define PARAM_INT_DEF_NO_INIT(s, f) std::cout << "settings." << (#f) << '=' << (settings.f) << std::endl;
+    // #define PARAM_INT_ARRAY_DEF(s, f, i, v)                                                          \
+    //     for (int count=0; count < i; count++) {                                                   \
+    //         std::cout << "settings." << (#f) << '[' << i << ']' << '=' << (settings.f[count]) << std::endl;  \
+    //     }
+    // #include "../../def/settings_t.def"
+    // #undef PARAM_INT_DEF
+    // #undef PARAM_INT_DEF_NO_INIT
+    // #undef PARAM_INT_ARRAY_DEF
 }
 
-void EOS420D::button_received(KeypadInput ki) {
-    if (ki.button == BUTTON_NONE) {
-        hw_control(ki.key);
+static void print_status() {
+    // char value[LP_MAX_WORD];
+    // #define STATUS_DEF(p)      std::cout << "status." << (#p) << '=' << (status.p) << std::endl;
+    // #define STATUS_TV_DEF(p)  {tv_print(value, status.p); std::cout << "status." << (#p) << '=' << value << std::endl;}
+    // #define STATUS_AV_DEF(p)  {av_print(value, status.p); std::cout << "status." << (#p) << '=' << value << std::endl;}
+    // #define STATUS_EC_DEF(p)  {ec_print(value, status.p); std::cout << "status." << (#p) << '=' << value << std::endl;}
+    // #include "../../def/status_t.def"
+    // #undef STATUS_DEF
+    // #undef STATUS_TV_DEF
+    // #undef STATUS_AV_DEF
+    // #undef STATUS_EC_DEF
+}
+
+static void print_dprdata() {
+    // #define PARAM_INT_DEF_NO_INIT(s, f)      std::cout << "DPData." << (#f) << '=' << (DPData.f) << std::endl;
+    // #include "../../def/dpr_data_t.def"
+    // #undef PARAM_INT_DEF_NO_INIT
+}
+
+void EOS420D::hw_control(char button)
+{
+    switch (button) {
+        case 'F':
+        // toggle face sensor
+        FLAG_FACE_SENSOR = !FLAG_FACE_SENSOR;
+        if (FLAG_FACE_SENSOR) {
+            FLAG_GUI_MODE = GUIMODE_OFF;
+        }
+        break;
+        case 'S':
+        // Print information
+        print_settings();
+        break;
+        case 'I':
+        print_status();
+        break;
+        case 'D':
+        print_dprdata();
+        break;
+        default:
+        break;
     }
-    else {
-        button_handler(ki.button, TRUE);
-    }
-    // Set GUIMODE according to button
+}
+
+void EOS420D::button_received(button_t button) {
+    int ret_val = button_handler(button, TRUE);
+    std::cout << "Button handler returned: " << ret_val << std::endl;
     if (status.menu_running)
         GUIMode = GUIMODE_420D;
-    if (GUIMode == GUIMODE_OFF) {
-        std::map<button_t, guimode_t>::iterator it = switch_guimode.find(ki.button);
+//    if (GUIMode == GUIMODE_OFF) {
+    if (ret_val == 0) {
+        std::map<button_t, guimode_t>::iterator it = switch_guimode.find(button);
         if (it != switch_guimode.end()) {
             GUIMode = it->second;
             FaceStatus = 0;
         }
     }
-    else if (ki.button == BUTTON_RELEASE) {
+    else if (button == BUTTON_RELEASE) {
         unsigned char msg[] = {(unsigned char)1, (unsigned char)IC_DIALOGOFF};
         intercom_proxy(0, msg);
         if (!status.menu_running) {
@@ -299,6 +356,16 @@ void EOS420D::button_received(KeypadInput ki) {
     }
     if (GUIMode == GUIMODE_AFPATTERN)
         display_af_patterns();
+}
+
+void EOS420D::start() {
+    // Init status
+    status.measured_tv = TV_MIN; // Shutter speed as proposed by the metering
+    status.measured_av = AV_MIN; // Aperture as proposed by the metering
+    status.measured_ec = EC_MIN; // Exposure deviation as measured by the camera (M) or set
+                      // by the user (P, Tv, Av)
+    status.last_shot_tv = TV_MAX; // Shutter speed of the last shot taken
+    status.last_shot_av = AV_MAX; // Aperture of the last shot taken
 }
 
 

@@ -15,16 +15,6 @@
 #include "serialize.h"
 #include "settings.h"
 
-#define PARAM_INT_DEF(s, f, v)     .f = (v),
-#define PARAM_INT_ARRAY_DEF(s, f, l, v)       .f = v,
-#define ISO_AEB_DEFAULT   {TRUE, TRUE, TRUE, TRUE, TRUE}
-settings_t settings_default = {
-#include "../def/settings_t.def"
-    // .iso_aeb = {TRUE, TRUE, TRUE, TRUE, TRUE},
-};
-#undef PARAM_INT_DEF
-#undef PARAM_INT_ARRAY_DEF
-
 menu_order_t menu_order_default;
 
 settings_t settings;
@@ -57,7 +47,7 @@ int settings_read() {
     // settings_t    settings_buffer;
     // menu_order_t  menu_order_buffer;
 
-    settings = settings_default;
+    settings = s_g_settings_t_default;
     menu_order = menu_order_default;
 
     if ((file = FIO_OpenFile(MKPATH_NEW(SETTINGS_FILENAME), O_RDONLY)) != -1) {
@@ -102,7 +92,7 @@ void settings_apply() {
 }
 
 void settings_restore() {
-    settings = settings_default;
+    settings = s_g_settings_t_default;
     menu_order = menu_order_default;
 
     settings_apply();
