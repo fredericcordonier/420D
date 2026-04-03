@@ -11,7 +11,7 @@ typedef struct {
 struct menupage_t {
     char *name;
     list_item_t items;
-    menuaction_t actions[MENU_EVENT_COUNT];
+    menuaction_spec_t *actions;
     int sibilings;
     int show_id;
     int *ordering;

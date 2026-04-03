@@ -38,7 +38,6 @@ static int template = 1;
 static int curr_palette = 0;
 
 static void test_dialog_create(const menuitem_t *menu);
-
 static void test_malloc(const menuitem_t *menu);
 
 static void menupage_developer_dump_log(const menuitem_t *menuitem);
@@ -84,13 +83,14 @@ menuitem_t menu_developer_items[] = {
 #endif
 };
 
-menupage_t menupage_developer = {
-    name : LP_WORD(L_P_DEVELOPERS),
-    items : LIST(menu_developer_items),
-    ordering : menu_order.developer,
-    actions : {
-        [MENU_EVENT_AV] = menu_return,
-    }
+static menupage_t menupage_developer = {
+    .name = LP_WORD(L_P_DEVELOPERS),
+    .items = LIST(menu_developer_items),
+    .ordering = menu_order.developer,
+    .actions = (menuaction_spec_t[]) {     // Dynamic array initialization
+        {MENU_EVENT_AV, menu_return},
+        {MENU_EVENT_LAST, NULL}             // End marker
+    },
 };
 
 void menupage_developer_start(menu_t *menu) {

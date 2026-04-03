@@ -87,15 +87,16 @@ static menuitem_t as_named_temps_items[MENU_HEIGHT] = {
 static menupage_t s_named_temps_page = {
     .name = LP_WORD(L_S_NAMED_TEMPS),
     .items = LIST(as_named_temps_items),
-    .actions = {
-        [MENU_EVENT_OPEN] = named_temps_init,
-        [MENU_EVENT_IN] = named_temps_pgdown,
-        [MENU_EVENT_OUT] = named_temps_pgup,
-        [MENU_EVENT_UP] = named_temps_up,
-        [MENU_EVENT_DOWN] = named_temps_down,
-        [MENU_EVENT_PREV] = named_temps_up,
-        [MENU_EVENT_NEXT] = named_temps_down,
-        [MENU_EVENT_SAVE] = named_temp_save,
+    .actions = (menuaction_spec_t[]) {
+        {MENU_EVENT_OPEN,  named_temps_init},
+        {MENU_EVENT_IN, named_temps_pgdown},
+        {MENU_EVENT_OUT, named_temps_pgup},
+        {MENU_EVENT_UP, named_temps_up},
+        {MENU_EVENT_DOWN, named_temps_down},
+        {MENU_EVENT_PREV, named_temps_up},
+        {MENU_EVENT_NEXT, named_temps_down},
+        {MENU_EVENT_SAVE, named_temp_save},
+        {MENU_EVENT_LAST, NULL}             // End marker
     }
 };
 
@@ -105,18 +106,19 @@ static menupage_t *as_named_temps_pages[] = {
 
 static menu_t s_menu_named_temps = {
     .pages = LIST(as_named_temps_pages),
-    .actions = {
-        [MENU_EVENT_SET] = menu_set,
-        [MENU_EVENT_UP] = menupage_up,
-        [MENU_EVENT_DOWN] = menupage_down,
-        [MENU_EVENT_PREV] = menupage_up,
-        [MENU_EVENT_NEXT] = menupage_down,
-        [MENU_EVENT_LEFT] = menu_left,
-        [MENU_EVENT_RIGHT] = menu_right,
-        [MENU_EVENT_DISPLAY] = menupage_display,
-        [MENU_EVENT_REFRESH] = menupage_refresh,
-        [MENU_EVENT_FINISH] = menu_finish,
-        [MENU_EVENT_TRASH] = menupage_developer_start,
+    .actions = (menuaction_spec_t[]) {
+        {MENU_EVENT_SET, menu_set},
+        {MENU_EVENT_UP, menupage_up},
+        {MENU_EVENT_DOWN, menupage_down},
+        {MENU_EVENT_PREV, menupage_up},
+        {MENU_EVENT_NEXT, menupage_down},
+        {MENU_EVENT_LEFT, menu_left},
+        {MENU_EVENT_RIGHT, menu_right},
+        {MENU_EVENT_DISPLAY, menupage_display},
+        {MENU_EVENT_REFRESH, menupage_refresh},
+        {MENU_EVENT_FINISH, menu_finish},
+        {MENU_EVENT_TRASH, menupage_developer_start},
+        {MENU_EVENT_LAST, NULL}             // End marker
     }
 };
 
@@ -140,25 +142,6 @@ typedef struct {
     int i_nb_values;      /**< Number of temp values retrieved */
     int i_last_line_read; /**< Last line number handled by callback */
 } named_temps_parsing_t;
-
-// /**
-//  * @brief extract integer value from its string represenation
-//  *
-//  * @param pc_x_val pointer to string
-//  * @return int integer value
-//  */
-// static int atoi(const char *pc_c_val) {
-//     int i_l_val = 0;
-//     while (*pc_c_val) {
-//         if (*pc_c_val >= '0' && *pc_c_val <= '9') {
-//             i_l_val = 10 * i_l_val + (*pc_c_val - '0');
-//         } else {
-//             break;
-//         }
-//         pc_c_val++;
-//     }
-//     return i_l_val;
-// }
 
 /**
  * @brief Callback to handle a named temp read from file.

@@ -109,52 +109,58 @@ menuitem_t dof_calc_items[] = {
 };
 
 menupage_t ext_aeb_page = {
-    name : LP_WORD(L_S_EXT_AEB),
-    items : LIST(ext_aeb_items),
-    actions : {
-        [MENU_EVENT_AV] = menu_return,
-    }
+    .name = LP_WORD(L_S_EXT_AEB),
+    .items = LIST(ext_aeb_items),
+    .actions = (menuaction_spec_t[]) {     // Dynamic array initialization
+        {MENU_EVENT_AV, menu_return},
+        {MENU_EVENT_LAST, NULL}             // End marker
+    },
 };
 
 menupage_t efl_aeb_page = {
-    name : LP_WORD(L_S_EFL_AEB),
-    items : LIST(efl_aeb_items),
-    actions : {
-        [MENU_EVENT_AV] = menu_return,
-    }
+    .name = LP_WORD(L_S_EFL_AEB),
+    .items = LIST(efl_aeb_items),
+    .actions = (menuaction_spec_t[]) {     // Dynamic array initialization
+        {MENU_EVENT_AV, menu_return},
+        {MENU_EVENT_LAST, NULL}             // End marker
+    },
 };
 
 menupage_t apt_aeb_page = {
-    name : LP_WORD(L_S_APT_AEB),
-    items : LIST(apt_aeb_items),
-    actions : {
-        [MENU_EVENT_AV] = menu_return,
-    }
+    .name = LP_WORD(L_S_APT_AEB),
+    .items = LIST(apt_aeb_items),
+    .actions = (menuaction_spec_t[]) {     // Dynamic array initialization
+        {MENU_EVENT_AV, menu_return},
+        {MENU_EVENT_LAST, NULL}             // End marker
+    },
 };
 
 menupage_t iso_aeb_page = {
-    name : LP_WORD(L_S_ISO_AEB),
-    items : LIST(iso_aeb_items),
-    actions : {
-        [MENU_EVENT_AV] = menu_return,
-    }
+    .name = LP_WORD(L_S_ISO_AEB),
+    .items = LIST(iso_aeb_items),
+    .actions = (menuaction_spec_t[]) {     // Dynamic array initialization
+        {MENU_EVENT_AV, menu_return},
+        {MENU_EVENT_LAST, NULL}             // End marker
+    },
 };
 
 menupage_t bramp_page = {
-    name : LP_WORD(L_S_BRAMP),
-    items : LIST(bramp_items),
-    actions : {
-        [MENU_EVENT_AV] = menu_return,
-    }
+    .name = LP_WORD(L_S_BRAMP),
+    .items = LIST(bramp_items),
+    .actions = (menuaction_spec_t[]) {     // Dynamic array initialization
+        {MENU_EVENT_AV, menu_return},
+        {MENU_EVENT_LAST, NULL}             // End marker
+    },
 };
 
 menupage_t dof_calc_page = {
-    name : LP_WORD(L_S_DOF_CALC),
-    items : LIST(dof_calc_items),
-    actions : {
-        [MENU_EVENT_OPEN] = menu_dof_calc_open,
-        [MENU_EVENT_AV] = menu_return,
-    }
+    .name = LP_WORD(L_S_DOF_CALC),
+    .items = LIST(dof_calc_items),
+    .actions = (menuaction_spec_t[]) {     // Dynamic array initialization
+        {MENU_EVENT_OPEN, menu_dof_calc_open},
+        {MENU_EVENT_AV, menu_return},
+        {MENU_EVENT_LAST, NULL}             // End marker
+    },
 };
 
 menuitem_t menupage_scripts_items[] = {
@@ -173,10 +179,10 @@ menuitem_t menupage_scripts_items[] = {
 };
 
 menupage_t menupage_scripts = {
-    name : LP_WORD(L_P_SCRIPTS),
-    sibilings : TRUE,
-    items : LIST(menupage_scripts_items),
-    ordering : menu_order.scripts,
+    .name = LP_WORD(L_P_SCRIPTS),
+    .sibilings = TRUE,
+    .items = LIST(menupage_scripts_items),
+    .ordering = menu_order.scripts,
 };
 
 void menu_dof_calc_open(menu_t *menu) {

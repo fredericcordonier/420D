@@ -163,26 +163,27 @@ menupage_t *menu_main_pages[] = {
  *
  */
 menu_t menu_main = {
-    pages : LIST(menu_main_pages),
-    ordering : menu_order.main,
-    actions : {
-        [MENU_EVENT_PLAY] = menupage_drag_drop,
-        [MENU_EVENT_UP] = menupage_up,
-        [MENU_EVENT_DOWN] = menupage_down,
-        [MENU_EVENT_SET] = menu_set,
-        [MENU_EVENT_LEFT] = menu_left,
-        [MENU_EVENT_RIGHT] = menu_right,
-        [MENU_EVENT_NEXT] = menu_next,
-        [MENU_EVENT_PREV] = menu_prev,
-        [MENU_EVENT_IN] = menupage_pgdown,
-        [MENU_EVENT_OUT] = menupage_pgup,
-        [MENU_EVENT_DP] = menu_finish,
-        [MENU_EVENT_DISPLAY] = menupage_display,
-        [MENU_EVENT_REFRESH] = menupage_refresh,
-        [MENU_EVENT_FINISH] = menu_finish,
-        [MENU_EVENT_SAVE] = menu_main_save,
-        [MENU_EVENT_AV] = list_display,
-        [MENU_EVENT_TRASH] = menupage_developer_start,
+    .pages = LIST(menu_main_pages),
+    .ordering = menu_order.main,
+    .actions = (menuaction_spec_t[]) {
+        {MENU_EVENT_PLAY,  menupage_drag_drop},
+        {MENU_EVENT_UP,  menupage_up},
+        {MENU_EVENT_DOWN,  menupage_down},
+        {MENU_EVENT_SET,  menu_set},
+        {MENU_EVENT_LEFT,  menu_left},
+        {MENU_EVENT_RIGHT,  menu_right},
+        {MENU_EVENT_NEXT,  menu_next},
+        {MENU_EVENT_PREV,  menu_prev},
+        {MENU_EVENT_IN,  menupage_pgdown},
+        {MENU_EVENT_OUT,  menupage_pgup},
+        {MENU_EVENT_DP,  menu_finish},
+        {MENU_EVENT_DISPLAY,  menupage_display},
+        {MENU_EVENT_REFRESH,  menupage_refresh},
+        {MENU_EVENT_FINISH,  menu_finish},
+        {MENU_EVENT_SAVE,  menu_main_save},
+        {MENU_EVENT_AV,  list_display},
+        {MENU_EVENT_TRASH,  menupage_developer_start},
+        {MENU_EVENT_LAST, NULL}
     }
 };
 
@@ -203,18 +204,19 @@ menuitem_t main_list_items[] = {
  *
  */
 menupage_t main_list = {
-    name : LP_WORD(L_P_420D),
-    items : LIST(main_list_items),
-    actions : {
-        [MENU_EVENT_PLAY] = page_display,
-        [MENU_EVENT_UP] = list_up,
-        [MENU_EVENT_DOWN] = list_down,
-        [MENU_EVENT_PREV] = list_up,
-        [MENU_EVENT_NEXT] = list_down,
-        [MENU_EVENT_AV_UP] = list_hide,
-        [MENU_EVENT_SET] = page_display,
+    .name = LP_WORD(L_P_420D),
+    .items = LIST(main_list_items),
+    .actions = (menuaction_spec_t[]) {    // Dynamic array initialization
+        {MENU_EVENT_PLAY, page_display},
+        {MENU_EVENT_UP, list_up},
+        {MENU_EVENT_DOWN, list_down},
+        {MENU_EVENT_PREV, list_up},
+        {MENU_EVENT_NEXT, list_down},
+        {MENU_EVENT_AV_UP, list_hide},
+        {MENU_EVENT_SET, page_display},
+        {MENU_EVENT_LAST, NULL}             // End marker
     },
-    ordering : menu_order.main,
+    .ordering = menu_order.main,            // Keep ordering as it is
 };
 
 /**

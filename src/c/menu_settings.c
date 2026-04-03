@@ -83,60 +83,68 @@ menuitem_t restore_items[] = {
 };
 
 menupage_t scripts_page = {
-    name : LP_WORD(L_S_SCRIPTS),
-    items : LIST(scripts_items),
-    actions : {
-        [MENU_EVENT_AV] = menu_return,
-    }
+    .name = LP_WORD(L_S_SCRIPTS),
+    .items = LIST(scripts_items),
+    .actions = (menuaction_spec_t[]){
+        {MENU_EVENT_AV, menu_return},
+        {MENU_EVENT_LAST, NULL}
+    },
 };
 
-menupage_t buttons_page = {
-    name : LP_WORD(L_S_BUTTONS),
-    items : LIST(buttons_items),
-    actions : {
-        [MENU_EVENT_AV] = menu_return,
-    }
+ menupage_t buttons_page = {
+    .name = LP_WORD(L_S_BUTTONS),         // Ensure it's a valid string
+    .items = LIST(buttons_items),          // Assuming LIST(buttons_items) is valid
+    .actions = (menuaction_spec_t[]) {    // Dynamic array initialization
+        {MENU_EVENT_AV, menu_return},      // Your defined event-action pair
+        // Add more action pairs as needed
+        {MENU_EVENT_LAST, NULL}            // End marker for the actions array
+    },
 };
 
 menupage_t cmodes_page = {
-    name : LP_WORD(L_S_CMODES),
-    items : LIST(cmodes_items),
-    actions : {
-        [MENU_EVENT_AV] = menu_return,
-    }
+    .name = LP_WORD(L_S_CMODES),
+    .items = LIST(cmodes_items),
+    .actions = (menuaction_spec_t[]) {    // Dynamic array initialization
+        {MENU_EVENT_AV, menu_return},
+        {MENU_EVENT_LAST, NULL}            // End marker
+    },
 };
 
 menupage_t menus_page = {
-    name : LP_WORD(L_S_MENUS),
-    items : LIST(menus_items),
-    actions : {
-        [MENU_EVENT_AV] = menu_return,
-    }
+    .name = LP_WORD(L_S_MENUS),
+    .items = LIST(menus_items),
+    .actions = (menuaction_spec_t[]) {    // Dynamic array initialization
+        {MENU_EVENT_AV, menu_return},
+        {MENU_EVENT_LAST, NULL}            // End marker
+    },
 };
 
 menupage_t qexp_page = {
-    name : LP_WORD(L_S_QEXP),
-    items : LIST(qexp_items),
-    actions : {
-        [MENU_EVENT_AV] = menu_return,
-    }
+    .name = LP_WORD(L_S_QEXP),
+    .items = LIST(qexp_items),
+    .actions = (menuaction_spec_t[]) {    // Dynamic array initialization
+        {MENU_EVENT_AV, menu_return},
+        {MENU_EVENT_LAST, NULL}            // End marker
+    },
 };
 
 menupage_t pages_page = {
-    name : LP_WORD(L_S_PAGES),
-    items : LIST(pages_items),
-    ordering : menu_order.main,
-    actions : {
-        [MENU_EVENT_AV] = menu_return,
-    }
+    .name = LP_WORD(L_S_PAGES),
+    .items = LIST(pages_items),
+    .ordering = menu_order.main,           // Keep ordering as it is
+    .actions = (menuaction_spec_t[]) {     // Dynamic array initialization
+        {MENU_EVENT_AV, menu_return},
+        {MENU_EVENT_LAST, NULL}             // End marker
+    },
 };
 
 menupage_t restore_page = {
-    name : LP_WORD(L_I_RESTORE),
-    items : LIST(restore_items),
-    actions : {
-        [MENU_EVENT_AV] = menu_return,
-    }
+    .name = LP_WORD(L_I_RESTORE),
+    .items = LIST(restore_items),
+    .actions = (menuaction_spec_t[]) {    // Dynamic array initialization
+        {MENU_EVENT_AV, menu_return},
+        {MENU_EVENT_LAST, NULL}            // End marker
+    },
 };
 
 menuitem_t menu_settings_items[] = {
@@ -167,12 +175,13 @@ menuitem_t menu_settings_items[] = {
 };
 
 menupage_t menupage_settings = {
-    name : LP_WORD(L_P_SETTINGS),
-    sibilings : TRUE,
-    items : LIST(menu_settings_items),
-    ordering : menu_order.settings,
-    actions : {
-        [MENU_EVENT_OPEN] = menu_settings_open,
+    .name = LP_WORD(L_P_SETTINGS),
+    .sibilings = TRUE,
+    .items = LIST(menu_settings_items),
+    .ordering = menu_order.settings,
+    .actions = (menuaction_spec_t[]) {
+        {MENU_EVENT_OPEN, menu_settings_open},
+        {MENU_EVENT_LAST, NULL}                 // End marker
     }
 };
 

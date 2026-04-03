@@ -63,6 +63,11 @@ typedef enum {
 
 typedef void (*menuaction_t)(menu_t *menu);
 
+typedef struct _menuaction_spec_t{
+    menu_event_t event;
+    menuaction_t action;
+} menuaction_spec_t;
+
 typedef struct {
     int size;
     menupage_t **data;
@@ -71,7 +76,7 @@ typedef struct {
 struct menu_t {
     menu_color_t color;
     list_page_t pages;
-    menuaction_t actions[MENU_EVENT_COUNT];
+    menuaction_spec_t *actions;   //[MENU_EVENT_COUNT];
     int *ordering;
     int current_posn;
     menupage_t *current_page;

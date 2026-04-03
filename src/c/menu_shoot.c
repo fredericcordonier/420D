@@ -127,11 +127,12 @@ static menuitem_t a_timer_items[] = {
     MENUITEM_ACTION(0, LP_WORD(L_I_ACTION), &settings.timer_action, NULL)};
 
 static menupage_t s_timer_page = {
-  name : LP_WORD(L_S_TIMER),
-  items : LIST(a_timer_items),
-  actions : {
-      [MENU_EVENT_OPEN] = timer_open,
-      [MENU_EVENT_AV] = timer_save_return,
+  .name = LP_WORD(L_S_TIMER),
+  .items = LIST(a_timer_items),
+  .actions = (menuaction_spec_t[]) {
+      {MENU_EVENT_OPEN, timer_open},
+      {MENU_EVENT_AV, timer_save_return},
+      {MENU_EVENT_LAST, NULL}             // End marker
   }
 };
 
@@ -142,11 +143,12 @@ static menuitem_t as_wave_items[] = {
     MENUITEM_BOOLEAN(0, LP_WORD(L_I_INSTANT), &settings.wave_instant, NULL)};
 
 static menupage_t s_wave_page = {
-  name : LP_WORD(L_S_HANDWAVE),
-  items : LIST(as_wave_items),
-  actions : {
-      [MENU_EVENT_OPEN] = wave_open,
-      [MENU_EVENT_AV] = wave_save_return,
+  .name = LP_WORD(L_S_HANDWAVE),
+  .items = LIST(as_wave_items),
+  .actions = (menuaction_spec_t[]) {
+      {MENU_EVENT_OPEN, wave_open},
+      {MENU_EVENT_AV, wave_save_return},
+      {MENU_EVENT_LAST, NULL}             // End marker
   }
 };
 
@@ -163,11 +165,12 @@ static menuitem_t as_lexp_calc_items[] = {
 };
 
 static menupage_t s_lexp_calc_page = {
-  name : LP_WORD(L_S_CALCULATOR),
-  items : LIST(as_lexp_calc_items),
-  actions : {
-      [MENU_EVENT_OPEN] = menu_lexp_calc_open,
-      [MENU_EVENT_AV] = menu_return,
+  .name = LP_WORD(L_S_CALCULATOR),
+  .items = LIST(as_lexp_calc_items),
+  .actions = (menuaction_spec_t[]) {
+      {MENU_EVENT_OPEN, menu_lexp_calc_open},
+      {MENU_EVENT_AV, menu_return},
+      {MENU_EVENT_LAST, NULL}             // End marker
   }
 };
 
@@ -178,10 +181,11 @@ static menuitem_t as_lexp_items[] = {
 };
 
 static menupage_t s_lexp_page = {
-  name : LP_WORD(L_S_LEXP),
-  items : LIST(as_lexp_items),
-  actions : {
-      [MENU_EVENT_AV] = lexp_save_return,
+  .name = LP_WORD(L_S_LEXP),
+  .items = LIST(as_lexp_items),
+  .actions = (menuaction_spec_t[]) {
+      {MENU_EVENT_AV, lexp_save_return},
+      {MENU_EVENT_LAST, NULL}             // End marker
   }
 };
 
@@ -202,11 +206,12 @@ static menuitem_t as_interval_items[] = {
 };
 
 static menupage_t s_interval_page = {
-  name : LP_WORD(L_S_INTERVAL),
-  items : LIST(as_interval_items),
-  actions : {
-      [MENU_EVENT_OPEN] = menu_shoot_mode_open_intervalometer,
-      [MENU_EVENT_AV] = interval_save_return,
+  .name = LP_WORD(L_S_INTERVAL),
+  .items = LIST(as_interval_items),
+  .actions = (menuaction_spec_t[]) {
+      {MENU_EVENT_OPEN, menu_shoot_mode_open_intervalometer},
+      {MENU_EVENT_AV, interval_save_return},
+      {MENU_EVENT_LAST, NULL}             // End marker
   }
 };
 
@@ -223,9 +228,10 @@ static menuitem_t as_timelapse_items[] = {
 static menupage_t s_timelapse_page = {
   .name = LP_WORD(L_S_TIMELAPSE),
   .items = LIST(as_timelapse_items),
-  .actions = {
-      [MENU_EVENT_OPEN] = menu_shoot_mode_open_timelapse,
-      [MENU_EVENT_AV] = timelapse_save_return,
+  .actions = (menuaction_spec_t[]) {
+      {MENU_EVENT_OPEN, menu_shoot_mode_open_timelapse},
+      {MENU_EVENT_AV, timelapse_save_return},
+      {MENU_EVENT_LAST, NULL}             // End marker
   }
 };
 
@@ -252,19 +258,20 @@ static menupage_t *as_menu_shoot_mode_pages[] = {
 };
 
 static menu_t s_menu_shoot_mode = {
-    pages : LIST(as_menu_shoot_mode_pages),
-    actions : {
-        [MENU_EVENT_SET] = menu_set,
-        [MENU_EVENT_UP] = menupage_up,
-        [MENU_EVENT_DOWN] = menupage_down,
-        [MENU_EVENT_PREV] = menupage_up,
-        [MENU_EVENT_NEXT] = menupage_down,
-        [MENU_EVENT_LEFT] = menu_left,
-        [MENU_EVENT_RIGHT] = menu_right,
-        [MENU_EVENT_DISPLAY] = menupage_display,
-        [MENU_EVENT_REFRESH] = menupage_refresh,
-        [MENU_EVENT_FINISH] = menu_finish,
-        [MENU_EVENT_TRASH] = menupage_developer_start,
+    .pages = LIST(as_menu_shoot_mode_pages),
+    .actions = (menuaction_spec_t[]) {
+      {MENU_EVENT_SET, menu_set},
+      {MENU_EVENT_UP, menupage_up},
+      {MENU_EVENT_DOWN, menupage_down},
+      {MENU_EVENT_PREV, menupage_up},
+      {MENU_EVENT_NEXT, menupage_down},
+      {MENU_EVENT_LEFT, menu_left},
+      {MENU_EVENT_RIGHT, menu_right},
+      {MENU_EVENT_DISPLAY, menupage_display},
+      {MENU_EVENT_REFRESH, menupage_refresh},
+      {MENU_EVENT_FINISH, menu_finish},
+      {MENU_EVENT_TRASH, menupage_developer_start},
+      {MENU_EVENT_LAST, NULL}             // End marker
     }
 };
 

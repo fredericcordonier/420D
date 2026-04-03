@@ -47,11 +47,12 @@ menuitem_t autoiso_items[] = {
 };
 
 menupage_t autoiso_page = {
-    name : LP_WORD(L_S_AUTOISO),
-    items : LIST(autoiso_items),
-    actions : {
-        [MENU_EVENT_AV] = menu_return,
-    }
+    .name = LP_WORD(L_S_AUTOISO),
+    .items = LIST(autoiso_items),
+    .actions = (menuaction_spec_t[]) {     // Dynamic array initialization
+        {MENU_EVENT_AV, menu_return},
+        {MENU_EVENT_LAST, NULL}             // End marker
+    },
 };
 
 menuitem_t flash_items[] = {
@@ -67,12 +68,14 @@ menuitem_t flash_items[] = {
 };
 
 menupage_t flash_page = {
-    name : LP_WORD(L_S_FLASH),
-    items : LIST(flash_items),
-    actions : {
-        [MENU_EVENT_AV] = menu_return,
-    }
+    .name = LP_WORD(L_S_FLASH),
+    .items = LIST(flash_items),
+    .actions = (menuaction_spec_t[]) {     // Dynamic array initialization
+        {MENU_EVENT_AV, menu_return},
+        {MENU_EVENT_LAST, NULL}             // End marker
+    },
 };
+
 /*
 menuitem_t ir_items[] = {
         MENUITEM_BOOLEAN(0, LP_WORD(L_I_IR_REMOTE_ENABLE),
@@ -114,10 +117,10 @@ menuitem_t menupage_params_items[] = {
 };
 
 menupage_t menupage_params = {
-    name : LP_WORD(L_P_PARAMS),
-    sibilings : TRUE,
-    items : LIST(menupage_params_items),
-    ordering : menu_order.params,
+    .name = LP_WORD(L_P_PARAMS),
+    .sibilings = TRUE,
+    .items = LIST(menupage_params_items),
+    .ordering = menu_order.params,
 };
 
 static void menu_params_apply_autoiso_miniso(const menuitem_t *item) {

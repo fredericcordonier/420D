@@ -25,8 +25,6 @@ enum {
     MENUPAGE_DEVEL_LAST = MENUPAGE_DEVEL_COUNT - 1
 };
 
-extern menupage_t menupage_developer;
-
 void menupage_developer_start(menu_t *menu);
 
 #endif /* MENU_DEVELOPER_H_ */

@@ -207,11 +207,22 @@ void menu_event_save() { menu_event(MENU_EVENT_SAVE); };
 void menu_event(menu_event_t event) {
     menu_t *menu = current_menu;
     menupage_t *page = menu->current_page;
+    menuaction_spec_t *search_action = NULL;
 
-    if (page->actions && page->actions[event])
-        page->actions[event](menu);
-    else if (menu->actions && menu->actions[event])
-        menu->actions[event](menu);
+    if (page->actions) {
+        search_action = page->actions;
+        while ((search_action->event != event) && (search_action->event != MENU_EVENT_LAST)) {
+            search_action++;
+        }
+    }
+    if  (((search_action == NULL) || (search_action->event == MENU_EVENT_LAST)) && (menu->actions)) {
+        search_action = menu->actions;
+        while ((search_action->event != event) && (search_action->event != MENU_EVENT_LAST)) {
+            search_action++;
+        }
+    }
+    if ((search_action !=  NULL) && (search_action->event != MENU_EVENT_LAST))
+        search_action->action(menu);
 }
 
 void menu_set(menu_t *menu) {

@@ -32,14 +32,15 @@ menupage_t menupage_cmodes_submenus[CMODES_MAX];
 menuitem_t menupage_cmodes_items[CMODES_MAX];
 
 menupage_t menupage_cmodes = {
-    name : LP_WORD(L_P_CMODES),
-    sibilings : TRUE,
-    items : LIST(menupage_cmodes_items),
-    show_id : TRUE,
-    ordering : cmodes_config.order,
-    actions : {
-        [MENU_EVENT_OPEN] = menu_cmodes_open,
-    }
+    .name = LP_WORD(L_P_CMODES),
+    .sibilings = TRUE,
+    .items = LIST(menupage_cmodes_items),
+    .show_id = TRUE,
+    .ordering = cmodes_config.order,
+    .actions = (menuaction_spec_t[]) {     // Dynamic array initialization
+        {MENU_EVENT_OPEN, menu_cmodes_open},
+        {MENU_EVENT_LAST, NULL}             // End marker
+    },
 };
 
 void menu_cmodes_open(menu_t *menu) {
@@ -101,7 +102,7 @@ void menu_cmodes_open(menu_t *menu) {
         menupage_cmodes_submenus[i].items.size = length;
         menupage_cmodes_submenus[i].items.data = menupage_cmodes_subitems[i];
 
-        menupage_cmodes_submenus[i].actions[MENU_EVENT_AV] = menu_return;
+        // menupage_cmodes_submenus[i].actions[MENU_EVENT_AV] = menu_return;
 
         // Add sub-menu to page
         menupage_cmodes_items[i].id = i;
