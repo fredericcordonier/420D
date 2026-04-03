@@ -149,7 +149,7 @@ $(PROJECT).arm.elf: $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 $(GEN_STAMP): $(DEFS) $(GEN_SCRIPT)
-	python3 $(GEN_SCRIPT) $(DEF_DIR) $(INC_DIR) $(CSRC_DIR)
+	$(PYTHON) $(GEN_SCRIPT) $(DEF_DIR) $(INC_DIR) $(CSRC_DIR)
 	touch $(GEN_STAMP)
 
 $(GEN_SOURCES): $(GEN_STAMP)

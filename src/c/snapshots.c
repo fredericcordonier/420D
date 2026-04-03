@@ -53,9 +53,9 @@ int snapshot_write(char names[][FILENAME_LENGTH]) {
     int file = -1;
 
     snapshot_t buffer = {
-        DPData : DPData,
-        settings : settings,
-        menu_order : menu_order,
+        .DPData = DPData,
+        .settings = settings,
+        .menu_order = menu_order,
     };
 
     if ((file = FIO_OpenFile(names[0], O_CREAT | O_WRONLY)) == -1)

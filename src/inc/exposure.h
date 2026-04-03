@@ -1,6 +1,10 @@
 #ifndef EXPOSURE_H_
 #define EXPOSURE_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** \file exposure.h
  * \brief Define all variables and types for exposure values
  */
@@ -185,5 +189,9 @@ extern iso_t iso_inc(iso_t iso);
 extern iso_t iso_dec(iso_t iso);
 
 extern void iso_print(char *dest, iso_t code);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* EXPOSURE_H_ */
