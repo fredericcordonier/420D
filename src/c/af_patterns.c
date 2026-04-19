@@ -1,5 +1,5 @@
 #include <vxworks.h>
-#include "settings.h"
+#include "persist.h"
 
 /**
  * @file af_patterns.c
@@ -153,17 +153,7 @@ int afp_transformer(int pattern, direction_t direction);
  */
 static void afp_set(int afp) {
     send_to_intercom(IC_SET_AF_POINT, afp);
-    switch (status.orientation) {
-    case ORIENTATION_H:
-        settings.af_pattern_horizontal = afp;
-        break;
-    case ORIENTATION_VL:
-        settings.af_pattern_vertical_left = afp;
-        break;
-    case ORIENTATION_VR:
-        settings.af_pattern_vertical_right = afp;
-        break;
-    }
+    persist.af_patterns[persist.current_af_pattern] = afp;
 }
 
 /**

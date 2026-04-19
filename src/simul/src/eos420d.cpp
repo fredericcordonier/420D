@@ -271,7 +271,7 @@ void EOS420D::post_message(action_t pMessage) {
 
 std::map<button_t, guimode_t> switch_guimode = {
     {BUTTON_DRIVE, GUIMODE_DRIVE},
-    {BUTTON_ZOOM_OUT, GUIMODE_AFPATTERN},
+    {BUTTON_ZOOM_IN, GUIMODE_AFPATTERN},
     {BUTTON_DOWN, GUIMODE_WB}
 };
 

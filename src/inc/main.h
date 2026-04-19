@@ -30,12 +30,6 @@ typedef enum {
     VF_STATUS_QEXP, //< Quick exposure
 } vf_status_t;
 
-typedef enum {
-    ORIENTATION_H,
-    ORIENTATION_VL,
-    ORIENTATION_VR,
-} camera_orientation;
-
 // Global status
 typedef struct {
     int button_down;      // A button is down, and which one

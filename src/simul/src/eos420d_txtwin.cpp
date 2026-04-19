@@ -22,6 +22,9 @@ const button_config txt_ui_buttons[] = {
     {'5', "SET", BUTTON_SET},
     {'6', "RIGHT", BUTTON_RIGHT},
     {'2', "DOWN", BUTTON_DOWN},
+    {'r', "RELEASE", BUTTON_RELEASE},
+    {'j', "JUMP", BUTTON_JUMP},
+    {'t', "TRASH", BUTTON_TRASH},
     // Key to quit the application
     {'q', "Quit", BUTTON_COUNT},
 };

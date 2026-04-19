@@ -28,6 +28,16 @@ int LEDBLUE;
 
 int SendToIntercom(int message, int length, int parm) {
 	my_camera.intercom_420d.send(message, length, parm);
+	switch(message) {
+	case IC_SET_ISO:
+		DPData.iso = parm;
+		break;
+	case IC_SET_AF_POINT:
+		DPData.af_point = parm;
+		break;
+	default:
+		break;
+	}
 	return 0;
 }
 
@@ -69,7 +79,17 @@ void dialog_item_set_str  (dialog_t *dialog, const int item, const char *data)
 }
 
 void dialog_item_set_label(dialog_t *dialog, const int type, const void *data, const int length, const int item)
-{}
+{
+	int dsp_line = 0;
+	if (item == 0x26)
+		dsp_line = 4;
+	else if (item == 0x04)
+		dsp_line = 1;
+
+	dialog_item_set_str(dialog, dsp_line, (const char *)data);
+//	std::cout << "dialog_item_set_label: " << (char *)data <<  std::endl;
+}
+
 int dialog_event_handler (dialog_t *dialog, int *r1, gui_event_t event, int *r3, int r4, int r5, int r6, int code)
 {
 	std::cout << "dialog_event_handler: " <<  std::endl;

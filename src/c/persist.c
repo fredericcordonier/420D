@@ -9,6 +9,7 @@
 #include "scripts.h"
 
 #include "persist.h"
+#include "firmware/camera.h"
 
 /**
  * \file persist.c
@@ -23,8 +24,10 @@
  * Persisted are EV compensation and last run script
  */
 persist_t persist = {
-    ev_comp : EC_ZERO,
-    last_script : SCRIPT_NONE,
+    .ev_comp = EC_ZERO,
+    .last_script = SCRIPT_NONE,
+    .current_af_pattern = 1,
+    .af_patterns = {AF_POINT_C, AF_POINT_C, AF_POINT_C},
 };
 
 /**

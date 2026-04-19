@@ -62,8 +62,9 @@ EOS400DWindow::EOS400DWindow(FirmwareBridge& fw)
     gtk_grid_attach(GTK_GRID(grid), makeButton("DP", BUTTON_DP),       0, 1, 1, 1);
     gtk_grid_attach(GTK_GRID(grid), makeButton("MENU", BUTTON_MENU),   0, 2, 1, 1);
     gtk_grid_attach(GTK_GRID(grid), makeButton("INFO", BUTTON_DISP),   0, 3, 1, 1);
-    gtk_grid_attach(GTK_GRID(grid), makeButton("PLAY", BUTTON_PLAY),   0, 4, 1, 1);
-    gtk_grid_attach(GTK_GRID(grid), makeButton("TRASH", BUTTON_TRASH), 0, 5, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid), makeButton("JUMP", BUTTON_JUMP),   0, 4, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid), makeButton("PLAY", BUTTON_PLAY),   0, 5, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid), makeButton("TRASH", BUTTON_TRASH), 0, 6, 1, 1);
 
     gtk_grid_attach(GTK_GRID(grid), makeButton("UP", BUTTON_UP),       2, 3, 1, 1);
     gtk_grid_attach(GTK_GRID(grid), makeButton("LEFT", BUTTON_LEFT),   1, 4, 1, 1);

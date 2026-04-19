@@ -67,6 +67,7 @@
 
 #include "macros.h"
 #include "main.h"
+#include "persist.h"
 
 #include "autoiso.h"
 #include "display.h"
@@ -113,7 +114,7 @@ static void shortcut_info_int(const char *label, const int value);
 static void shortcut_info_ec(const char *label, const ec_t value);
 static void shortcut_info_end(void);
 
-static void shortcut_afcfg_orientation(camera_orientation orient);
+static void shortcut_afpattern(int afp);
 
 /**
  * @brief Activate the JUMP shortcut.
@@ -232,6 +233,7 @@ void shortcut_event_disp() {
 void shortcut_event_end() {
     switch (status.shortcut_running) {
     case SHORTCUT_AEB:
+    case SHORTCUT_AFCFG:
         enqueue_action(persist_write);
         break;
     default:
@@ -276,9 +278,6 @@ void shortcut_event_set(void) {
         break;
     case SHORTCUT_FLASH:
         shortcut_efl_toggle();
-        break;
-    case SHORTCUT_AFCFG:
-        shortcut_afcfg_orientation(ORIENTATION_H);
         break;
     case SHORTCUT_DISPLAY:
         enqueue_action(beep);
@@ -358,7 +357,10 @@ void shortcut_event_right(void) {
         shortcut_disp_set(MIN(DPData.lcd_brightness + 1, 7));
         break;
     case SHORTCUT_AFCFG:
-        shortcut_afcfg_orientation(ORIENTATION_VR);
+        if (persist.current_af_pattern < C_NB_AF_PATTERNS - 1) {
+            persist.current_af_pattern++;
+            shortcut_afpattern(persist.af_patterns[persist.current_af_pattern]);
+        }
         break;
     default:
         break;
@@ -384,7 +386,10 @@ void shortcut_event_left(void) {
         shortcut_disp_set(MAX(DPData.lcd_brightness - 1, 1));
         break;
     case SHORTCUT_AFCFG:
-        shortcut_afcfg_orientation(ORIENTATION_VL);
+        if (persist.current_af_pattern > 0) {
+            persist.current_af_pattern = persist.current_af_pattern - 1;
+            shortcut_afpattern(persist.af_patterns[persist.current_af_pattern]);
+        }
         break;
     default:
         break;
@@ -469,24 +474,12 @@ static void shortcut_f2c_toggle(void) {
 }
 
 /**
- * @brief (manually) Set camera orientation to get
+ * @brief Select the AF pattern
  *
  */
-static void shortcut_afcfg_orientation(camera_orientation orient) {
+static void shortcut_afpattern(int afp) {
     // Remember orientation
-    status.orientation = orient;
-    // Set the corresponding AF point
-    switch (status.orientation) {
-    case ORIENTATION_H:
-        send_to_intercom(IC_SET_AF_POINT, settings.af_pattern_horizontal);
-        break;
-    case ORIENTATION_VL:
-        send_to_intercom(IC_SET_AF_POINT, settings.af_pattern_vertical_left);
-        break;
-    case ORIENTATION_VR:
-        send_to_intercom(IC_SET_AF_POINT, settings.af_pattern_vertical_right);
-        break;
-    }
+    send_to_intercom(IC_SET_AF_POINT, afp);
     shortcut_info_afcfg();
 }
 
@@ -601,13 +594,7 @@ static void shortcut_info_flash() {
  */
 static void shortcut_info_afcfg(void) {
     char buffer[8] = "";
-    if (status.orientation == ORIENTATION_H) {
-        sprintf(buffer, "^");
-    } else if (status.orientation == ORIENTATION_VL) {
-        sprintf(buffer, "<");
-    } else if (status.orientation == ORIENTATION_VR) {
-        sprintf(buffer, ">");
-    }
+    sprintf(buffer, "%d", (unsigned short)(persist.current_af_pattern + 1));
     shortcut_info_str(label_afcfg, buffer);
 }
 
