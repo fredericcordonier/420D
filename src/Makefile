@@ -148,7 +148,7 @@ $(PROJECT).arm.elf: $(OBJS)
 	@$(ECHO) -e $(BOLD)[LINK]:$(NORM) $@
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
-$(GEN_STAMP): $(DEFS) $(GEN_SCRIPT)
+$(GEN_STAMP): $(STRUCT_DEFS) $(GEN_SCRIPT)
 	$(PYTHON) $(GEN_SCRIPT) --infile $(STRUCT_DEFS) --incdir $(INC_DIR) --srcdir $(CSRC_DIR)
 	touch $(GEN_STAMP)
 
