@@ -31,10 +31,8 @@ class SettingsFile:
 
 def parse_args() -> NamedTuple:
     parser = ArgumentParser(description="Supported arguments")
+    parser.add_argument("binary_file", type=Path, help='Binary file to read')
     parser.add_argument('-f', "--infile", type=Path, help='Structure definition file')
-    parser.add_argument('-i', "--binary-file", type=Path, help='Binary file to read')
-    # parser.add_argument('-s', "--srcdir", type=Path, default=Path("../src/c"), nargs='?', help='Source directory')
-    # parser.add_argument('-i', "--incdir", type=Path, default=Path("../src/inc"), help="Include directory")
     return parser.parse_args()
 
 def generate_ini_files(args: NamedTuple):

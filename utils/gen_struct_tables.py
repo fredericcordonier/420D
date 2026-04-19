@@ -32,9 +32,7 @@ def write_struct_files(args, structures: list[Struct]):
         for struct in structures:
             ## Generate structure include file
             header_file = HeaderFileWriter(args.incdir, struct.name)
-            header_file.included_files = [
-                "param_def.h"               # Needed to know the structure field_def.h
-            ] + struct.included_in_h
+            header_file.included_files = struct.included_in_h
             header_file.add_lines(struct.get_header_file_content())
             header_file.write()
 
@@ -42,7 +40,6 @@ def write_struct_files(args, structures: list[Struct]):
             src_file = SrcFileWriter(args.srcdir, struct.name)
             src_file.included_files = [
                     "vxworks.h",                # Needed for NULL definition
-                    "param_def.h",              # Needed to know the structure field_def.h
                     f'{struct.name}.h'
                 ] + struct.included_in_c
             src_file.add_lines(struct.get_src_file_content())
