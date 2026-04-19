@@ -39,7 +39,7 @@ menupage_t menupage_cmodes = {
     .ordering = cmodes_config.order,
     .actions = (menuaction_spec_t[]) {     // Dynamic array initialization
         {MENU_EVENT_OPEN, menu_cmodes_open},
-        {MENU_EVENT_LAST, NULL}             // End marker
+        {MENU_EVENT_SENTINEL, NULL}             // End marker
     },
 };
 

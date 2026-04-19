@@ -89,7 +89,7 @@ static menupage_t menupage_developer = {
     .ordering = menu_order.developer,
     .actions = (menuaction_spec_t[]) {     // Dynamic array initialization
         {MENU_EVENT_AV, menu_return},
-        {MENU_EVENT_LAST, NULL}             // End marker
+        {MENU_EVENT_SENTINEL, NULL}             // End marker
     },
 };
 

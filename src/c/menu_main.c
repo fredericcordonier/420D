@@ -183,7 +183,7 @@ menu_t menu_main = {
         {MENU_EVENT_SAVE,  menu_main_save},
         {MENU_EVENT_AV,  list_display},
         {MENU_EVENT_TRASH,  menupage_developer_start},
-        {MENU_EVENT_LAST, NULL}
+        {MENU_EVENT_SENTINEL, NULL}
     }
 };
 
@@ -214,7 +214,7 @@ menupage_t main_list = {
         {MENU_EVENT_NEXT, list_down},
         {MENU_EVENT_AV_UP, list_hide},
         {MENU_EVENT_SET, page_display},
-        {MENU_EVENT_LAST, NULL}             // End marker
+        {MENU_EVENT_SENTINEL, NULL}             // End marker
     },
     .ordering = menu_order.main,            // Keep ordering as it is
 };

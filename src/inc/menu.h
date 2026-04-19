@@ -58,7 +58,8 @@ typedef enum {
     MENU_EVENT_SAVE,
     MENU_EVENT_COUNT,
     MENU_EVENT_FIRST = 0,
-    MENU_EVENT_LAST = MENU_EVENT_COUNT - 1
+    MENU_EVENT_LAST = MENU_EVENT_COUNT - 1,
+    MENU_EVENT_SENTINEL = MENU_EVENT_COUNT
 } menu_event_t;
 
 typedef void (*menuaction_t)(menu_t *menu);

@@ -16,6 +16,8 @@ typedef struct {
     int last_page;        // Last page visited in main menu
     int aeb;              // AEB being used
     int last_aeb;         // Last AEB used
+    int named_temps_top_of_page_line; // Named temps top of page line
+    int named_temps_cur_line;         // Named temps current line
 } persist_t;
 
 extern persist_t persist;

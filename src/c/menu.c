@@ -211,17 +211,17 @@ void menu_event(menu_event_t event) {
 
     if (page->actions) {
         search_action = page->actions;
-        while ((search_action->event != event) && (search_action->event != MENU_EVENT_LAST)) {
+        while ((search_action->event != event) && (search_action->event != MENU_EVENT_SENTINEL)) {
             search_action++;
         }
     }
-    if  (((search_action == NULL) || (search_action->event == MENU_EVENT_LAST)) && (menu->actions)) {
+    if  (((search_action == NULL) || (search_action->event == MENU_EVENT_SENTINEL)) && (menu->actions)) {
         search_action = menu->actions;
-        while ((search_action->event != event) && (search_action->event != MENU_EVENT_LAST)) {
+        while ((search_action->event != event) && (search_action->event != MENU_EVENT_SENTINEL)) {
             search_action++;
         }
     }
-    if ((search_action !=  NULL) && (search_action->event != MENU_EVENT_LAST))
+    if ((search_action !=  NULL) && (search_action->event != MENU_EVENT_SENTINEL))
         search_action->action(menu);
 }
 

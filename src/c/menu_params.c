@@ -51,7 +51,7 @@ menupage_t autoiso_page = {
     .items = LIST(autoiso_items),
     .actions = (menuaction_spec_t[]) {     // Dynamic array initialization
         {MENU_EVENT_AV, menu_return},
-        {MENU_EVENT_LAST, NULL}             // End marker
+        {MENU_EVENT_SENTINEL, NULL}             // End marker
     },
 };
 
@@ -72,7 +72,7 @@ menupage_t flash_page = {
     .items = LIST(flash_items),
     .actions = (menuaction_spec_t[]) {     // Dynamic array initialization
         {MENU_EVENT_AV, menu_return},
-        {MENU_EVENT_LAST, NULL}             // End marker
+        {MENU_EVENT_SENTINEL, NULL}             // End marker
     },
 };
 

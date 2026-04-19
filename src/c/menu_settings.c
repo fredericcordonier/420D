@@ -87,7 +87,7 @@ menupage_t scripts_page = {
     .items = LIST(scripts_items),
     .actions = (menuaction_spec_t[]){
         {MENU_EVENT_AV, menu_return},
-        {MENU_EVENT_LAST, NULL}
+        {MENU_EVENT_SENTINEL, NULL}
     },
 };
 
@@ -97,7 +97,7 @@ menupage_t scripts_page = {
     .actions = (menuaction_spec_t[]) {    // Dynamic array initialization
         {MENU_EVENT_AV, menu_return},      // Your defined event-action pair
         // Add more action pairs as needed
-        {MENU_EVENT_LAST, NULL}            // End marker for the actions array
+        {MENU_EVENT_SENTINEL, NULL}            // End marker for the actions array
     },
 };
 
@@ -106,7 +106,7 @@ menupage_t cmodes_page = {
     .items = LIST(cmodes_items),
     .actions = (menuaction_spec_t[]) {    // Dynamic array initialization
         {MENU_EVENT_AV, menu_return},
-        {MENU_EVENT_LAST, NULL}            // End marker
+        {MENU_EVENT_SENTINEL, NULL}            // End marker
     },
 };
 
@@ -115,7 +115,7 @@ menupage_t menus_page = {
     .items = LIST(menus_items),
     .actions = (menuaction_spec_t[]) {    // Dynamic array initialization
         {MENU_EVENT_AV, menu_return},
-        {MENU_EVENT_LAST, NULL}            // End marker
+        {MENU_EVENT_SENTINEL, NULL}            // End marker
     },
 };
 
@@ -124,7 +124,7 @@ menupage_t qexp_page = {
     .items = LIST(qexp_items),
     .actions = (menuaction_spec_t[]) {    // Dynamic array initialization
         {MENU_EVENT_AV, menu_return},
-        {MENU_EVENT_LAST, NULL}            // End marker
+        {MENU_EVENT_SENTINEL, NULL}            // End marker
     },
 };
 
@@ -134,7 +134,7 @@ menupage_t pages_page = {
     .ordering = menu_order.main,           // Keep ordering as it is
     .actions = (menuaction_spec_t[]) {     // Dynamic array initialization
         {MENU_EVENT_AV, menu_return},
-        {MENU_EVENT_LAST, NULL}             // End marker
+        {MENU_EVENT_SENTINEL, NULL}             // End marker
     },
 };
 
@@ -143,7 +143,7 @@ menupage_t restore_page = {
     .items = LIST(restore_items),
     .actions = (menuaction_spec_t[]) {    // Dynamic array initialization
         {MENU_EVENT_AV, menu_return},
-        {MENU_EVENT_LAST, NULL}            // End marker
+        {MENU_EVENT_SENTINEL, NULL}            // End marker
     },
 };
 
@@ -181,7 +181,7 @@ menupage_t menupage_settings = {
     .ordering = menu_order.settings,
     .actions = (menuaction_spec_t[]) {
         {MENU_EVENT_OPEN, menu_settings_open},
-        {MENU_EVENT_LAST, NULL}                 // End marker
+        {MENU_EVENT_SENTINEL, NULL}                 // End marker
     }
 };
 

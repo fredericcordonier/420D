@@ -113,7 +113,7 @@ menupage_t ext_aeb_page = {
     .items = LIST(ext_aeb_items),
     .actions = (menuaction_spec_t[]) {     // Dynamic array initialization
         {MENU_EVENT_AV, menu_return},
-        {MENU_EVENT_LAST, NULL}             // End marker
+        {MENU_EVENT_SENTINEL, NULL}             // End marker
     },
 };
 
@@ -122,7 +122,7 @@ menupage_t efl_aeb_page = {
     .items = LIST(efl_aeb_items),
     .actions = (menuaction_spec_t[]) {     // Dynamic array initialization
         {MENU_EVENT_AV, menu_return},
-        {MENU_EVENT_LAST, NULL}             // End marker
+        {MENU_EVENT_SENTINEL, NULL}             // End marker
     },
 };
 
@@ -131,7 +131,7 @@ menupage_t apt_aeb_page = {
     .items = LIST(apt_aeb_items),
     .actions = (menuaction_spec_t[]) {     // Dynamic array initialization
         {MENU_EVENT_AV, menu_return},
-        {MENU_EVENT_LAST, NULL}             // End marker
+        {MENU_EVENT_SENTINEL, NULL}             // End marker
     },
 };
 
@@ -140,7 +140,7 @@ menupage_t iso_aeb_page = {
     .items = LIST(iso_aeb_items),
     .actions = (menuaction_spec_t[]) {     // Dynamic array initialization
         {MENU_EVENT_AV, menu_return},
-        {MENU_EVENT_LAST, NULL}             // End marker
+        {MENU_EVENT_SENTINEL, NULL}             // End marker
     },
 };
 
@@ -149,7 +149,7 @@ menupage_t bramp_page = {
     .items = LIST(bramp_items),
     .actions = (menuaction_spec_t[]) {     // Dynamic array initialization
         {MENU_EVENT_AV, menu_return},
-        {MENU_EVENT_LAST, NULL}             // End marker
+        {MENU_EVENT_SENTINEL, NULL}             // End marker
     },
 };
 
@@ -159,7 +159,7 @@ menupage_t dof_calc_page = {
     .actions = (menuaction_spec_t[]) {     // Dynamic array initialization
         {MENU_EVENT_OPEN, menu_dof_calc_open},
         {MENU_EVENT_AV, menu_return},
-        {MENU_EVENT_LAST, NULL}             // End marker
+        {MENU_EVENT_SENTINEL, NULL}             // End marker
     },
 };
 

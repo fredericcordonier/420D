@@ -99,7 +99,7 @@ menupage_t menupage_rename = {
         {MENU_EVENT_DISPLAY, rename_display},
         {MENU_EVENT_REFRESH, rename_refresh},
         {MENU_EVENT_SAVE, rename_close},
-        {MENU_EVENT_LAST, NULL}             // End marker
+        {MENU_EVENT_SENTINEL, NULL}             // End marker
     },
 };
 

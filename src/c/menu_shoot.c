@@ -132,7 +132,7 @@ static menupage_t s_timer_page = {
   .actions = (menuaction_spec_t[]) {
       {MENU_EVENT_OPEN, timer_open},
       {MENU_EVENT_AV, timer_save_return},
-      {MENU_EVENT_LAST, NULL}             // End marker
+      {MENU_EVENT_SENTINEL, NULL}             // End marker
   }
 };
 
@@ -148,7 +148,7 @@ static menupage_t s_wave_page = {
   .actions = (menuaction_spec_t[]) {
       {MENU_EVENT_OPEN, wave_open},
       {MENU_EVENT_AV, wave_save_return},
-      {MENU_EVENT_LAST, NULL}             // End marker
+      {MENU_EVENT_SENTINEL, NULL}             // End marker
   }
 };
 
@@ -170,7 +170,7 @@ static menupage_t s_lexp_calc_page = {
   .actions = (menuaction_spec_t[]) {
       {MENU_EVENT_OPEN, menu_lexp_calc_open},
       {MENU_EVENT_AV, menu_return},
-      {MENU_EVENT_LAST, NULL}             // End marker
+      {MENU_EVENT_SENTINEL, NULL}             // End marker
   }
 };
 
@@ -185,7 +185,7 @@ static menupage_t s_lexp_page = {
   .items = LIST(as_lexp_items),
   .actions = (menuaction_spec_t[]) {
       {MENU_EVENT_AV, lexp_save_return},
-      {MENU_EVENT_LAST, NULL}             // End marker
+      {MENU_EVENT_SENTINEL, NULL}             // End marker
   }
 };
 
@@ -211,7 +211,7 @@ static menupage_t s_interval_page = {
   .actions = (menuaction_spec_t[]) {
       {MENU_EVENT_OPEN, menu_shoot_mode_open_intervalometer},
       {MENU_EVENT_AV, interval_save_return},
-      {MENU_EVENT_LAST, NULL}             // End marker
+      {MENU_EVENT_SENTINEL, NULL}             // End marker
   }
 };
 
@@ -231,7 +231,7 @@ static menupage_t s_timelapse_page = {
   .actions = (menuaction_spec_t[]) {
       {MENU_EVENT_OPEN, menu_shoot_mode_open_timelapse},
       {MENU_EVENT_AV, timelapse_save_return},
-      {MENU_EVENT_LAST, NULL}             // End marker
+      {MENU_EVENT_SENTINEL, NULL}             // End marker
   }
 };
 
@@ -271,7 +271,7 @@ static menu_t s_menu_shoot_mode = {
       {MENU_EVENT_REFRESH, menupage_refresh},
       {MENU_EVENT_FINISH, menu_finish},
       {MENU_EVENT_TRASH, menupage_developer_start},
-      {MENU_EVENT_LAST, NULL}             // End marker
+      {MENU_EVENT_SENTINEL, NULL}             // End marker
     }
 };
 

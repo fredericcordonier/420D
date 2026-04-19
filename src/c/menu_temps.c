@@ -42,7 +42,7 @@
 #include "menu_developer.h"
 #include "menuitem.h"
 #include "menupage.h"
-#include "settings.h" // named_temps could be relocated here...?
+#include "persist.h"
 #include "utils.h"    // beep function
 
 #include "menu_temps.h"
@@ -96,7 +96,7 @@ static menupage_t s_named_temps_page = {
         {MENU_EVENT_PREV, named_temps_up},
         {MENU_EVENT_NEXT, named_temps_down},
         {MENU_EVENT_SAVE, named_temp_save},
-        {MENU_EVENT_LAST, NULL}             // End marker
+        {MENU_EVENT_SENTINEL, NULL}             // End marker
     }
 };
 
@@ -108,17 +108,11 @@ static menu_t s_menu_named_temps = {
     .pages = LIST(as_named_temps_pages),
     .actions = (menuaction_spec_t[]) {
         {MENU_EVENT_SET, menu_set},
-        {MENU_EVENT_UP, menupage_up},
-        {MENU_EVENT_DOWN, menupage_down},
-        {MENU_EVENT_PREV, menupage_up},
-        {MENU_EVENT_NEXT, menupage_down},
-        {MENU_EVENT_LEFT, menu_left},
-        {MENU_EVENT_RIGHT, menu_right},
         {MENU_EVENT_DISPLAY, menupage_display},
         {MENU_EVENT_REFRESH, menupage_refresh},
         {MENU_EVENT_FINISH, menu_finish},
         {MENU_EVENT_TRASH, menupage_developer_start},
-        {MENU_EVENT_LAST, NULL}             // End marker
+        {MENU_EVENT_SENTINEL, NULL}             // End marker
     }
 };
 
@@ -127,8 +121,8 @@ static menu_t s_menu_named_temps = {
  */
 void menu_named_temps_start(void) {
     // Init named temps from file is done through the MENU_EVENT_OPEN event
-    s_named_temps_page.current_line = settings.named_temps_cur_line;
-    s_named_temps_page.current_posn = settings.named_temps_cur_line;
+    s_named_temps_page.current_line = persist.named_temps_cur_line;
+    s_named_temps_page.current_posn = persist.named_temps_cur_line;
     s_menu_named_temps.color = MENU_COLOR_DARK_BLUE;
     s_menu_named_temps.current_posn = 0;
     menu_create(&s_menu_named_temps);
@@ -200,7 +194,7 @@ static void named_temps_init(menu_t *ps_c_menu) {
     named_temps_parsing_t s_l_nt_parsed;
 
     // Get current values of named temps menu
-    s_named_temps.named_temps_top_of_page_line = settings.named_temps_top_of_page_line;
+    s_named_temps.named_temps_top_of_page_line = persist.named_temps_top_of_page_line;
 
     s_l_nt_parsed.i_nb_values = 0;
     char ac_l_folder_lang[LP_MAX_WORD];
@@ -214,25 +208,25 @@ static void named_temps_init(menu_t *ps_c_menu) {
 }
 
 /**
- * @brief Save the settings parameters.
+ * @brief Save the persist parameters.
  *
  * @param ps_c_menu
  */
 static void named_temp_save(menu_t *ps_c_menu) {
-    int i_l_settings_changed = 0;
+    int i_l_persist_changed = 0;
     debug_log("curline: %d, top_of_page_line: %d",
               s_named_temps_page.current_line,
               s_named_temps.named_temps_top_of_page_line);
-    if (settings.named_temps_top_of_page_line != s_named_temps.named_temps_top_of_page_line) {
-        settings.named_temps_top_of_page_line = s_named_temps.named_temps_top_of_page_line;
-        i_l_settings_changed = 1;
+    if (persist.named_temps_top_of_page_line != s_named_temps.named_temps_top_of_page_line) {
+        persist.named_temps_top_of_page_line = s_named_temps.named_temps_top_of_page_line;
+        i_l_persist_changed = 1;
     }
-    if (settings.named_temps_cur_line != s_named_temps_page.current_line) {
-        settings.named_temps_cur_line = s_named_temps_page.current_line;
-        i_l_settings_changed = 1;
+    if (persist.named_temps_cur_line != s_named_temps_page.current_line) {
+        persist.named_temps_cur_line = s_named_temps_page.current_line;
+        i_l_persist_changed = 1;
     }
-    if (i_l_settings_changed) {
-        enqueue_action(settings_write);
+    if (i_l_persist_changed) {
+        enqueue_action(persist_write);
         debug_log("named_temp_save end");
     }
 }
