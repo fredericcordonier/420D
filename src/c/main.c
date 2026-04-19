@@ -31,20 +31,20 @@ int *action_queue;
  * Global status
  */
 status_t status = {
-    button_down : BUTTON_NONE,
-    script_running : FALSE,
-    script_stopping : FALSE,
-    menu_running : FALSE,
-    shortcut_running : SHORTCUT_NONE,
-    afp_dialog : FALSE,
-    measuring : FALSE,
-    msm_count : 0,
-    msm_tv : EV_ZERO,
-    msm_av : EV_ZERO,
-    ignore_msg : FALSE,
-    vf_status : VF_STATUS_NONE,
-    lock_redraw : FALSE,
-    orientation : ORIENTATION_H,
+    .button_down = BUTTON_NONE,
+    .script_running = FALSE,
+    .script_stopping = FALSE,
+    .menu_running = FALSE,
+    .shortcut_running = SHORTCUT_NONE,
+    .afp_dialog = FALSE,
+    .measuring = FALSE,
+    .msm_count = 0,
+    .msm_tv = EV_ZERO,
+    .msm_av = EV_ZERO,
+    .ignore_msg = FALSE,
+    .vf_status = VF_STATUS_NONE,
+    .lock_redraw = FALSE,
+    .orientation = ORIENTATION_H,
 };
 
 void hack_relocate(void);

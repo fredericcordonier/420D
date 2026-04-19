@@ -16,12 +16,12 @@
 #include "cmodes.h"
 
 cmodes_config_t cmodes_default = {
-    recall_camera : TRUE,
-    recall_420D : TRUE,
-    recall_ordering : FALSE,
-    recall_settings : FALSE,
-    recall_image : TRUE,
-    recall_cfn : TRUE,
+    .recall_camera = TRUE,
+    .recall_420D = TRUE,
+    .recall_ordering = FALSE,
+    .recall_settings = FALSE,
+    .recall_image = TRUE,
+    .recall_cfn = TRUE,
 };
 
 cmodes_config_t cmodes_config;
