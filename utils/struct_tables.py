@@ -22,6 +22,7 @@ class Type:
     def to_string(self, f_name: str) -> str:
         raise TypeError('Method must be surcharged')
 
+    def to_val(self) -> str:        raise TypeError('Method must be surcharged')
 
 class IntType(Type):
     def __init__(self):
@@ -30,12 +31,39 @@ class IntType(Type):
     def to_string(self, f_name: str) -> str:
         return f'{self.base_type} {f_name}'
 
+    def to_val(self) -> str:
+        return '04'
+
 class IntArrayType(Type):
     def __init__(self, size: str):
         super().__init__('int', size)
 
     def to_string(self, f_name: str) -> str:
         return f'{self.base_type} {f_name}[{self.size}]'
+
+    def to_val(self) -> str:
+        return '14'
+
+class CharType(Type):
+    def __init__(self):
+        super().__init__('char', '1')
+
+    def to_string(self, f_name: str) -> str:
+        return f'{self.base_type} {f_name}[{self.size}]'
+
+    def to_val(self) -> str:
+        return '01'
+
+
+class CharArrayType(Type):
+    def __init__(self, size: str):
+        super().__init__('char', size)
+
+    def to_string(self, f_name: str) -> str:
+        return f'{self.base_type} {f_name}[{self.size}]'
+
+    def to_val(self) -> str:
+        return '11'
 
 
 class Field:
@@ -102,7 +130,7 @@ class Struct:
         ret_val: list[str] = [f'static const field_def_t as_{self.name}_hashtable[] = {{']
         for hash in sorted(self.hashes.keys()):
             field = self.hashes[hash]
-            ret_val.append(f'    {{0x{hash:08x}, (long)(&((({self.name} *)NULL)->{field.name})), sizeof((({self.name} *)NULL)->{field.name})/sizeof(int)' + '},')
+            ret_val.append(f'    {{0x{hash:08x}, (long)(&((({self.name} *)NULL)->{field.name})), sizeof((({self.name} *)NULL)->{field.name})' + '},')
         ret_val.append('};')
         ret_val  += (['', ''])
         ret_val.append(f'{self.hashtable_def} = LIST(as_{self.name}_hashtable);')
