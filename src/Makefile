@@ -64,6 +64,7 @@ OBJCOPY := $(CROSS_COMPILE)objcopy
 PYTHON := python3
 UTILS := ../utils
 GEN_SCRIPT := $(UTILS)/gen_struct_tables.py
+GEN_SCRIPT_DEPS := $(GEN_SCRIPT)  $(UTILS)/struct_tables.py $(UTILS)/file_writer.py
 GEN_STAMP := .gen_stamp
 
 # === Source structure ===
@@ -148,7 +149,7 @@ $(PROJECT).arm.elf: $(OBJS)
 	@$(ECHO) -e $(BOLD)[LINK]:$(NORM) $@
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
-$(GEN_STAMP): $(STRUCT_DEFS) $(GEN_SCRIPT)
+$(GEN_STAMP): $(STRUCT_DEFS) $(GEN_SCRIPT_DEPS)
 	$(PYTHON) $(GEN_SCRIPT) --infile $(STRUCT_DEFS) --incdir $(INC_DIR) --srcdir $(CSRC_DIR)
 	touch $(GEN_STAMP)
 

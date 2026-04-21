@@ -4,12 +4,14 @@ CC  = gcc
 PYTHON := python3
 UTILS := ../../utils
 GEN_SCRIPT := $(UTILS)/gen_struct_tables.py
+GEN_SCRIPT_DEPS := $(GEN_SCRIPT)  $(UTILS)/struct_tables.py $(UTILS)/file_writer.py
 GEN_STAMP  := .gen_stamp
 
 CFLAGS := -Iinc -Iinc/vxworks -I../inc              \
 	-Werror                            \
 	-g                                 \
 	-DSIMUL								\
+	-DENABLE_DEBUG                     \
 	-O0
 LDFLAGS :=
 
@@ -77,7 +79,7 @@ all: $(GEN_STAMP) $(BIN_DIR)/simul languages.ini languages/new_lang.ini
 	@$(ECHO) -e $(BOLD)[ALL]$(NORM)
 	@ls -l $(BIN_DIR)
 
-$(GEN_STAMP): $(STRUCT_DEFS) $(GEN_SCRIPT)
+$(GEN_STAMP): $(STRUCT_DEFS) $(GEN_SCRIPT_DEPS)
 	$(PYTHON) $(GEN_SCRIPT) --infile $(STRUCT_DEFS) --incdir $(INC_420D) --srcdir $(SRC_420D)
 	touch $(GEN_STAMP)
 
