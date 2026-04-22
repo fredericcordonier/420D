@@ -34,6 +34,7 @@ _It is designed specifically for the Canon 400D/XTi and will not work with other
 
 ## Key Features
 
+- Fv mode, as seen in recent Canon cameras
 - Enhanced autofocus patterns (up to three patterns stored)
 - Spot measurement (multi-measure supported)
 - Named color temperatures (from an external file, unlimited)
@@ -65,7 +66,7 @@ Press the **Direct Print (DP)** button to access most of the extended features o
 | In ISO selection dialog | Enable AutoISO |
 | In Drive selection dialog | Open the extended shooting modes dialog |
 
-Half-press the shutter to exit and 420D dialog or menu.
+Half-press the shutter to exit a 420D dialog or menu.
 
 Other features are activated with different button operations, and will be described later in this user guide.
 
@@ -77,13 +78,6 @@ Other features are activated with different button operations, and will be descr
 - **SET**: confirm selection, execute the action if applicable; actions are indicated with a ! on the left
 - **Front dial**: switch pages
 - Hold **AV** / **Front dial**: display the page headers and select the desired page
-
-## Menu Philosophy
-`@TODO`
-420D simplifies the original structure:
-- Fewer items per page
-- Grouped by function
-- Faster access to common settings
 
 ---
 
@@ -110,9 +104,9 @@ Other features are activated with different button operations, and will be descr
 - Access pattern selection
 - Choose pattern based on orientation
 
-## Use Named Color Temperatures
+## Use Extended White balances
 - Open the White balance selection dialog (**DOWN** button)
-- Press **DP** to display the list of custom named color temperatures
+- Press **DP** to display the list of custom white balance
 - Select the desired preset
 - Adjust the temperature as needed with **LEFT** and **RIGHT** buttons
 - Press **SET** to store the white balance value
@@ -130,16 +124,24 @@ Other features are activated with different button operations, and will be descr
 ## Exposure
 
 ### Extended ISO
-- Finer ISO steps (up to 1/8 EV)
+- Finer ISO steps (1/2, 1/4 or 1/8 EV)
 - Better exposure tuning
+- This feature is activated through the 420D menu: _Settings_ → _Digital ISO step_
+
+It is to be noted that this is a pure software configuration, and does not change the gain of the sensor.
 
 ### AutoISO
 - Automatically adjusts ISO
 - Configurable limits
 - Adapts to shooting mode (Av, Tv, M, P)
+- This feature is activated either by:
+  - selecting the ISO dialog and pressing **DP** button
+  - going to the 420D menu and selecting _Parameters_ → _AutoISO_ → _Enable_
+- The menu configuration allows clamping the min and max ISO values selected by AutoISO
 
 ### Exposure Compensation
 - Extended beyond default limits (up to +/-6Ev)
+- To select the extended value, go to menu _Parameters_ → _AV comp._
 
 ## Multi-metering mode
 - Measure the exposure as many times as desired, the photo will be taken with an average exposure value.
@@ -149,13 +151,13 @@ Other features are activated with different button operations, and will be descr
 ### AF Patterns
 
 420D supports multiple autofocus (AF) patterns allowing zone focusing rather than only point focusing.
-In order to activate the zone focus selection, press AF button twice.
+In order to activate the zone focus selection, press AF button twice. The detailed feature is described in "Advanced User Guide".
 
 
 ## White Balance
 
 ### Color Temperature (K)
-- Direct Kelvin input set in the 420D menu
+- Direct Kelvin input set in the 420D menu _Parameters_ → _Color temp. (K)_.
 
 ### Named Temperatures
 - Stored in external file
@@ -173,6 +175,55 @@ In order to activate the zone focus selection, press AF button twice.
 <p style="page-break-after: always;">&nbsp;</p>
 
 # 4. Advanced Using Guide
+
+## Improvements in `P` mode
+
+## Improvements in `Av` / `Tv` modes
+
+## Improvements in `M` mode
+
+## `Fv` mode
+
+The original 400D firmware does not provide a `Fv` mode as in more recent Canon cameras. 420D adds this capability, making the Green Square (full auto) dial position work as a flexible exposure mode instead.
+
+### Overview
+
+`Fv` mode (**Flex Value** mode) lets you freely choose whether shutter speed (Tv) and aperture (Av) are controlled automatically or set to a fixed value. Based on your choice, 420D transparently selects the appropriate underlying exposure mode for you:
+
+| Tv | Av | Effective mode |
+|:---:|:---:|:---:|
+| Auto | Auto | `P` |
+| Fixed | Auto | `Tv` |
+| Auto | Fixed | `Av` |
+| Fixed | Fixed | `M` |
+
+This way, you can stay on the Green Square position and move from fully automatic to partially manual or fully manual simply by adjusting individual parameters, without turning the dial.
+
+### Enabling `Fv` mode
+
+> **Note:** To use the Fv mode, go to menu entry  _Settings_ → _Use Fv mode_, set it to **Yes** to enable this feature; when set to **No** (the default), the Green Square position behaves as normal full auto.
+
+### Using `Fv` mode
+
+Once enabled, set the main dial to the **Green Square** (full auto) position; the camera will be automatically set to the last _actual_ mode used by Fv.
+Press and hold the **JUMP** button to open the `Fv` shortcut and setting the desired `Tv` and `Av` values.
+
+> **Note:** When `Fv` mode is enabled, the **JUMP** button is reserved for `Fv` shortcut access and cannot be assigned to another action.
+
+While the `Fv` shortcut is active, the main display shows the name `Fv` along with the current value of the selected parameter. Use the following controls to adjust exposure:
+
+| Button | Action |
+|:-------|:-------|
+| **AV** | Switch selection between Tv and Av |
+| **UP** | Increase the selected value by one whole step |
+| **DOWN** | Decrease the selected value by one whole step |
+| **RIGHT** | Increase the selected value by 1/3 or 1/2 step, depending on the EV step configured in 400D |
+| **LEFT** | Decrease the selected value by 1/3 or 1/2 step, depending on the EV step configured in 400D |
+| **SET** | Reset the selected value to Auto |
+
+- When a value is set to Auto it is displayed as `Tv:A` or `Av:A`.
+- When you start from an Auto value and press **UP** or **DOWN**, the camera adopts the current metered value as the starting point before incrementing or decrementing.
+- Releasing the **JUMP** button applies the selected values immediately and saves them, so the same `Fv` state is restored the next time you turn the camera on.
 
 ## Metering improvements
 
@@ -243,6 +294,7 @@ Then, press twice the AF pattern selection button **ZOOM-**.
         [X]           |          [ ]           |           [ ]
 ```
 
+<p style="page-break-after: always;">&nbsp;</p>
 
 #### **UP**  and  **DOWN**  buttons: change vertical focus zone
 
@@ -319,15 +371,16 @@ Then, press twice the AF pattern selection button **ZOOM-**.
 
 ## Advanced Shooting Modes Reference
 
-### Timelapse
+### Timelapse HD
 
-The timelapse will fire the camera as many times as configured. To configure the parameters, set the video format
-(number of frames per second), the duration desired for the final video (play time), and the duration of the shoot
-(recording time).
+The timelapse HD can be used to simplify the task of taking picture with the final goal to obtain a video, for
+example with ffmpeg. The timelapse function targets a configuration as simple as possible. As the timelapse will shoot
+a large number of pictures at a rapid frequency, the camera buffer may fill and prevent a smooth result.
+For both a maximal simplicity and preventing the buffer to be filled, this mode forces pictures in JPEG and size 'S',
+which is appropriate for a full HD final video.
 
-The timelapse function targets a configuraiton as simple as possible. As the timelapse will shoot a large number
-of pictures at a rapid frequency, the camera buffer may fill and prevent a smooth result. For a maximal simplicity,
-this mode forces pictures in JPEG and size 'S', which is sufficient for a full HD final video.
+To configure the timelapse, set the number of frames per second expected in the final video format (), the duration desired
+for the final video (play time), and the duration of the shoot sequence (recording time).
 
 For more configuration possibilities (RAW, other sizes, etc..), the intervalometer can be used with the timelapse
 calculator.
