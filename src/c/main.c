@@ -44,6 +44,7 @@ status_t status = {
     .ignore_msg = FALSE,
     .vf_status = VF_STATUS_NONE,
     .lock_redraw = FALSE,
+    .fv_active = FALSE,
 };
 
 void hack_relocate(void);

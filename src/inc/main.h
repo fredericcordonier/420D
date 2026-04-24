@@ -28,6 +28,7 @@ typedef enum {
     VF_STATUS_ISO,  //< Display ISO
     VF_STATUS_FEXP, //< Fixed epxosure
     VF_STATUS_QEXP, //< Quick exposure
+    VF_STATUS_FV_MODE, // Flex value mode
 } vf_status_t;
 
 // Global status
@@ -57,7 +58,7 @@ typedef struct {
     vf_status_t vf_status; // Status of viewfinder
     int folder_exists;     // 420D folder exists
     int lock_redraw;       // Lock redrawing of dialogs
-    int orientation;       // Camera orientation (set manually by user)
+    int fv_active;         // FV mode is active
 } status_t;
 
 // Our own code

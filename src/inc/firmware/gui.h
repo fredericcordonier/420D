@@ -52,6 +52,22 @@ typedef enum {
 	GUIMODE_COUNT    = 0x4F   // Total number of active GUIMODEs (plus a safe margin)
 } guimode_t;
 
+typedef enum {
+	GUIITEM_SPEED = 1,
+	GUIITEM_APERTURE = 2,
+	GUIITEM_ISO = 4,
+	GUIITEM_MODE = 6,
+	GUIITEM_CARD_CAPACITY = 0x26,
+} guimode_item_t;
+
+/*
+  Tv = 0x4f?
+  P  = 0x4b?
+  Av = 0x44?
+  M  = 0x48
+  Green square = 0x46
+*/
+
 /**
  * @brief GUI Events
  *

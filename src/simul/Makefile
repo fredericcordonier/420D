@@ -11,7 +11,6 @@ CFLAGS := -Iinc -Iinc/vxworks -I../inc              \
 	-Werror                            \
 	-g                                 \
 	-DSIMUL								\
-	-DENABLE_DEBUG                     \
 	-O0
 LDFLAGS :=
 
@@ -52,7 +51,7 @@ C_SRCS   := $(SRC_420D)/ini.c $(SRC_420D)/settings.c $(SRC_420D)/serialize.c $(S
 			$(SRC_420D)/scripts.c $(SRC_420D)/shutter.c $(SRC_420D)/float.c  $(SRC_420D)/display.c $(SRC_420D)/menu_shoot.c $(SRC_420D)/csv.c \
 			$(SRC_420D)/msm.c $(SRC_420D)/qexp.c $(SRC_420D)/persist.c $(SRC_420D)/fexp.c $(SRC_420D)/debug.c $(SRC_420D)/bmp.c \
 			$(SRC_420D)/font-large.c $(SRC_420D)/font-med.c $(SRC_420D)/font-small.c $(SRC_420D)/memspy.c $(SRC_420D)/intercom.c \
-			$(SRC_420D)/menu_temps.c $(SRC_420D)/hashtable.c $(GEN_SOURCES)
+			$(SRC_420D)/menu_temps.c $(SRC_420D)/hashtable.c $(SRC_420D)/fv_mode.c $(GEN_SOURCES)
 
 SRCS     := $(CPP_SRCS) $(C_SRCS)
 # Object files (mirror source paths inside obj/)

@@ -53,6 +53,7 @@ typedef enum {
     SHORTCUT_FLASH,
     SHORTCUT_DISPLAY,
     SHORTCUT_AFCFG,
+    SHORTCUT_FV_MODE,
 #ifdef DEV_BTN_ACTION
     SHORTCUT_DEV_BTN,
 #endif

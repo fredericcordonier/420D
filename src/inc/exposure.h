@@ -52,7 +52,7 @@ typedef unsigned char iso_t;
  * Value for 0EV
  */
 #define EV_ZERO EV_CODE(0, 0)
-#define EV_STEP EV_CODE(0, DPData.cf_explevel_inc_third ? 4 : 3) // 1/3 or 1/5
+#define EV_STEP EV_CODE(0, DPData.cf_explevel_inc_third ? 4 : 3) // 1/3 or 1/2
 
 /**
  * Exposure compensation of 0EV
@@ -169,6 +169,8 @@ extern av_t av_add(av_t ying, av_t yang);
 extern av_t av_sub(av_t ying, av_t yang);
 extern av_t av_inc(av_t av);
 extern av_t av_dec(av_t av);
+av_t av_next(av_t av);
+av_t av_prev(av_t av);
 
 extern void av_print(char *dest, av_t av);
 
@@ -176,11 +178,14 @@ extern tv_t tv_add(tv_t ying, tv_t yang);
 extern tv_t tv_sub(tv_t ying, tv_t yang);
 extern tv_t tv_inc(tv_t tv);
 extern tv_t tv_dec(tv_t tv);
+tv_t tv_next(tv_t tv);
+tv_t tv_prev(tv_t tv);
 
 extern tv_t bulb_next(tv_t tv);
 extern tv_t bulb_prev(tv_t tv);
 
 extern void tv_print(char *dest, tv_t tv);
+extern void tv_print_short(char *dest, tv_t tv);
 extern void bulb_print(char *dest, tv_t tv);
 
 extern iso_t iso_next(iso_t iso);

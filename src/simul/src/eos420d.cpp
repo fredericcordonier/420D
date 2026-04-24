@@ -216,6 +216,8 @@ EOS420D::EOS420D() {
     GUIMode = GUIMODE_OFF;
     DPData.af_point = AF_PATTERN_CENTER;
     DPData.iso = ISO_100;
+    DPData.tv_val = EV_CODE(12, 0);
+    DPData.av_val = EV_CODE(8, 0);
 }
 
 void EOS420D::display_af_patterns(void) {

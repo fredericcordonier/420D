@@ -10,6 +10,7 @@
 
 #include "persist.h"
 #include "firmware/camera.h"
+#include "fv_mode.h"
 
 /**
  * \file persist.c
@@ -23,11 +24,15 @@
  *
  * Persisted are EV compensation and last run script
  */
-persist_t persist = {
+persist_t persist;
+static const persist_t persist_default = {
     .ev_comp = EC_ZERO,
     .last_script = SCRIPT_NONE,
     .current_af_pattern = 1,
     .af_patterns = {AF_POINT_C, AF_POINT_C, AF_POINT_C},
+    .fv_tv = FV_MODE_TV_AUTO,
+    .fv_av = FV_MODE_AV_AUTO,
+    .fv_currently_selected_parameter = 'T',
 };
 
 /**
@@ -40,6 +45,8 @@ int persist_read(void) {
     int file = -1;
     int version = 0;
 
+    // Initialize persist structure with default values
+    persist = persist_default;
     persist_t persistent_buffer;
 
     if ((file = FIO_OpenFile(MKPATH_NEW(PERSIST_FILENAME), O_RDONLY)) == -1)
@@ -57,6 +64,7 @@ int persist_read(void) {
         goto end;
 
     persist = persistent_buffer;
+
     result = TRUE;
 
 end:

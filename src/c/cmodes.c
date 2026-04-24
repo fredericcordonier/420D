@@ -12,6 +12,9 @@
 #include "languages.h"
 #include "snapshots.h"
 #include "utils.h"
+#include "persist.h"
+#include "fv_mode.h"
+#include "main.h"
 
 #include "cmodes.h"
 
@@ -163,7 +166,17 @@ void cmode_recall_apply(int full) {
 
     snapshot_t snapshot;
 
-    if (AE_IS_CREATIVE(status.main_dial_ae)) {
+    status.fv_active = FALSE;
+    if ((status.main_dial_ae == AE_MODE_AUTO) && (settings.use_fv_mode)) {
+        // Cmode short-circuit: force FV mode when main dial is in Auto, regardless of custom mode assignment
+        // This is a user-friendly workaround to the fact that the camera doesn't allow FV mode to be assigned to the main dial,
+        // even though it can be recalled in a custom mode. This way, users can still use FV mode without having to assign it to
+        // a custom mode, which is especially useful for those who want to use FV mode but don't want to lose the ability to
+        // assign custom modes.
+        status.fv_active = TRUE;
+        fv_mode_apply();
+    }
+    else if (AE_IS_CREATIVE(status.main_dial_ae)) {
         // Update current status
         status.cmode_active = FALSE;
 

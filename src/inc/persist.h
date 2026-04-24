@@ -25,6 +25,9 @@ typedef struct {
     int named_temps_cur_line;            // Named temps current line
     int af_patterns[C_NB_AF_PATTERNS];   // AF patterns being used
     int current_af_pattern;              // Current AF pattern
+    tv_t fv_tv;
+    av_t fv_av;
+    char fv_currently_selected_parameter;
 } persist_t;
 
 extern persist_t persist;

@@ -73,6 +73,8 @@
 #include "display.h"
 #include "intercom.h"
 #include "persist.h"
+#include "fv_mode.h"
+#include "exposure.h"
 #include "scripts.h"
 #include "settings.h"
 #include "utils.h"
@@ -107,6 +109,7 @@ static void shortcut_info_aeb(void);
 static void shortcut_info_flash(void);
 static void shortcut_info_display(void);
 static void shortcut_info_afcfg(void);
+static void shortcut_info_fv_mode(void);
 
 static void shortcut_info(const char *label);
 static void shortcut_info_str(const char *label, const char *value);
@@ -121,8 +124,14 @@ static void shortcut_afpattern(int afp);
  *
  */
 void shortcut_jump() {
-    if (DPData.cf_set_button_func != 4)
+    if (DPData.cf_set_button_func != 4) {
+        if (status.fv_active) {
+            // If settings want to use fv, mode, force JUMP button to be assigned to FV mode shortcut, and ignore user configuration
+            shortcut_start(SHORTCUT_FV_MODE);
+        } else {
         shortcut_start(settings.shortcut_jump);
+        }
+    }
     /// This not available if D-Pad is configured for AF point selection
 }
 
@@ -194,6 +203,9 @@ static void shortcut_start(shortcut_t action) {
     case SHORTCUT_AFCFG:
         shortcut_info_afcfg();
         break;
+    case SHORTCUT_FV_MODE:
+        shortcut_info_fv_mode();
+        break;
 #ifdef DEV_BTN_ACTION
     case SHORTCUT_DEV_BTN:
         dev_btn_action();
@@ -232,6 +244,10 @@ void shortcut_event_disp() {
  */
 void shortcut_event_end() {
     switch (status.shortcut_running) {
+    case SHORTCUT_FV_MODE:
+        enqueue_action(persist_write);
+        enqueue_action(fv_mode_apply);
+        break;
     case SHORTCUT_AEB:
     case SHORTCUT_AFCFG:
         enqueue_action(persist_write);
@@ -255,6 +271,11 @@ void shortcut_event_av(void) {
     switch (status.shortcut_running) {
     case SHORTCUT_FLASH:
         shortcut_f2c_toggle();
+        break;
+    case SHORTCUT_FV_MODE:
+        // Pressing AV in Fv mode will switch the selected value from Tv to Av
+        persist.fv_currently_selected_parameter = 'T' + 'A' - persist.fv_currently_selected_parameter;
+        shortcut_info_fv_mode();
         break;
     default:
         break;
@@ -283,6 +304,15 @@ void shortcut_event_set(void) {
         enqueue_action(beep);
         shortcut_event_end();
         break;
+    case SHORTCUT_FV_MODE:
+        // Pressing SET in FV mode will set the currently selected parameter (Tv or Av) to Auto, and display it
+        enqueue_action(beep);
+        if (persist.fv_currently_selected_parameter == 'T')
+            persist.fv_tv = FV_MODE_TV_AUTO;
+        else if (persist.fv_currently_selected_parameter == 'A')
+            persist.fv_av = FV_MODE_AV_AUTO;
+        shortcut_info_fv_mode();
+        break;
     default:
         break;
     }
@@ -308,6 +338,23 @@ void shortcut_event_up(void) {
     case SHORTCUT_DISPLAY:
         shortcut_disp_set(7);
         break;
+    case SHORTCUT_FV_MODE:
+        // Pressing UP in Fv mode will increase the currently selected parameter (Tv or Av) by one step, and display it
+        if (persist.fv_currently_selected_parameter == 'T') {
+            if (persist.fv_tv != FV_MODE_TV_AUTO) {
+                persist.fv_tv = tv_next(persist.fv_tv);
+            } else {
+                persist.fv_tv = DPData.tv_val;
+            }
+        } else if (persist.fv_currently_selected_parameter == 'A') {
+            if (persist.fv_av != FV_MODE_AV_AUTO) {
+                persist.fv_av = av_next(persist.fv_av);
+            } else {
+                persist.fv_av = DPData.av_val;
+            }
+        }
+        shortcut_info_fv_mode();
+        break;
     default:
         break;
     }
@@ -332,6 +379,23 @@ void shortcut_event_down(void) {
         break;
     case SHORTCUT_DISPLAY:
         shortcut_disp_set(1);
+        break;
+    case SHORTCUT_FV_MODE:
+        // Pressing DOWN in Fv mode will decrease the currently selected parameter (Tv or Av) by one step, and display it
+        if (persist.fv_currently_selected_parameter == 'T') {
+            if (persist.fv_tv != FV_MODE_TV_AUTO) {
+                persist.fv_tv = tv_prev(persist.fv_tv);
+            } else {
+                persist.fv_tv = DPData.tv_val;
+            }
+        } else if (persist.fv_currently_selected_parameter == 'A') {
+            if (persist.fv_av != FV_MODE_AV_AUTO) {
+                persist.fv_av = av_prev(persist.fv_av);
+            } else {
+                persist.fv_av = DPData.av_val;
+            }
+        }
+        shortcut_info_fv_mode();
         break;
     default:
         break;
@@ -362,6 +426,23 @@ void shortcut_event_right(void) {
             shortcut_afpattern(persist.af_patterns[persist.current_af_pattern]);
         }
         break;
+    case SHORTCUT_FV_MODE:
+        // Pressing UP in Fv mode will increase the currently selected parameter (Tv or Av) by one step, and display it
+        if (persist.fv_currently_selected_parameter == 'T') {
+            if (persist.fv_tv != FV_MODE_TV_AUTO) {
+                persist.fv_tv = tv_inc(persist.fv_tv);
+            } else {
+                persist.fv_tv = DPData.tv_val;
+            }
+        } else if (persist.fv_currently_selected_parameter == 'A') {
+            if (persist.fv_av != FV_MODE_AV_AUTO) {
+                persist.fv_av = av_inc(persist.fv_av);
+            } else {
+                persist.fv_av = DPData.av_val;
+            }
+        }
+        shortcut_info_fv_mode();
+        break;
     default:
         break;
     }
@@ -390,6 +471,23 @@ void shortcut_event_left(void) {
             persist.current_af_pattern = persist.current_af_pattern - 1;
             shortcut_afpattern(persist.af_patterns[persist.current_af_pattern]);
         }
+        break;
+    case SHORTCUT_FV_MODE:
+        // Pressing UP in Fv mode will increase the currently selected parameter (Tv or Av) by one step, and display it
+        if (persist.fv_currently_selected_parameter == 'T') {
+            if (persist.fv_tv != FV_MODE_TV_AUTO) {
+                persist.fv_tv = tv_dec(persist.fv_tv);
+            } else {
+                persist.fv_tv = MIN(MAX(DPData.tv_val, TV_MIN), TV_MAX);
+            }
+        } else if (persist.fv_currently_selected_parameter == 'A') {
+            if (persist.fv_av != FV_MODE_AV_AUTO) {
+                persist.fv_av = av_dec(persist.fv_av);
+            } else {
+                persist.fv_av = MIN(MAX(DPData.av_val, AV_MIN), AV_MAX);
+            }
+        }
+        shortcut_info_fv_mode();
         break;
     default:
         break;
@@ -668,4 +766,37 @@ static void shortcut_info_end() {
     dialog_item_set_label(hMainDialog, 0x12, &symbol, 0x04, 0x09);
 
     display_refresh();
+}
+
+
+/**
+ * @brief Display info about Fv mode shortcut
+ */
+static void shortcut_info_fv_mode() {
+    char ac_l_mode[8] = "";
+    char ac_l_value[8] = "";
+    // By pressing RIGHT or LEFT button, he will change selection from Tv to Av and vice versa, so we display the value of the currently selected
+    //   parameter and the other one only if Tv is not in auto mode
+    switch  (persist.fv_currently_selected_parameter) {
+        case 'T':
+            sprintf(ac_l_mode, "Fv:Tv");
+            if (persist.fv_tv == FV_MODE_TV_AUTO) {
+                sprintf(ac_l_value, "A");
+            } else {
+                tv_print_short(ac_l_value, persist.fv_tv);
+            }
+            break;
+        case 'A':
+            sprintf(ac_l_mode, "Fv:Av");
+            if (persist.fv_av == FV_MODE_AV_AUTO) {
+                sprintf(ac_l_value, "A");
+            } else {
+                av_print(ac_l_value, persist.fv_av);
+            }
+            break;
+        default:
+            persist.fv_currently_selected_parameter = 'T';
+            break;
+    }
+    shortcut_info_str(ac_l_mode, ac_l_value);
 }

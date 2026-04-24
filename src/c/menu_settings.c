@@ -154,6 +154,8 @@ menuitem_t menu_settings_items[] = {
                      &settings.digital_iso_step, NULL),
     MENUITEM_BOOLEAN(MENUPAGE_SETTINGS_PERSAEB, LP_WORD(L_I_PERSIST_AEB),
                      &settings.persist_aeb, NULL),
+    MENUITEM_BOOLEAN(MENUPAGE_SETTINGS_FV_MODE, LP_WORD(L_I_USE_FV_MODE),
+                     &settings.use_fv_mode, NULL),
     //	MENUITEM_OLC_INV(MENUPAGE_SETTINGS_INVERTOLC,LP_WORD(L_I_INVERT_OLC),
     //&settings.invert_olc,       NULL),
     MENUITEM_SUBMENU(MENUPAGE_SETTINGS_SCRIPTS, LP_WORD(L_S_SCRIPTS),

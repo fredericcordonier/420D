@@ -106,6 +106,7 @@
     LANG_PAIR(I_LCD_SCRIPT, "LCD display")                                     \
     LANG_PAIR(I_BTN_JUMP, "Jump")                                              \
     LANG_PAIR(I_BTN_TRASH, "Trash")                                            \
+    LANG_PAIR(I_USE_FV_MODE, "Use Fv mode")                                    \
     LANG_PAIR(I_CMODES_CAMERA, "Camera")                                       \
     LANG_PAIR(I_CMODES_420D, "420D")                                           \
     LANG_PAIR(I_CMODES_ORDERING, "Menu order")                                 \

@@ -30,7 +30,7 @@ static char *av_strings[][4] = {
 /**
  * Strings displaying Time values.
  */
-static char *tv_strings[][4] = {
+static const char *tv_strings[][4] = {
     {"30\"", "25\"", "20\"", "20\""},
     {"15\"", "13\"", "10\"", "10\""},
     {"8\"", "6\"", "6\"", "5\""},
@@ -49,6 +49,30 @@ static char *tv_strings[][4] = {
     {"1/1000", "1/1250", "1/1500", "1/1600"},
     {"1/2000", "1/2500", "1/3000", "1/3200"},
     {"1/4000", "", "", ""},
+};
+
+/**
+ * Strings displaying Time values.
+ */
+static const char *tv_strings_short[][4] = {
+    {"30\"", "25\"", "20\"", "20\""},
+    {"15\"", "13\"", "10\"", "10\""},
+    {"8\"", "6\"", "6\"", "5\""},
+    {"4\"", "3.2\"", "3\"", "2.5\""},
+    {"2\"", "1.6\"", "1.5\"", "1.3\""},
+    {"1\"", "0.8\"", "0.7\"", "0.6\""},
+    {"0.5\"", "0.4\"", "0.3\"", "0.3\""},
+    {"4", "5", "6", "6"},
+    {"8", "10", "10", "13"},
+    {"15", "20", "20", "25"},
+    {"30", "40", "45", "50"},
+    {"60", "80", "90", "100"},
+    {"125", "160", "180", "200"},
+    {"250", "320", "350", "400"},
+    {"500", "640", "750", "800"},
+    {"1000", "1250", "1500", "1600"},
+    {"2000", "2500", "3000", "3200"},
+    {"4000", "", "", ""},
 };
 
 char ev_normalization[2][8] = {
@@ -182,6 +206,18 @@ av_t av_inc(av_t av) { return av_add(av, EV_STEP); }
 
 av_t av_dec(av_t av) { return av_sub(av, EV_STEP); }
 
+av_t av_next(av_t av) {
+    av = EV_CODE(EV_VAL(av) + 1, 0);
+
+    return MIN(av, AV_MAX);
+}
+
+av_t av_prev(av_t av) {
+    av = EV_CODE(EV_VAL(av) - 1, 0);
+
+    return MAX(av, AV_MIN);
+}
+
 /**
  * @brief Print aperture values.
  *
@@ -234,6 +270,18 @@ tv_t tv_inc(tv_t tv) { return tv_add(tv, EV_STEP); }
 
 tv_t tv_dec(tv_t tv) { return tv_sub(tv, EV_STEP); }
 
+tv_t tv_next(tv_t tv) {
+    tv = EV_CODE(EV_VAL(tv) + 1, 0);
+
+    return MIN(tv, TV_MAX);
+}
+
+tv_t tv_prev(tv_t tv) {
+    tv = EV_CODE(EV_VAL(tv) - 1, 0);
+
+    return MAX(tv, TV_MIN);
+}
+
 tv_t bulb_next(tv_t tv) {
     tv += EV_CODE(1, 0);
 
@@ -278,6 +326,40 @@ void tv_print(char *dest, tv_t tv) {
     }
 
     sprintf(dest, "%s", tv_strings[base - 2][frac]);
+}
+
+/**
+ * @brief Print Time values.
+ *
+ * @param dest <out> Pointer to buffer to contain the returned string.
+ * @param tv   <in>  Time value.
+ */
+void tv_print_short(char *dest, tv_t tv) {
+    int base = EV_VAL(tv);
+    int frac = 0;
+
+    switch (EV_SUB(tv)) {
+    case 0000:
+    case 0001:
+        frac = 0;
+        break;
+    case 0002:
+    case 0003:
+        frac = 1;
+        break;
+    case 0004:
+        frac = 2;
+        break;
+    case 0005:
+    case 0006:
+    case 0007:
+        frac = 3;
+        break;
+    default:
+        break;
+    }
+
+    sprintf(dest, "%s", tv_strings_short[base - 2][frac]);
 }
 
 /**
