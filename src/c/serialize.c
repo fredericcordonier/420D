@@ -1,5 +1,4 @@
 #include "serialize.h"
-#include "firmware/fio.h"
 #include "ini.h"
 #include "macros.h"
 #include <stdio.h>
@@ -9,6 +8,7 @@
 #include "param_def.h"
 #include "settings_t.h"
 #include "menu_order_t.h"
+#include "fcache.h"
 
 typedef struct {
     int tag;        // Tag to identify the structure (e.g. settings_t, menu_order_t)
@@ -16,10 +16,10 @@ typedef struct {
 } tag_len_t;
 
 // Prototypes for static functions
-static int serialize_structure(int file, unsigned char *pu_x_data, const list_field_def_t *ps_x_hash_table);
-static void read_structure(int file, unsigned char *base_addr, const list_field_def_t *fields, int data_size);
+static int serialize_structure(fcache *cache, unsigned char *pu_x_data, const list_field_def_t *ps_x_hash_table);
+static void read_structure(fcache *cache, unsigned char *base_addr, const list_field_def_t *fields, int data_size);
 
-static int serialize_structure(int file, unsigned char *pu_x_data,
+static int serialize_structure(fcache *cache, unsigned char *pu_x_data,
                                const list_field_def_t *ps_x_hash_table) {
 #define MAX_BUF 100
     const field_def_t *ps_l_field = ps_x_hash_table->data;
@@ -33,9 +33,9 @@ static int serialize_structure(int file, unsigned char *pu_x_data,
         s_l_tag_len.len = ps_l_field->i_field_size;
         int i_l_offset = (ps_l_field->i_field_offset_in_struct);
         // Write metadata for field
-        i_l_write_result = FIO_WriteFile(file, &s_l_tag_len, sizeof(tag_len_t));
+        i_l_write_result = fcache_write(cache, &s_l_tag_len, sizeof(tag_len_t));
         // Write field data
-        i_l_write_result = FIO_WriteFile(file, (pu_x_data + i_l_offset), (size_t)(s_l_tag_len.len));
+        i_l_write_result = fcache_write(cache, (pu_x_data + i_l_offset), (size_t)(s_l_tag_len.len));
         i_l_nb_int_written += (size_t)sizeof(tag_len_t) + (size_t)(s_l_tag_len.len);
         ps_l_field++;
     }
@@ -43,25 +43,24 @@ static int serialize_structure(int file, unsigned char *pu_x_data,
 }
 
 // Write settings into ini file
-int write_settings_file(int file) {
-    int val = 0;
+int write_settings_file(fcache *cache) {
     tag_len_t s_l_tag_len;
     s_l_tag_len.tag = C_SETTINGS_T_TAG;
     s_l_tag_len.len = sizeof(settings) + (s_g_settings_t_hashtable.size) * (sizeof(field_def_t) - sizeof(int));                // Size of structure data + size of metadata (tag & len)
-    FIO_WriteFile(file, &s_l_tag_len, sizeof(tag_len_t));
-    int result = serialize_structure(file, (unsigned char *)(&settings), &s_g_settings_t_hashtable);
-    if (result == val) {
+    fcache_write(cache, &s_l_tag_len, sizeof(tag_len_t));
+    int result = serialize_structure(cache, (unsigned char *)(&settings), &s_g_settings_t_hashtable);
+    if (result == s_l_tag_len.len) {
         // Success writing
         s_l_tag_len.tag = C_MENU_ORDER_T_TAG;
         s_l_tag_len.len = sizeof(menu_order) + (s_g_menu_order_t_hashtable.size) * (sizeof(field_def_t) - sizeof(int));        // Size of structure data + size of metadata (tag & len)
-        FIO_WriteFile(file, &s_l_tag_len, sizeof(tag_len_t));
-        result += serialize_structure(file, (unsigned char *)(&menu_order), &s_g_menu_order_t_hashtable);
+        fcache_write(cache, &s_l_tag_len, sizeof(tag_len_t));
+        result += serialize_structure(cache, (unsigned char *)(&menu_order), &s_g_menu_order_t_hashtable);
     }
     return result;
 }
 
 
-static void read_structure(int i_x_file, unsigned char *pu_x_base_addr, const list_field_def_t *ps_x_fields, int i_l_data_size) {
+static void read_structure(fcache *cache, unsigned char *pu_x_base_addr, const list_field_def_t *ps_x_fields, int i_l_data_size) {
     int i_l_success = 0;
     int i_l_total_read = 0;
     int i_l_nb_read = 0;
@@ -70,7 +69,7 @@ static void read_structure(int i_x_file, unsigned char *pu_x_base_addr, const li
     int i_l_struct_offset = 0;          // Offset of data in the structure to be filled
     tag_len_t s_l_tag_len;
 
-    i_l_total_read = FIO_ReadFile(i_x_file, &s_l_tag_len, sizeof(tag_len_t));
+    i_l_total_read = fcache_read(cache, &s_l_tag_len, sizeof(tag_len_t));
     while (i_l_total_read < i_l_data_size)
     {
         i_l_success = hashtable_get(s_l_tag_len.tag, &i_l_def_offset, ps_x_fields->data, ps_x_fields->size);
@@ -79,40 +78,40 @@ static void read_structure(int i_x_file, unsigned char *pu_x_base_addr, const li
             i_l_struct_offset = ps_x_fields->data[i_l_def_offset].i_field_offset_in_struct;
             // Ensure we don't read too many values, neither from file, not to store in struct
             i_l_expected = MIN(i_l_expected, s_l_tag_len.len);
-            i_l_total_read += FIO_ReadFile(i_x_file, (pu_x_base_addr + i_l_struct_offset), i_l_expected);
+            i_l_total_read += fcache_read(cache, (pu_x_base_addr + i_l_struct_offset), i_l_expected);
             if (s_l_tag_len.len > i_l_expected) {
                 i_l_nb_read = (s_l_tag_len.len - i_l_expected);
-                FIO_SeekFile(i_x_file, i_l_nb_read, SEEK_CUR);
+                fcache_seek(cache, i_l_nb_read, SEEK_CUR);
                 i_l_total_read += i_l_nb_read;
             }
         }
         if (i_l_total_read < i_l_data_size) {
-            i_l_nb_read = FIO_ReadFile(i_x_file, &s_l_tag_len, sizeof(tag_len_t));
+            i_l_nb_read = fcache_read(cache, &s_l_tag_len, sizeof(tag_len_t));
             i_l_total_read += i_l_nb_read;
         }
     }
 }
 
 // Read an ini file containing settings
-int read_settings_file(int file) {
+int read_settings_file(fcache *cache) {
     tag_len_t read_tag_len;
     int read_len;
 
-    read_len = FIO_ReadFile(file, &read_tag_len, sizeof(tag_len_t));
+    read_len = fcache_read(cache, &read_tag_len, sizeof(tag_len_t));
     while (read_len ==  sizeof(tag_len_t)) {
         switch (read_tag_len.tag)
         {
             case C_SETTINGS_T_TAG:
-            read_structure(file, (unsigned char *)(&settings), &s_g_settings_t_hashtable, read_tag_len.len);
+            read_structure(cache, (unsigned char *)(&settings), &s_g_settings_t_hashtable, read_tag_len.len);
             break;
             case C_MENU_ORDER_T_TAG:
-            read_structure(file, (unsigned char *)(&menu_order), &s_g_menu_order_t_hashtable, read_tag_len.len);
+            read_structure(cache, (unsigned char *)(&menu_order), &s_g_menu_order_t_hashtable, read_tag_len.len);
             break;
             default:
-            FIO_SeekFile(file, read_tag_len.len * sizeof(int), SEEK_CUR);
+            fcache_seek(cache, read_tag_len.len * sizeof(int), SEEK_CUR);
             break;
         }
-        read_len = FIO_ReadFile(file, &read_tag_len, sizeof(tag_len_t));
+        read_len = fcache_read(cache, &read_tag_len, sizeof(tag_len_t));
     }
 
     return 1;

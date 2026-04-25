@@ -81,7 +81,7 @@ void FIO_SeekFile(int fd, long offset, int whence) {
 int  FIO_WriteFile(int fd, void *buffer, size_t count) {
     FILE *stream = my_camera.flash_420d.get_fstream(fd);
     if (stream != nullptr) {
-        return fwrite(buffer, count, 1, stream);
+        return fwrite(buffer, 1, count, stream);
     }
     else {
         return 0;

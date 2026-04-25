@@ -15,6 +15,8 @@
 #include "serialize.h"
 #include "settings.h"
 
+#include "fcache.h"
+
 menu_order_t menu_order_default;
 
 settings_t settings;
@@ -25,6 +27,8 @@ int settings_read() {
 
     int result = FALSE;
     int file = -1;
+    fcache s_l_file_read_cache;
+    unsigned char buffer[1000]; // Buffer used for file read, to avoid dynamic memory
 
     for (i = 0; i < LENGTH(menu_order_default.main); i++)
         menu_order_default.main[i] = i;
@@ -44,30 +48,29 @@ int settings_read() {
     for (i = 0; i < LENGTH(menu_order_default.settings); i++)
         menu_order_default.settings[i] = i;
 
-    // settings_t    settings_buffer;
-    // menu_order_t  menu_order_buffer;
-
     settings = s_g_settings_t_default;
     menu_order = menu_order_default;
 
-    if ((file = FIO_OpenFile(MKPATH_NEW(SETTINGS_FILENAME), O_RDONLY)) != -1) {
-        if (read_settings_file(file) != -1) {
+    file = fcache_open(&s_l_file_read_cache, MKPATH_NEW(SETTINGS_FILENAME), buffer, sizeof(buffer), O_RDONLY);
+    if (file  != -1) {
+        if (read_settings_file(&s_l_file_read_cache) != -1) {
             result = TRUE;
         }
-        FIO_CloseFile(file);
+        fcache_close_file(&s_l_file_read_cache);
     }
     return result;
 }
 
 void settings_write() {
+    fcache s_l_file_write_cache;
     int file = -1;
     int success = 1;
+    unsigned char buffer[1000]; // Buffer used for file write, to avoid dynamic memory allocation
 
-    if ((file = FIO_OpenFile(MKPATH_NEW(SETTINGS_FILENAME),
-                             O_CREAT | O_WRONLY)) != -1) {
-        success = write_settings_file(file);
-        // TODO: only settings are saved now, menu_order to do
-        FIO_CloseFile(file);
+    file = fcache_open(&s_l_file_write_cache, MKPATH_NEW(SETTINGS_FILENAME), buffer, sizeof(buffer), O_CREAT | O_WRONLY);
+    if (file != -1) {
+        success = write_settings_file(&s_l_file_write_cache);
+        fcache_close_file(&s_l_file_write_cache);
     }
     if (success == -1) {
         // Don't want to have a partially written file here, delete it.
