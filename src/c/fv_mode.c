@@ -37,7 +37,21 @@
  * user selection (Tv and Av values).
  */
 
-void fv_mode_init(void) {
+void fv_mode_start_shortcut(void) {
+    // Initialize user selection with current values
+    if (DPData.ae == AE_MODE_P) {
+        persist.fv_tv = FV_MODE_TV_AUTO;
+        persist.fv_av = FV_MODE_AV_AUTO;
+    } else if (DPData.ae == AE_MODE_TV) {
+        persist.fv_tv = DPData.tv_val;
+        persist.fv_av = FV_MODE_AV_AUTO;
+    } else if (DPData.ae == AE_MODE_AV) {
+        persist.fv_tv = FV_MODE_TV_AUTO;
+        persist.fv_av = DPData.av_val;
+    } else if (DPData.ae == AE_MODE_M) {
+        persist.fv_tv = DPData.tv_val;
+        persist.fv_av = DPData.av_val;
+    }
 }
 
 void fv_mode_apply(void) {
@@ -74,4 +88,18 @@ void fv_mode_apply(void) {
                 send_to_intercom(IC_SET_AV_VAL, persist.fv_av);
         }
     }
+}
+
+void fv_mode_set_av(av_t av) {
+    if (av != FV_MODE_AV_AUTO && (av < AV_MIN || av > AV_MAX))
+        return;
+    persist.fv_av = av;
+    fv_mode_apply();
+}
+
+void fv_mode_set_tv(tv_t tv) {
+    if (tv != FV_MODE_TV_AUTO && (tv < TV_MIN || tv > TV_MAX))
+        return;
+    persist.fv_tv = tv;
+    fv_mode_apply();
 }

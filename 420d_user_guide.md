@@ -210,7 +210,9 @@ Press and hold the **JUMP** button to open the `Fv` shortcut and setting the des
 
 > **Note:** When `Fv` mode is enabled, the **JUMP** button is reserved for `Fv` shortcut access and cannot be assigned to another action.
 
-While the `Fv` shortcut is active, the main display shows the name `Fv` along with the current value of the selected parameter. Use the following controls to adjust exposure:
+While the `Fv` shortcut is active and the **JUMP** button pressed, the main display shows the name `Fv` along with the selected parameter (`Av` or `Tv`). When the **JUMP** button is released, the display recovers its standard 400D behavior.
+
+Use the following controls to adjust exposure:
 
 | Button | Action |
 |:-------|:-------|
@@ -219,11 +221,11 @@ While the `Fv` shortcut is active, the main display shows the name `Fv` along wi
 | **DOWN** | Decrease the selected value by one whole step |
 | **RIGHT** | Increase the selected value by 1/3 or 1/2 step, depending on the EV step configured in 400D |
 | **LEFT** | Decrease the selected value by 1/3 or 1/2 step, depending on the EV step configured in 400D |
-| **SET** | Reset the selected value to Auto |
+| **SET** | Reset the selected value to Auto and change mode accordingly |
 
-- When a value is set to Auto it is displayed as `Tv:A` or `Av:A`.
-- When you start from an Auto value and press **UP** or **DOWN**, the camera adopts the current metered value as the starting point before incrementing or decrementing.
-- Releasing the **JUMP** button applies the selected values immediately and saves them, so the same `Fv` state is restored the next time you turn the camera on.
+- When a value modified from Auto to a specific value or reciprocally, the camera will automatically change mode and the value automatically set.
+- Releasing the **JUMP** button saves the selected values, so the same `Fv` state is restored the next time you turn the camera on.
+- When the **JUMP** button is not pressed, the camera will behave as if in the actual mode, and the values can be selected with the Wheel and Av/Wheel.
 
 ## Metering improvements
 

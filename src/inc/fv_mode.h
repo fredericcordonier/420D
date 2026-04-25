@@ -14,5 +14,7 @@ typedef enum {
     FV_MODE_M = 'M'
 } fv_mode;
 
-void fv_mode_init(void);
+void fv_mode_start_shortcut(void);
 void fv_mode_apply(void);
+void fv_mode_set_av(av_t av);
+void fv_mode_set_tv(tv_t tv);
